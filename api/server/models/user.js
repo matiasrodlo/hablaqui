@@ -24,6 +24,8 @@ const userSchema = new Schema(
      */
     name: {
       type: String,
+      required: [true, 'Name is required'],
+      trim: true
     },
 
     /**
@@ -32,6 +34,8 @@ const userSchema = new Schema(
      */
     lastName: {
       type: String,
+      required: [true, 'Last name is required'],
+      trim: true
     },
 
     /**
@@ -40,6 +44,8 @@ const userSchema = new Schema(
      */
     rut: {
       type: String,
+      unique: true,
+      sparse: true
     },
 
     /**
@@ -49,8 +55,10 @@ const userSchema = new Schema(
      */
     email: {
       type: String,
-      lowercase: true,
+      required: [true, 'Email is required'],
+      unique: true,
       trim: true,
+      lowercase: true
     },
 
     /**
@@ -59,6 +67,8 @@ const userSchema = new Schema(
      */
     password: {
       type: String,
+      required: [true, 'Password is required'],
+      minlength: [8, 'Password must be at least 8 characters long']
     },
 
     /**
@@ -84,8 +94,6 @@ const userSchema = new Schema(
      */
     phone: {
       type: String,
-      trim: true,
-      required: false,
     },
 
     /**
@@ -103,8 +111,9 @@ const userSchema = new Schema(
      * @type {Boolean}
      */
     state: {
-      type: Boolean,
-      default: true,
+      type: String,
+      enum: ['active', 'inactive', 'suspended'],
+      default: 'active'
     },
 
     /**
@@ -122,7 +131,7 @@ const userSchema = new Schema(
      */
     avatar: { 
       type: String, 
-      default: '' 
+      default: null 
     },
 
     /**
@@ -131,6 +140,7 @@ const userSchema = new Schema(
      */
     avatarThumbnail: {
       type: String,
+      default: null
     },
 
     /**
@@ -157,7 +167,7 @@ const userSchema = new Schema(
      */
     hasPaid: {
       type: Boolean,
-      default: 'false',
+      default: false,
     },
 
     /**
@@ -165,8 +175,8 @@ const userSchema = new Schema(
      * @type {Array}
      */
     finishedSessions: {
-      type: Array,
-      required: false,
+      type: Number,
+      default: 0
     },
 
     /**
@@ -196,8 +206,8 @@ const userSchema = new Schema(
      */
     role: {
       type: String,
-      default: 'user',
       enum: ['user', 'specialist', 'superuser'],
+      default: 'user'
     },
 
     /**
@@ -232,12 +242,79 @@ const userSchema = new Schema(
      * @type {String}
      */
     birthDate: {
+      type: Date,
+    },
+
+    /**
+     * User's specialties
+     * @type {Array}
+     */
+    specialties: [{
+      type: String
+    }],
+
+    /**
+     * User's languages
+     * @type {Array}
+     */
+    languages: [{
+      type: String
+    }],
+
+    /**
+     * User's availability
+     * @type {Object}
+     */
+    availability: {
+      monday: [String],
+      tuesday: [String],
+      wednesday: [String],
+      thursday: [String],
+      friday: [String],
+      saturday: [String],
+      sunday: [String]
+    },
+
+    /**
+     * User's plan
+     * @type {String}
+     */
+    plan: {
       type: String,
+      enum: ['free', 'basic', 'premium'],
+      default: 'free'
+    },
+
+    /**
+     * User's isInvited status
+     * @type {Boolean}
+     */
+    isInvited: {
+      type: Boolean,
+      default: false
     },
   },
   {
     timestamps: true, // Adds createdAt and updatedAt fields
   }
 )
+
+// Indexes
+userSchema.index({ email: 1 });
+userSchema.index({ rut: 1 });
+userSchema.index({ role: 1 });
+userSchema.index({ state: 1 });
+
+// Virtual for full name
+userSchema.virtual('fullName').get(function() {
+  return `${this.name} ${this.lastName}`;
+});
+
+// Methods
+userSchema.methods.toJSON = function() {
+  const user = this.toObject();
+  delete user.password;  // Remove password from JSON response
+  return user;
+};
 
 export default model('User', userSchema)

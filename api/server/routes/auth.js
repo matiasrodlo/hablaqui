@@ -64,94 +64,13 @@ import authSchema from '../schemas/auth'
 // Initialize Express router
 const authRouter = Router()
 
-/**
- * User Login
- * Authenticates a user and returns a JWT token
- * 
- * @route POST /api/v1/auth/login
- * @param {Object} req.body - Request body
- * @param {string} req.body.email - User's email address
- * @param {string} req.body.password - User's password
- * @returns {Object} Response containing:
- *   - token: JWT authentication token
- *   - user: User object with sensitive data removed
- * @throws {401} If authentication fails
- * @throws {400} If validation fails
- * 
- * @example
- * // Request
- * POST /api/v1/auth/login
- * {
- *   "email": "user@example.com",
- *   "password": "securepassword"
- * }
- * 
- * // Response
- * {
- *   "token": "eyJhbGciOiJIUzI1NiIs...",
- *   "user": {
- *     "id": "123",
- *     "email": "user@example.com",
- *     "role": "user"
- *   }
- * }
- */
-authRouter.post(
-  '/auth/login',
-  [validation(authSchema.login, 'body'), passport.authenticate('local')],
-  authController.login
-)
+// Authentication Routes
+// This file defines all authentication-related routes for the API
 
 /**
- * User Logout
- * Invalidates the current user session
- * 
- * @route POST /api/v1/auth/logout
- * @returns {Object} Success message
- * @throws {401} If not authenticated
- * 
- * @example
- * // Request
- * POST /api/v1/auth/logout
- * 
- * // Response
- * {
- *   "message": "Successfully logged out"
- * }
- */
-authRouter.post('/auth/logout', authController.logout)
-
-/**
- * User Registration
- * Creates a new user account
- * 
- * @route POST /api/v1/auth/register
- * @param {Object} req.body - Request body
- * @param {string} req.body.email - User's email address
- * @param {string} req.body.password - User's password
- * @returns {Object} Response containing:
- *   - token: JWT authentication token
- *   - user: Newly created user object
- * @throws {400} If validation fails
- * @throws {409} If email already exists
- * 
- * @example
- * // Request
- * POST /api/v1/auth/register
- * {
- *   "email": "newuser@example.com",
- *   "password": "securepassword"
- * }
- * 
- * // Response
- * {
- *   "token": "eyJhbGciOiJIUzI1NiIs...",
- *   "user": {
- *     "id": "123",
- *     "email": "newuser@example.com",
- *     "role": "user"
- *   }
- * }
+ * @route POST /auth/register
+ * @desc Register a new user
+ * @access Public
  */
 authRouter.post(
   '/auth/register',
@@ -160,83 +79,49 @@ authRouter.post(
 )
 
 /**
- * Password Recovery Request
- * Sends a password recovery email to the specified address
- * 
- * @route GET /api/v1/auth/send-password-recover/:email
- * @param {string} req.params.email - Email address for password recovery
- * @returns {Object} Success message
- * @throws {404} If email not found
- * 
- * @example
- * // Request
- * GET /api/v1/auth/send-password-recover/user@example.com
- * 
- * // Response
- * {
- *   "message": "Password recovery email sent"
- * }
+ * @route POST /auth/login
+ * @desc Login user and return JWT token
+ * @access Public
  */
-authRouter.get(
-  '/auth/send-password-recover/:email',
-  authController.sendPasswordRecover
+authRouter.post(
+  '/auth/login',
+  [validation(authSchema.login, 'body'), passport.authenticate('local')],
+  authController.login
 )
 
 /**
- * Change User Password
- * Updates the authenticated user's password
- * 
- * @route PUT /api/v1/auth/user/password
- * @param {Object} req.user - Authenticated user object
- * @param {string} req.body.password - New password
- * @returns {Object} Success message
- * @throws {401} If not authenticated
- * @throws {400} If validation fails
- * 
- * @example
- * // Request
- * PUT /api/v1/auth/user/password
- * {
- *   "password": "newsecurepassword"
- * }
- * 
- * // Response
- * {
- *   "message": "Password updated successfully"
- * }
+ * @route POST /auth/refresh-token
+ * @desc Get a new access token using refresh token
+ * @access Public
  */
-authRouter.put(
-  '/auth/user/password',
-  passport.authenticate('jwt'),
-  authController.changeUserPassword
-)
+authRouter.post('/auth/refresh-token', validation(authSchema.refreshToken, 'body'), authController.refreshToken)
 
 /**
- * Email Verification
- * Verifies a user's email address
- * 
- * @route PUT /api/v1/auth/user/verification/:id
- * @param {string} req.params.id - User ID to verify
- * @param {Object} req.user - Authenticated user object
- * @returns {Object} Updated user object
- * @throws {401} If not authenticated
- * @throws {404} If user not found
- * 
- * @example
- * // Request
- * PUT /api/v1/auth/user/verification/123
- * 
- * // Response
- * {
- *   "id": "123",
- *   "email": "user@example.com",
- *   "verified": true
- * }
+ * @route POST /auth/forgot-password
+ * @desc Send password reset email
+ * @access Public
  */
-authRouter.put(
-  '/auth/user/verification/:id',
-  passport.authenticate('jwt'),
-  authController.changeVerifiedStatus
-)
+authRouter.post('/auth/forgot-password', validation(authSchema.forgotPassword, 'body'), authController.forgotPassword)
+
+/**
+ * @route POST /auth/reset-password
+ * @desc Reset password using token
+ * @access Public
+ */
+authRouter.post('/auth/reset-password', validation(authSchema.resetPassword, 'body'), authController.resetPassword)
+
+/**
+ * @route GET /auth/verify-email/:token
+ * @desc Verify user's email address
+ * @access Public
+ */
+authRouter.get('/auth/verify-email/:token', authController.verifyEmail)
+
+/**
+ * @route POST /auth/logout
+ * @desc Logout user and invalidate tokens
+ * @access Private
+ */
+authRouter.post('/auth/logout', authController.logout)
 
 export default authRouter
