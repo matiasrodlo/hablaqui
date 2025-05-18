@@ -1,0 +1,82 @@
+# Docker Compose Override Configuration
+# This file contains local development overrides for docker-compose-dev.yml
+# It is automatically merged with docker-compose-dev.yml when running docker-compose up
+
+version: '3.8'
+
+services:
+  # Frontend service overrides
+  landing-ui:
+    # Development-specific overrides
+    environment:
+      - DEBUG=true  # Enable debug mode
+      - VUE_APP_DEBUG=true  # Enable Vue debug tools
+    volumes:
+      - ../../landing:/app  # Mount source code
+      - /app/node_modules  # Preserve node_modules
+      - ~/.npm:/root/.npm  # Cache npm packages
+    # Development tools
+    command: npm run dev -- --inspect  # Enable Node.js inspector
+
+  # Backend service overrides
+  api-restful:
+    # Development-specific overrides
+    environment:
+      - DEBUG=true  # Enable debug mode
+      - NODE_ENV=development  # Force development mode
+    volumes:
+      - ../../api:/app  # Mount source code
+      - /app/node_modules  # Preserve node_modules
+      - ~/.npm:/root/.npm  # Cache npm packages
+    # Development tools
+    command: npm run dev -- --inspect  # Enable Node.js inspector
+
+  # Development tools
+  mongo-express:
+    image: mongo-express
+    container_name: hablaqui-mongo-express
+    ports:
+      - "8081:8081"  # MongoDB web interface
+    environment:
+      - ME_CONFIG_MONGODB_SERVER=api-restful  # Connect to backend service
+      - ME_CONFIG_MONGODB_PORT=27017
+    networks:
+      - hablaqui-network
+    depends_on:
+      - api-restful
+
+  # Redis for caching
+  redis:
+    image: redis:alpine
+    container_name: hablaqui-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis-data:/data
+    networks:
+      - hablaqui-network
+
+  # Redis Commander for Redis management
+  redis-commander:
+    image: rediscommander/redis-commander
+    container_name: hablaqui-redis-commander
+    ports:
+      - "8082:8081"  # Redis web interface
+    environment:
+      - REDIS_HOSTS=redis
+    networks:
+      - hablaqui-network
+    depends_on:
+      - redis
+
+volumes:
+  redis-data:  # Persistent Redis data
+
+networks:
+  hablaqui-network:
+    driver: bridge
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.81.0/24
+          gateway: 192.168.81.1 
