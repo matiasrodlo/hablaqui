@@ -5,6 +5,21 @@
  * including session reminders, payment notifications, chat notifications, and subscription renewals.
  * It integrates with SendGrid for email delivery and includes batch processing capabilities.
  * 
+ * Key features:
+ * - Session reminder scheduling (hourly and daily)
+ * - Payment reminder processing
+ * - Chat notification handling
+ * - Subscription renewal notifications
+ * - Batch email processing
+ * - Coupon generation
+ * - Payment preference creation
+ * - Timezone-aware scheduling
+ * - MercadoPago integration
+ * 
+ * The service uses SendGrid for email delivery and includes timezone-aware scheduling
+ * using dayjs for date handling. All emails are sent with unsubscribe groups for
+ * email management.
+ * 
  * @module utils/functions/mails/mailing
  */
 
@@ -24,25 +39,42 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import sgClient from '@sendgrid/client' // sendgrid es una api que permite enviar correos masivos
+import sgClient from '@sendgrid/client'
+
+// Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
 dayjs.tz.setDefault('America/Santiago')
+
+// Configure SendGrid client
 sgClient.setApiKey(process.env.SENDGRID_API_KEY)
 
 /**
  * Generates payload for email scheduling updates
+ * Creates the payload for updating email scheduling objects in the database
  * 
  * @param {dayjs} date - Date when the email should be scheduled
- * @param {string} batch - SendGrid batch ID
+ * @param {string} batch - SendGrid batch ID for tracking
  * @param {string} reminderType - Type of reminder ('hour' or 'day')
  * @param {boolean} isSend - Whether the email has been sent
  * @returns {Object} Payload for email scheduling update
+ * @property {boolean} wasScheduled - Whether the email was scheduled
+ * @property {string} scheduledAt - Scheduled date in RFC2822 format
+ * @property {string} batchId - SendGrid batch ID
  * 
  * @private
+ * 
+ * @example
+ * // Generate payload for hourly reminder
+ * const payload = generatePayload(
+ *   dayjs().add(1, 'hour'),
+ *   'batch123',
+ *   'hour',
+ *   false
+ * );
  */
 function generatePayload(date, batch, reminderType, isSend) {
   /**
@@ -63,10 +95,17 @@ function generatePayload(date, batch, reminderType, isSend) {
 
 /**
  * Gets a new batch ID from SendGrid for email sending
+ * Creates a new batch for tracking related emails in SendGrid
  * 
  * @returns {Promise<string>} SendGrid batch ID
+ * @throws {Error} If batch creation fails
  * 
  * @private
+ * 
+ * @example
+ * // Get new batch ID
+ * const batchId = await getBatchId();
+ * console.log(`Created batch: ${batchId}`);
  */
 async function getBatchId() {
   /**
@@ -82,6 +121,7 @@ async function getBatchId() {
       if (response.statusCode === 201) {
         return body
       }
+      throw new Error('Failed to create batch ID')
     })
   const { batch_id } = result
   return batch_id
@@ -89,14 +129,32 @@ async function getBatchId() {
 
 /**
  * Creates a payment preference in MercadoPago
+ * Generates a payment link for session or plan purchases
  * 
  * @param {Object} user - User information
+ * @param {string} user.name - User's first name
+ * @param {string} user.lastName - User's last name
  * @param {Object} specialist - Specialist information
+ * @param {string} specialist.username - Specialist's username
  * @param {Object} plan - Plan information
+ * @param {string} plan.title - Plan title
+ * @param {number} plan.totalPrice - Plan price
+ * @param {string} plan._id - Plan ID
  * @param {Object} session - Session information
+ * @param {string} session._id - Session ID
  * @returns {Promise<string>} MercadoPago payment URL
+ * @throws {Error} If payment preference creation fails
  * 
  * @private
+ * 
+ * @example
+ * // Create payment preference
+ * const paymentUrl = await preference(
+ *   { name: 'John', lastName: 'Doe' },
+ *   { username: 'dr.smith' },
+ *   { title: 'Basic Plan', totalPrice: 50000, _id: 'plan123' },
+ *   { _id: 'session123' }
+ * );
  */
 async function preference(user, specialist, plan, session) {
   // Se genera un código aleatorio para el token de pago
@@ -126,10 +184,17 @@ async function preference(user, specialist, plan, session) {
 
 /**
  * Creates a new discount coupon
+ * Generates a unique coupon code with a 20% discount
  * 
  * @returns {Promise<string>} Generated coupon code
+ * @throws {Error} If coupon creation fails
  * 
  * @private
+ * 
+ * @example
+ * // Create new coupon
+ * const couponCode = await createCoupon();
+ * console.log(`Created coupon: ${couponCode}`);
  */
 async function createCoupon() {
   // Generar un número entero random
@@ -154,11 +219,19 @@ async function createCoupon() {
  * Processes and sends session reminder emails
  * Handles both hourly and daily reminders for users and specialists
  * 
+ * The function:
+ * 1. Finds pending reminder emails
+ * 2. Processes each email based on type (hour/day) and recipient (user/spec)
+ * 3. Sends reminders using appropriate templates
+ * 4. Updates email status in database
+ * 
  * @returns {Promise<number>} Number of processed emails
+ * @throws {Error} If email processing fails
  * 
  * @example
  * // Process session reminders
  * const processedCount = await sessionReminder();
+ * console.log(`Processed ${processedCount} reminder emails`);
  */
 const sessionReminder = async () => {
   // Encuentra los correos que no han sido programados aún, los obtiene por el asunto.
@@ -250,7 +323,7 @@ const sessionReminder = async () => {
         new: true,
       })
     } catch (error) {
-      return conflictResponse('Email sheduling service found an error')
+      console.error('Error processing reminder:', error)
     }
   })
   return pendingEmails.length
@@ -258,13 +331,21 @@ const sessionReminder = async () => {
 
 /**
  * Processes and sends payment reminder emails
- * Handles payment notifications and promotional incentives
+ * Handles payment notifications for pending and overdue payments
+ * 
+ * The function:
+ * 1. Finds pending payment reminder emails
+ * 2. Processes each email based on payment status
+ * 3. Sends reminders using appropriate templates
+ * 4. Updates email status in database
  * 
  * @returns {Promise<number>} Number of processed emails
+ * @throws {Error} If email processing fails
  * 
  * @example
  * // Process payment reminders
  * const processedCount = await reminderPayment();
+ * console.log(`Processed ${processedCount} payment reminder emails`);
  */
 const reminderPayment = async () => {
   // Se busca todos los correos no programados con los asuntos de pago
@@ -366,13 +447,21 @@ const reminderPayment = async () => {
 
 /**
  * Processes and sends chat notification emails
- * Handles unread message notifications
+ * Handles notifications for new chat messages
+ * 
+ * The function:
+ * 1. Finds pending chat notification emails
+ * 2. Processes each notification based on message type
+ * 3. Sends notifications using appropriate templates
+ * 4. Updates email status in database
  * 
  * @returns {Promise<number>} Number of processed emails
+ * @throws {Error} If email processing fails
  * 
  * @example
  * // Process chat notifications
  * const processedCount = await reminderChat();
+ * console.log(`Processed ${processedCount} chat notification emails`);
  */
 const reminderChat = async () => {
   // Se busca todos los correos no programados con los asuntos de pago
@@ -435,13 +524,21 @@ const reminderChat = async () => {
 
 /**
  * Processes and sends subscription renewal reminder emails
- * Handles renewal notifications for expiring subscriptions
+ * Handles notifications for upcoming subscription renewals
+ * 
+ * The function:
+ * 1. Finds pending renewal reminder emails
+ * 2. Processes each reminder based on renewal date
+ * 3. Sends reminders using appropriate templates
+ * 4. Updates email status in database
  * 
  * @returns {Promise<number>} Number of processed emails
+ * @throws {Error} If email processing fails
  * 
  * @example
  * // Process renewal reminders
  * const processedCount = await reminderRenewal();
+ * console.log(`Processed ${processedCount} renewal reminder emails`);
  */
 const reminderRenewal = async () => {
   // Se busca todos los correos no programados con los asuntos de pago
@@ -537,7 +634,12 @@ const reminderRenewal = async () => {
   return pendingEmails.length
 }
 
-const mailingService = {
+/**
+ * Email Management Service
+ * 
+ * @exports mailService
+ */
+const mailService = {
   sessionReminder,
   reminderPayment,
   reminderChat,
@@ -545,4 +647,4 @@ const mailingService = {
   getBatchId,
 }
 
-export default Object.freeze(mailingService)
+export default Object.freeze(mailService)

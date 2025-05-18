@@ -5,6 +5,18 @@
  * in the Hablaquí platform, including recruitment, evaluations, payments, and withdrawals.
  * It uses SendGrid templates for consistent email formatting.
  * 
+ * Key features:
+ * - Recruitment notifications
+ * - Evaluation requests and confirmations
+ * - Payment reminders and confirmations
+ * - Withdrawal requests and completions
+ * - Internal notifications
+ * - Timezone-aware date handling
+ * 
+ * The service uses SendGrid templates for consistent email formatting and includes
+ * unsubscribe groups for email management. All emails are sent with proper reply-to
+ * addresses and support contact information.
+ * 
  * @module utils/functions/mails/specialistStatus
  */
 
@@ -36,6 +48,8 @@ const mailService = {
    * @param {string} recruitedSpec.name - Specialist's first name
    * @param {string} recruitedSpec.lastName - Specialist's last name
    * @param {string} recruitedSpec.email - Specialist's email
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send recruitment confirmation to admin
@@ -72,6 +86,8 @@ const mailService = {
    * @param {Object} recruitedSpec - Specialist information
    * @param {string} recruitedSpec.name - Specialist's name
    * @param {string} recruitedSpec.email - Specialist's email
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send recruitment confirmation to specialist
@@ -103,11 +119,20 @@ const mailService = {
    * Notifies when they can evaluate a specialist
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.lastName - User's last name (optional)
+   * @param {string} user.email - User's email address
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send evaluation request
-   * await mailService.sendEnabledEvaluation(userData, specialistData);
+   * await mailService.sendEnabledEvaluation(
+   *   { name: 'John', lastName: 'Doe', email: 'john@example.com' },
+   *   { name: 'Dr. Smith' }
+   * );
    */
   async sendEnabledEvaluation(user, spec) {
     const dataPayload = {
@@ -132,15 +157,21 @@ const mailService = {
    * Notifies about pending plan payment
    * 
    * @param {Object} user - Specialist information
+   * @param {string} user.name - Specialist's first name
+   * @param {string} user.email - Specialist's email address
    * @param {Object} spec - Specialist information (duplicate for template compatibility)
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} spec.lastName - Specialist's last name (optional)
    * @param {string} amount - Plan payment amount
    * @param {string} url - Payment page URL
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send payment reminder
    * await mailService.pendingPlanPayment(
-   *   specialistData,
-   *   specialistData,
+   *   { name: 'Dr. Smith', email: 'smith@example.com' },
+   *   { name: 'Dr. Smith', lastName: 'Jones' },
    *   '$50000',
    *   'https://payment.example.com/123'
    * );
@@ -170,13 +201,17 @@ const mailService = {
    * Notifies when they have requested a withdrawal
    * 
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} spec.email - Specialist's email address
    * @param {string} total - Withdrawal amount
-   * @param {string} date - Withdrawal request date
+   * @param {string} date - Withdrawal request date (YYYY-MM-DD)
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send withdrawal request confirmation
    * await mailService.sendPaymentRequest(
-   *   specialistData,
+   *   { name: 'Dr. Smith', email: 'smith@example.com' },
    *   '$100000',
    *   '2024-03-20'
    * );
@@ -205,13 +240,17 @@ const mailService = {
    * Notifies when their withdrawal request has been processed
    * 
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} spec.email - Specialist's email address
    * @param {string} total - Withdrawal amount
-   * @param {string} date - Withdrawal completion date
+   * @param {string} date - Withdrawal completion date (YYYY-MM-DD)
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send withdrawal completion notification
    * await mailService.sendCompletePaymentRequest(
-   *   specialistData,
+   *   { name: 'Dr. Smith', email: 'smith@example.com' },
    *   '$100000',
    *   '2024-03-20'
    * );
@@ -240,83 +279,110 @@ const mailService = {
    * Notifies when they have completed an evaluation
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.lastName - User's last name (optional)
+   * @param {string} user.email - User's email address
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send evaluation completion confirmation
-   * await mailService.sendAddEvaluation(userData, specialistData);
+   * await mailService.sendAddEvaluation(
+   *   { name: 'John', lastName: 'Doe', email: 'john@example.com' },
+   *   { name: 'Dr. Smith' }
+   * );
    */
   async sendAddEvaluation(user, spec) {
     const dataPayload = {
       from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
       to: user.name + '<' + user.email + '>',
-      subject: '¡Has completado una evaluación!',
+      subject: 'Gracias por evaluar a su especialista',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-451461690169414ba91a86ee4c439c2a',
+      templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
+        user_name: user.name + ' ' + (user.lastName ? user.lastName : ''),
         psy_name: spec.name,
-        user_name: user.name,
       },
     }
     await sendMails(dataPayload)
   },
 
   /**
-   * Sends a new evaluation notification email to a specialist
+   * Sends an evaluation notification email to a specialist
    * Notifies when they have received a new evaluation
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.lastName - User's last name (optional)
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} spec.email - Specialist's email address
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
-   * // Send new evaluation notification
-   * await mailService.sendApproveEvaluationToSpec(userData, specialistData);
+   * // Send evaluation notification
+   * await mailService.sendApproveEvaluationToSpec(
+   *   { name: 'John', lastName: 'Doe' },
+   *   { name: 'Dr. Smith', email: 'smith@example.com' }
+   * );
    */
   async sendApproveEvaluationToSpec(user, spec) {
     const dataPayload = {
       from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
       to: spec.name + '<' + spec.email + '>',
-      subject: 'Ha recibido una nueva evaluación',
+      subject: 'Han evaluado su servicio',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-39a41d2dc58e4e35a5674cf03a2cb86e',
+      templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
+        user_name: user.name + ' ' + (user.lastName ? user.lastName : ''),
         psy_name: spec.name,
-        user_name: user.name,
       },
     }
     await sendMails(dataPayload)
   },
 
   /**
-   * Sends an evaluation rejection notification email to a specialist
+   * Sends an evaluation rejection email to a specialist
    * Notifies when their evaluation has been rejected
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.lastName - User's last name (optional)
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} spec.email - Specialist's email address
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
-   * // Send evaluation rejection notification
-   * await mailService.sendRefuseEvaluation(userData, specialistData);
+   * // Send evaluation rejection
+   * await mailService.sendRefuseEvaluation(
+   *   { name: 'John', lastName: 'Doe' },
+   *   { name: 'Dr. Smith', email: 'smith@example.com' }
+   * );
    */
   async sendRefuseEvaluation(user, spec) {
     const dataPayload = {
       from: 'Hablaquí <evaluaciones@mail.hablaqui.cl>',
       to: spec.name + '<' + spec.email + '>',
-      subject: 'Se ha rechazado tu evaluación',
+      subject: 'Han rechazado su evaluación',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-c88421c7ff9e4165b883255b9a35a701',
+      templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
+        user_name: user.name + ' ' + (user.lastName ? user.lastName : ''),
         psy_name: spec.name,
-        user_name: user.name,
       },
     }
     await sendMails(dataPayload)

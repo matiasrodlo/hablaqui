@@ -209,202 +209,167 @@ const sessionsController = {
 	},
 
 	/**
-	 * Get All Formatted Sessions
-	 * Retrieves formatted information for all sessions
+	 * Get Formatted Sessions All
+	 * Retrieves all formatted session information for a specialist
 	 * 
 	 * @param {Object} req - Express request object
+	 * @param {string} req.params.idSpecialist - Specialist ID
 	 * @param {Object} res - Express response object
 	 * @returns {Array} Formatted session information
 	 * @throws {Error} If sessions cannot be retrieved
 	 */
 	async formattedSessionsAll(req, res) {
 		try {
-			const { data, code } = await sessionsService.formattedSessionsAll();
+			const { idSpecialist } = req.params;
+			const { data, code } = await sessionsService.formattedSessionsAll(idSpecialist);
 			return restResponse(data, code, res);
-		} catch (error) {
-			errorCallback(
-				error,
-				res,
-				'Error obteniendo las sesiones formateadas'
-			);
+		} catch (e) {
+			errorCallback(e, res, 'Error retrieving formatted sessions');
 		}
 	},
 
 	/**
-	 * Get Sessions by Limit
-	 * Retrieves formatted sessions for specific IDs
+	 * Get Sessions Limit
+	 * Retrieves the session limit for a specialist
 	 * 
 	 * @param {Object} req - Express request object
-	 * @param {Object} req.body - Request information
-	 * @param {Array} req.body.ids - Array of session IDs
+	 * @param {string} req.params.idSpecialist - Specialist ID
 	 * @param {Object} res - Express response object
-	 * @returns {Array} Formatted session information
-	 * @throws {Error} If sessions cannot be retrieved
+	 * @returns {Object} Session limit information
+	 * @throws {Error} If limit cannot be retrieved
 	 */
 	async sessionsLimit(req, res) {
 		try {
-			const { body } = req;
-			const { data, code } = await sessionsService.formattedSessionsAll(
-				body.ids
-			);
+			const { idSpecialist } = req.params;
+			const { data, code } = await sessionsService.sessionsLimit(idSpecialist);
 			return restResponse(data, code, res);
-		} catch (error) {
-			errorCallback(
-				error,
-				res,
-				'Error obteniendo las sesiones formateadas'
-			);
+		} catch (e) {
+			errorCallback(e, res, 'Error retrieving session limit');
 		}
 	},
 
 	/**
-	 * Get Payment Information
-	 * Retrieves payment information for a user's sessions
+	 * Get Payments Info
+	 * Retrieves payment information for a specialist
 	 * 
 	 * @param {Object} req - Express request object
-	 * @param {Object} req.user - Authenticated user object
+	 * @param {string} req.params.idSpecialist - Specialist ID
 	 * @param {Object} res - Express response object
 	 * @returns {Object} Payment information
-	 * @throws {Error} If payment information cannot be retrieved
+	 * @throws {Error} If payment info cannot be retrieved
 	 */
 	async paymentsInfo(req, res) {
 		try {
-			const { user } = req;
-			const { data, code } = await sessionsService.paymentsInfo(user);
+			const { idSpecialist } = req.params;
+			const { data, code } = await sessionsService.paymentsInfo(idSpecialist);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(
-				e,
-				res,
-				'Error procesando la informacion de los pagos'
-			);
+			errorCallback(e, res, 'Error retrieving payment information');
 		}
 	},
 
 	/**
 	 * Reschedule Session
-	 * Updates the date and time of a scheduled session
+	 * Reschedules a session to a new time
 	 * 
 	 * @param {Object} req - Express request object
 	 * @param {Object} req.user - Authenticated user object
-	 * @param {string} req.params.id - Session ID
-	 * @param {string} req.params.sessionsId - Sessions collection ID
-	 * @param {Date} req.body.newDate - New date and time
+	 * @param {Object} req.body - Rescheduling information
 	 * @param {Object} res - Express response object
-	 * @returns {Object} Updated session information
+	 * @returns {Object} Rescheduling confirmation
 	 * @throws {Error} If rescheduling fails
 	 */
 	async reschedule(req, res) {
 		try {
-			const { id, sessionsId } = req.params;
-			const { user } = req;
-			const { newDate } = req.body;
-			const { data, code } = await sessionsService.reschedule(
-				user,
-				sessionsId,
-				id,
-				newDate
-			);
+			const { user, body } = req;
+			const { data, code } = await sessionsService.reschedule(user, body);
 			return restResponse(data, code, res);
 		} catch (e) {
-			errorCallback(e, res, 'error actualizando la cita');
+			errorCallback(e, res, 'Error rescheduling the session');
 		}
 	},
 
 	/**
 	 * Update Sessions
-	 * Updates multiple sessions with new information
+	 * Updates session information
 	 * 
 	 * @param {Object} req - Express request object
-	 * @param {Object} req.body - Updated session information
+	 * @param {Object} req.body - Session update information
 	 * @param {Object} res - Express response object
-	 * @returns {Object} Update confirmation
+	 * @returns {Object} Updated session information
 	 * @throws {Error} If update fails
 	 */
 	async updateSessions(req, res) {
 		try {
-			const { data, code } = await sessionsService.updateSessions(
-				req.body
-			);
+			const { body } = req;
+			const { data, code } = await sessionsService.updateSessions(body);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
+			errorCallback(e, res, 'Error updating sessions');
 		}
 	},
 
 	/**
 	 * Delete Commitment
-	 * Removes a commitment from a plan
+	 * Deletes a commitment for a session
 	 * 
 	 * @param {Object} req - Express request object
-	 * @param {string} req.params.specId - Specialist ID
-	 * @param {string} req.params.planId - Plan ID
+	 * @param {Object} req.body - Commitment information
 	 * @param {Object} res - Express response object
 	 * @returns {Object} Deletion confirmation
 	 * @throws {Error} If deletion fails
 	 */
 	async deleteCommitment(req, res) {
 		try {
-			const { specId, planId } = req.params;
-			const { data, code } = await sessionsService.deleteCommitment(
-				planId,
-				specId
-			);
+			const { body } = req;
+			const { data, code } = await sessionsService.deleteCommitment(body);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
+			errorCallback(e, res, 'Error deleting commitment');
 		}
 	},
 
 	/**
 	 * Get All Sessions
-	 * Retrieves all sessions for a specialist
+	 * Retrieves all sessions
 	 * 
 	 * @param {Object} req - Express request object
-	 * @param {string} req.params.spec - Specialist ID
 	 * @param {Object} res - Express response object
-	 * @returns {Array} List of sessions
+	 * @returns {Array} List of all sessions
 	 * @throws {Error} If sessions cannot be retrieved
 	 */
 	async getAllSessions(req, res) {
 		try {
-			const { spec } = req.params;
-			const { data, code } = await sessionsService.getAllSessions(spec);
+			const { data, code } = await sessionsService.getAllSessions();
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
+			errorCallback(e, res, 'Error retrieving all sessions');
 		}
 	},
 
 	/**
-	 * Get Payment Information by ID
-	 * Retrieves payment information for a specific specialist
+	 * Get Payments Info From ID
+	 * Retrieves payment information for a session by ID
 	 * 
 	 * @param {Object} req - Express request object
-	 * @param {string} req.params.spec - Specialist ID
+	 * @param {string} req.params.id - Session ID
 	 * @param {Object} res - Express response object
 	 * @returns {Object} Payment information
-	 * @throws {Error} If payment information cannot be retrieved
+	 * @throws {Error} If payment info cannot be retrieved
 	 */
 	async paymentsInfoFromId(req, res) {
 		try {
-			const { spec } = req.params;
-			const { data, code } = await sessionsService.paymentsInfoFromId(
-				spec
-			);
+			const { id } = req.params;
+			const { data, code } = await sessionsService.paymentsInfoFromId(id);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(
-				e,
-				res,
-				'Error procesando la informacion de los pagos'
-			);
+			errorCallback(e, res, 'Error retrieving payment information from ID');
 		}
 	},
 
 	/**
-	 * Get All Formatted Sessions
-	 * Retrieves formatted information for all sessions in the system
+	 * Get All Sessions Formatted
+	 * Retrieves all sessions in a formatted manner
 	 * 
 	 * @param {Object} req - Express request object
 	 * @param {Object} res - Express response object
@@ -413,40 +378,31 @@ const sessionsController = {
 	 */
 	async getAllSessionsFormatted(req, res) {
 		try {
-			const {
-				data,
-				code,
-			} = await sessionsService.getAllSessionsFormatted();
+			const { data, code } = await sessionsService.getAllSessionsFormatted();
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
+			errorCallback(e, res, 'Error retrieving all formatted sessions');
 		}
 	},
 
 	/**
-	 * Cancel Session by Specialist
-	 * Allows a specialist to cancel a scheduled session
+	 * Cancel Session By Specialist
+	 * Cancels a session by a specialist
 	 * 
 	 * @param {Object} req - Express request object
+	 * @param {Object} req.user - Authenticated user object
 	 * @param {Object} req.body - Session information
-	 * @param {string} req.body.sessionsId - Sessions collection ID
-	 * @param {string} req.body.planId - Plan ID
-	 * @param {string} req.body.id - Session ID
 	 * @param {Object} res - Express response object
 	 * @returns {Object} Cancellation confirmation
 	 * @throws {Error} If cancellation fails
 	 */
 	async cancelSessionByEspecialist(req, res) {
 		try {
-			const { sessionsId, planId, id } = req.body;
-			const { data, code } = await sessionsService.cancelSessionByEspecialist(
-				sessionsId,
-				planId,
-				id
-			);
+			const { user, body } = req;
+			const { data, code } = await sessionsService.cancelSessionByEspecialist(user, body);
 			return restResponse(data, code, res);
 		} catch (e) {
-			return errorCallback(e, res, 'Error procesando la solicitud');
+			errorCallback(e, res, 'Error canceling session by specialist');
 		}
 	},
 };

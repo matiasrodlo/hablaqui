@@ -5,6 +5,19 @@
  * in the Hablaquí platform, including appointment confirmations, rescheduling notifications,
  * and session scheduling updates. It uses SendGrid templates for consistent email formatting.
  * 
+ * Key features:
+ * - Subscription confirmation notifications
+ * - Session scheduling notifications
+ * - Rescheduling notifications
+ * - Cancellation notifications
+ * - Custom session notifications
+ * - Payment integration
+ * - Timezone-aware date handling
+ * 
+ * The service uses SendGrid templates for consistent email formatting and includes
+ * unsubscribe groups for email management. All emails are sent with proper reply-to
+ * addresses and support contact information.
+ * 
  * @module utils/functions/mails/schedule
  */
 
@@ -33,12 +46,22 @@ const mailService = {
    * Notifies when a user has purchased a new plan
    * 
    * @param {Object} user - User information
+   * @param {string} user.email - User's email address
+   * @param {string} user.name - User's first name
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} spec.lastName - Specialist's last name (optional)
    * @param {string} price - Plan price
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send subscription confirmation
-   * await mailService.sendAppConfirmationUser(userData, specialistData, '$50000');
+   * await mailService.sendAppConfirmationUser(
+   *   { email: 'user@example.com', name: 'John' },
+   *   { name: 'Dr. Smith', lastName: 'Jones' },
+   *   '$50000'
+   * );
    */
   async sendAppConfirmationUser(user, spec, price) {
     const { email, name } = user
@@ -65,12 +88,22 @@ const mailService = {
    * Notifies when a user has purchased a new plan
    * 
    * @param {Object} spec - Specialist information
+   * @param {string} spec.email - Specialist's email address
+   * @param {string} spec.name - Specialist's first name
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.lastName - User's last name
    * @param {string} price - Plan price
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send new plan notification
-   * await mailService.sendAppConfirmationSpec(specialistData, userData, '$50000');
+   * await mailService.sendAppConfirmationSpec(
+   *   { email: 'specialist@example.com', name: 'Dr. Smith' },
+   *   { name: 'John', lastName: 'Doe' },
+   *   '$50000'
+   * );
    */
   async sendAppConfirmationSpec(spec, user, price) {
     const nameUser = user.name
@@ -100,19 +133,24 @@ const mailService = {
    * Notifies when a specialist has scheduled a session
    * 
    * @param {Object} user - User information
+   * @param {string} user.email - User's email address
+   * @param {string} user.name - User's first name
    * @param {Object} specialist - Specialist information
+   * @param {string} specialist.name - Specialist's first name
    * @param {string} paymentURL - Payment page URL
-   * @param {string} date - Session date and time
+   * @param {string} date - Session date and time (MM/DD/YYYY HH:mm)
    * @param {string} value - Session value
-   * @param {string} type - Session type
+   * @param {string} type - Session type (online/presential)
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send custom session notification
    * await mailService.sendCustomSessionToUser(
-   *   userData,
-   *   specialistData,
+   *   { email: 'user@example.com', name: 'John' },
+   *   { name: 'Dr. Smith' },
    *   'https://payment.example.com/123',
-   *   '2024-03-20 14:30',
+   *   '03/20/2024 14:30',
    *   '$50000',
    *   'online'
    * );
@@ -145,19 +183,24 @@ const mailService = {
    * Notifies when a user has scheduled a session
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
    * @param {Object} specialist - Specialist information
+   * @param {string} specialist.email - Specialist's email address
+   * @param {string} specialist.name - Specialist's first name
    * @param {string} paymentURL - Payment page URL
-   * @param {string} date - Session date and time
+   * @param {string} date - Session date and time (MM/DD/YYYY HH:mm)
    * @param {string} value - Session value
-   * @param {string} type - Session type
+   * @param {string} type - Session type (online/presential)
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send custom session notification
    * await mailService.sendCustomSessionToSpec(
-   *   userData,
-   *   specialistData,
+   *   { name: 'John' },
+   *   { email: 'specialist@example.com', name: 'Dr. Smith' },
    *   'https://payment.example.com/123',
-   *   '2024-03-20 14:30',
+   *   '03/20/2024 14:30',
    *   '$50000',
    *   'online'
    * );
@@ -190,17 +233,23 @@ const mailService = {
    * Notifies when a session has been successfully rescheduled
    * 
    * @param {Object} user - User information
+   * @param {string} user.email - User's email address
+   * @param {string} user.name - User's first name
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} spec.lastName - Specialist's last name
    * @param {Object} sessionDate - Session date information
-   * @param {string} sessionDate.date - Session date
-   * @param {string} sessionDate.hour - Session hour
+   * @param {string} sessionDate.date - Session date (DD/MM/YYYY)
+   * @param {string} sessionDate.hour - Session hour (HH:mm)
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send rescheduling confirmation
    * await mailService.sendRescheduleToUser(
-   *   userData,
-   *   specialistData,
-   *   { date: '2024-03-20', hour: '14:30' }
+   *   { email: 'user@example.com', name: 'John' },
+   *   { name: 'Dr. Smith', lastName: 'Jones' },
+   *   { date: '20/03/2024', hour: '14:30' }
    * );
    */
   async sendRescheduleToUser(user, spec, sessionDate) {
@@ -228,18 +277,23 @@ const mailService = {
    * Notifies when a user has rescheduled a session
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
    * @param {Object} spec - Specialist information
+   * @param {string} spec.email - Specialist's email address
+   * @param {string} spec.name - Specialist's first name
    * @param {Object} sessionDate - Session date information
-   * @param {string} sessionDate.date - Session date
-   * @param {string} sessionDate.hour - Session hour
+   * @param {string} sessionDate.date - Session date (DD/MM/YYYY)
+   * @param {string} sessionDate.hour - Session hour (HH:mm)
    * @param {string} url - Payment page URL
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send rescheduling notification
    * await mailService.sendRescheduleToSpec(
-   *   userData,
-   *   specialistData,
-   *   { date: '2024-03-20', hour: '14:30' },
+   *   { name: 'John' },
+   *   { email: 'specialist@example.com', name: 'Dr. Smith' },
+   *   { date: '20/03/2024', hour: '14:30' },
    *   'https://payment.example.com/123'
    * );
    */
@@ -249,16 +303,16 @@ const mailService = {
       to: spec.name + '<' + spec.email + '>',
       subject: 'Han reprogramado una sesión con usted',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-b336c59aa9d74750b13414954f7daee0',
+      templateId: 'd-54f94040924645be93ccdb21c243e6c2',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
-        user_name: user.name + ' ' + (user.lastName ? user.lastName : ''),
+        user_name: user.name,
         date: sessionDate.date,
         hour: sessionDate.hour,
         psy_name: spec.name,
-        url,
+        payment_url: url,
       },
     }
     await sendMails(dataPayload)

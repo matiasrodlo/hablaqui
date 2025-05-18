@@ -2,10 +2,6 @@
 
 # Hablaquí
 
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
-[![PRs Welcome](https://img.shields.io/badge/PRs-welcome-brightgreen.svg)](http://makeapullrequest.com)
-[![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)](https://github.com/yourusername/hablaqui/graphs/commit-activity)
-
 A mental health marketplace and SaaS platform connecting users with a network of over 200 certified specialists. The platform facilitates scheduling, payments, and secure video consultations.
 
 Hablaquí was born at the Startup School of Adolfo Ibáñez University and was later incubated by Digevo Ventures, accelerated through Start-Up Chile, and backed by Google for Startups.

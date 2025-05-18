@@ -5,6 +5,20 @@
  * in the Hablaquí platform, including welcome emails, password recovery, email verification,
  * and account changes. It uses SendGrid templates for consistent email formatting.
  * 
+ * Key features:
+ * - Welcome emails for new users and specialists
+ * - Password recovery notifications
+ * - Email verification
+ * - Account change notifications
+ * - Photo upload notifications
+ * - Plan cancellation notifications
+ * - Specialist change notifications
+ * - Timezone-aware date handling
+ * 
+ * The service uses SendGrid templates for consistent email formatting and includes
+ * unsubscribe groups for email management. All emails are sent with proper reply-to
+ * addresses and support contact information.
+ * 
  * @module utils/functions/mails/accountsShares
  */
 
@@ -35,6 +49,8 @@ const mailService = {
    * @param {Object} user - User information
    * @param {string} user.email - User's email address
    * @param {string} user.name - User's first name
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send welcome email to new user
@@ -68,6 +84,8 @@ const mailService = {
    * @param {Object} user - Specialist information
    * @param {string} user.email - Specialist's email address
    * @param {string} user.name - Specialist's first name
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send welcome email to new specialist
@@ -105,6 +123,8 @@ const mailService = {
    * @param {string} newUser.name - User's first name
    * @param {string} newUser.email - User's email address
    * @param {string} pass - Temporary password for the new user
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send welcome email to invited user
@@ -144,6 +164,8 @@ const mailService = {
    * @param {string} user.email - User's email address
    * @param {string} user.name - User's first name
    * @param {string} url - Password recovery URL
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send password recovery email
@@ -178,6 +200,8 @@ const mailService = {
    * @param {string} user.email - User's email address
    * @param {string} user.name - User's first name
    * @param {string} url - Email verification URL
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send email verification
@@ -212,6 +236,8 @@ const mailService = {
    * @param {string} spec.name - Specialist's first name
    * @param {string} spec.lastName - Specialist's last name
    * @param {string} spec.email - Specialist's email address
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send photo upload notification
@@ -223,15 +249,17 @@ const mailService = {
    */
   async sendUploadPicture(spec) {
     const dataPayload = {
-      from: 'Hablaquí <notifiaciones@mail.hablaqui.cl>',
-      to: 'Hablaquí <soporte@hablaqui.cl>',
-      subject: '[Internal] Nueva fotografía de especialista',
-      templateId: 'd-d0ad663db5c64f0f965d5aeab027a7aa',
+      from: 'Hablaquí <internal@mail.hablaqui.cl>',
+      to: 'direccion@hablaqui.com',
+      subject: '[Internal] Nueva foto de especialista',
+      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+      templateId: 'd-8ee906349e144427ad0103a31507541a',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
-        psy_name: spec.name + ' ' + spec.lastName,
+        psy_first_name: spec.name,
+        psy_last_name: spec.lastName,
         psy_email: spec.email,
       },
     }
@@ -240,43 +268,76 @@ const mailService = {
 
   /**
    * Sends a plan cancellation notification to a user
-   * Notifies when a user cancels their plan
+   * Notifies when a user cancels their subscription plan
    * 
    * @param {Object} user - User information
    * @param {string} user.name - User's first name
-   * @param {string} user.lastName - User's last name (optional)
    * @param {string} user.email - User's email address
    * @param {Object} spec - Specialist information
    * @param {string} spec.name - Specialist's first name
-   * @param {Object} coupon - Coupon information
-   * @param {string} coupon.code - Coupon code
-   * @param {string} coupon.discount - Discount amount
-   * @param {Date} coupon.expiration - Coupon expiration date
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send plan cancellation notification
-   * await mailService.sendChangeSpeccologistToUser(
-   *   { name: 'John', lastName: 'Doe', email: 'john@example.com' },
-   *   { name: 'Dr. Smith' },
-   *   { code: 'WELCOME20', discount: '20%', expiration: new Date('2024-12-31') }
+   * await mailService.sendCancelPlanToUser(
+   *   { name: 'John', email: 'john@example.com' },
+   *   { name: 'Dr. Smith' }
    * );
    */
-  async sendChangeSpeccologistToUser(user, spec, coupon) {
+  async sendCancelPlanToUser(user, spec) {
     const dataPayload = {
-      from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+      from: 'Hablaquí <planes@mail.hablaqui.cl>',
       to: user.name + '<' + user.email + '>',
-      subject: 'Has cancelado tu plan',
+      subject: 'Plan cancelado',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-efbfc3aba77142fcaf1a24f693d71429',
+      templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
-        user_name: user.name + ' ' + (user.lastName ? user.lastName : ''),
+        user_name: user.name,
         psy_name: spec.name,
-        code: coupon.code,
-        amount: coupon.discount,
-        expiration_date: dayjs(coupon.expiration).format('DD/MM/YYYY'),
+      },
+    }
+    await sendMails(dataPayload)
+  },
+
+  /**
+   * Sends a specialist change notification to a user
+   * Notifies when a user's specialist is changed
+   * 
+   * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.email - User's email address
+   * @param {Object} spec - New specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} coupon - Discount coupon code (optional)
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
+   * 
+   * @example
+   * // Send specialist change notification
+   * await mailService.sendChangeSpeccologistToUser(
+   *   { name: 'John', email: 'john@example.com' },
+   *   { name: 'Dr. Smith' },
+   *   'WELCOME20'
+   * );
+   */
+  async sendChangeSpeccologistToUser(user, spec, coupon) {
+    const dataPayload = {
+      from: 'Hablaquí <cambios@mail.hablaqui.cl>',
+      to: user.name + '<' + user.email + '>',
+      subject: 'Cambio de especialista',
+      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+      templateId: 'd-39a4dae7572448e08a7f0b8e9cc4adbd',
+      asm: {
+        group_id: 16321,
+      },
+      dynamicTemplateData: {
+        user_name: user.name,
+        psy_name: spec.name,
+        coupon: coupon || '',
       },
     }
     await sendMails(dataPayload)

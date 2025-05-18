@@ -5,6 +5,19 @@
  * including session reminders, chat notifications, and payment reminders.
  * It uses SendGrid templates for consistent email formatting.
  * 
+ * Key features:
+ * - Session reminders (hourly and daily)
+ * - Chat notifications
+ * - Payment reminders
+ * - Session cancellation notifications
+ * - Private commitment notifications
+ * - Subscription renewal reminders
+ * - Promotional incentives
+ * 
+ * The service uses SendGrid for email delivery and includes timezone-aware scheduling
+ * using dayjs for date handling. All emails are sent with unsubscribe groups for
+ * email management.
+ * 
  * @module utils/functions/mails/reminder
  */
 
@@ -34,12 +47,21 @@ const mailService = {
    * Notifies when a specialist sends a new message
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.email - User's email address
    * @param {Object} specialist - Specialist information
-   * @param {string} batch - SendGrid batch ID
+   * @param {string} specialist.name - Specialist's first name
+   * @param {string} batch - SendGrid batch ID for tracking
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send chat notification to user
-   * await mailService.sendChatNotificationToUser(userData, specialistData, 'batch123');
+   * await mailService.sendChatNotificationToUser(
+   *   { name: 'John', email: 'john@example.com' },
+   *   { name: 'Dr. Smith' },
+   *   'batch123'
+   * );
    */
   async sendChatNotificationToUser(user, specialist, batch) {
     const dataPayload = {
@@ -59,17 +81,27 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
    * Sends a chat notification email to a specialist
    * Notifies when a user sends a new message
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
    * @param {Object} specialist - Specialist information
-   * @param {string} batch - SendGrid batch ID
+   * @param {string} specialist.name - Specialist's first name
+   * @param {string} specialist.email - Specialist's email address
+   * @param {string} batch - SendGrid batch ID for tracking
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send chat notification to specialist
-   * await mailService.sendChatNotificationToSpec(userData, specialistData, 'batch123');
+   * await mailService.sendChatNotificationToSpec(
+   *   { name: 'John' },
+   *   { name: 'Dr. Smith', email: 'smith@example.com' },
+   *   'batch123'
+   * );
    */
   async sendChatNotificationToSpec(user, specialist, batch) {
     const dataPayload = {
@@ -89,16 +121,26 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
    * Sends a session cancellation notification to a user
    * Notifies when a session has been rescheduled
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.email - User's email address
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} [spec.lastName] - Specialist's last name (optional)
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send cancellation notification
-   * await mailService.sendCancelSessionUser(userData, specialistData);
+   * await mailService.sendCancelSessionUser(
+   *   { name: 'John', email: 'john@example.com' },
+   *   { name: 'Dr. Smith', lastName: 'Jones' }
+   * );
    */
   async sendCancelSessionUser(user, spec) {
     const dataPayload = {
@@ -117,15 +159,23 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
    * Sends a private commitment cancellation notification to a specialist
    * Notifies when a specialist cancels a private commitment
    * 
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} spec.email - Specialist's email address
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send commitment cancellation
-   * await mailService.sendCancelCommitment(specialistData);
+   * await mailService.sendCancelCommitment({
+   *   name: 'Dr. Smith',
+   *   email: 'smith@example.com'
+   * });
    */
   async sendCancelCommitment(spec) {
     const dataPayload = {
@@ -143,15 +193,23 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
    * Sends a private session commitment notification to a specialist
    * Notifies when a specialist schedules a private commitment
    * 
    * @param {Object} specialist - Specialist information
+   * @param {string} specialist.name - Specialist's first name
+   * @param {string} specialist.email - Specialist's email address
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send custom session commitment
-   * await mailService.sendCustomSessionCommitment(specialistData);
+   * await mailService.sendCustomSessionCommitment({
+   *   name: 'Dr. Smith',
+   *   email: 'smith@example.com'
+   * });
    */
   async sendCustomSessionCommitment(specialist) {
     const dataPayload = {
@@ -169,22 +227,29 @@ const mailService = {
     }
     await sendMails(dataPayload)
   },
+
   /**
    * Sends a session reminder to a user
    * Can be sent either an hour before or a day before the session
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.email - User's email address
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} [spec.lastName] - Specialist's last name (optional)
    * @param {string} sessionDate - Session date and time
-   * @param {string} batch - SendGrid batch ID
+   * @param {string} batch - SendGrid batch ID for tracking
    * @param {string} mailType - Type of reminder ('hour' or 'day')
    * @param {string} urlRooms - URL for the session room
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send hourly reminder
    * await mailService.sendReminderUser(
-   *   userData,
-   *   specialistData,
+   *   { name: 'John', email: 'john@example.com' },
+   *   { name: 'Dr. Smith', lastName: 'Jones' },
    *   '2024-03-20 14:30',
    *   'batch123',
    *   'hour',
@@ -198,42 +263,43 @@ const mailService = {
       to: name + '<' + email + '>',
       subject: 'Su sesión con ${spec.name} ${spec.lastname} está por comenzar',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-3ab0f381fc2f4a579165cc6c36ed8586',
-      dynamicTemplateData: {
-        user_first_name: name,
-        psy_first_name: spec.name,
-        psy_last_name: spec.lastName,
-        date: dayjs.tz(sessionDate).format('DD/MM/YYYY'),
-        hour: dayjs.tz(sessionDate).format('HH:mm'),
-        url_rooms: urlRooms,
-      },
+      templateId: 'd-72d35079d0c2482da9be18b7e9a71958',
       asm: {
         group_id: 16321,
       },
+      dynamicTemplateData: {
+        user_name: name,
+        psy_name: spec.name + ' ' + (spec.lastName ? spec.lastName : ''),
+        session_date: dayjs(sessionDate).format('DD/MM/YYYY HH:mm'),
+        url_rooms: urlRooms,
+        reminder_type: mailType,
+      },
       batchId: batch,
-    }
-    if (mailType === 'day') {
-      dataPayload.subject = 'Mañana es su sesión en Hablaquí'
-      dataPayload.templateId = 'd-cb455abcd59a4553a1fa3a16770dbdc6'
     }
     await sendMails(dataPayload)
   },
+
   /**
    * Sends a session reminder to a specialist
    * Can be sent either an hour before or a day before the session
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
    * @param {Object} spec - Specialist information
+   * @param {string} spec.name - Specialist's first name
+   * @param {string} spec.email - Specialist's email address
    * @param {string} sessionDate - Session date and time
-   * @param {string} batch - SendGrid batch ID
+   * @param {string} batch - SendGrid batch ID for tracking
    * @param {string} mailType - Type of reminder ('hour' or 'day')
    * @param {string} urlRooms - URL for the session room
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
-   * // Send hourly reminder
+   * // Send hourly reminder to specialist
    * await mailService.sendReminderSpec(
-   *   userData,
-   *   specialistData,
+   *   { name: 'John' },
+   *   { name: 'Dr. Smith', email: 'smith@example.com' },
    *   '2024-03-20 14:30',
    *   'batch123',
    *   'hour',
@@ -241,75 +307,85 @@ const mailService = {
    * );
    */
   async sendReminderSpec(user, spec, sessionDate, batch, mailType, urlRooms) {
-    const { email, name } = spec
     const dataPayload = {
-      from: 'Hablaquí <recordatorios-especialistas@mail.hablaqui.cl>',
-      to: name + '<' + email + '>',
-      subject: `Su sesión con ${user.name} en Hablaquí está por comenzar`,
+      from: 'Hablaquí <recordatorios@mail.hablaqui.cl>',
+      to: spec.name + '<' + spec.email + '>',
+      subject: 'Tiene una sesión con ${user.name}',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-3b8cc80917614591b078cf83d3ec3bc9',
-      dynamicTemplateData: {
-        psy_first_name: name,
-        user_first_name: user.name,
-        date: dayjs.tz(sessionDate).format('DD/MM/YYYY'),
-        hour: dayjs.tz(sessionDate).format('HH:mm'),
-        url_rooms: urlRooms,
-      },
-      asm: {
-        group_id: 16321,
-      },
-      batchId: batch,
-    }
-    if (mailType === 'day') {
-      dataPayload.subject = 'Mañana es su sesión en Hablaquí'
-      dataPayload.templateId = 'd-cb455abcd59a4553a1fa3a16770dbdc6'
-    }
-    await sendMails(dataPayload)
-  },
-  /**
-   * Sends a promotional incentive email to a user
-   * Notifies about special offers and discounts
-   * 
-   * @param {Object} user - User information
-   * @param {string} coupon - Discount coupon code
-   * 
-   * @example
-   * // Send promotional incentive
-   * await mailService.sendPromocionalIncentive(userData, 'WELCOME50');
-   */
-  async sendPromocionalIncentive(user, coupon) {
-    const dataPayload = {
-      from: 'Hablaquí <promociones@mail.hablaqui.cl>',
-      to: user.name + '<' + user.email + '>',
-      subject: '¡Tienes un descuento especial en Hablaquí!',
-      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
+      templateId: 'd-72d35079d0c2482da9be18b7e9a71958',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
         user_name: user.name,
-        coupon,
-        landing_url,
+        psy_name: spec.name,
+        session_date: dayjs(sessionDate).format('DD/MM/YYYY HH:mm'),
+        url_rooms: urlRooms,
+        reminder_type: mailType,
+      },
+      batchId: batch,
+    }
+    await sendMails(dataPayload)
+  },
+
+  /**
+   * Sends a promotional incentive email to a user
+   * Includes a discount coupon for subscription renewal
+   * 
+   * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.email - User's email address
+   * @param {string} coupon - Discount coupon code
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
+   * 
+   * @example
+   * // Send promotional incentive
+   * await mailService.sendPromocionalIncentive(
+   *   { name: 'John', email: 'john@example.com' },
+   *   'H123'
+   * );
+   */
+  async sendPromocionalIncentive(user, coupon) {
+    const dataPayload = {
+      from: 'Hablaquí <pagos@mail.hablaqui.cl>',
+      to: user.name + '<' + user.email + '>',
+      subject: '¡Renueva tu suscripción con un 20% de descuento!',
+      reply_to: 'Hablaquí <soporte@hablaqui.cl>',
+      templateId: 'd-72d35079d0c2482da9be18b7e9a71958',
+      asm: {
+        group_id: 16321,
+      },
+      dynamicTemplateData: {
+        user_name: user.name,
+        coupon_code: coupon,
+        discount_percentage: 20,
+        landing_url: landing_url,
       },
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * Sends a payment reminder email to a user
-   * Notifies about upcoming or overdue payments
+   * Sends a daily payment reminder to a user
+   * Includes payment link and amount
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.email - User's email address
    * @param {Object} specialist - Specialist information
-   * @param {string} price - Payment amount
-   * @param {string} url - Payment page URL
+   * @param {string} specialist.name - Specialist's first name
+   * @param {number} price - Payment amount
+   * @param {string} url - Payment URL
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
-   * // Send payment reminder
+   * // Send daily payment reminder
    * await mailService.sendPaymentDay(
-   *   userData,
-   *   specialistData,
-   *   '$50000',
+   *   { name: 'John', email: 'john@example.com' },
+   *   { name: 'Dr. Smith' },
+   *   50000,
    *   'https://payment.example.com/123'
    * );
    */
@@ -317,85 +393,99 @@ const mailService = {
     const dataPayload = {
       from: 'Hablaquí <pagos@mail.hablaqui.cl>',
       to: user.name + '<' + user.email + '>',
-      subject: 'Recordatorio de pago en Hablaquí',
+      subject: 'Tiene un pago pendiente en Hablaquí',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
+      templateId: 'd-72d35079d0c2482da9be18b7e9a71958',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
         user_name: user.name,
         psy_name: specialist.name,
-        price,
-        url,
+        payment_amount: price,
+        payment_url: url,
       },
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * Sends a subscription renewal reminder email to a user
-   * Notifies 1 hour before subscription expiration
+   * Sends an hourly subscription renewal reminder to a user
+   * Notifies when subscription is about to expire
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.email - User's email address
    * @param {Object} specialist - Specialist information
-   * @param {string} expiracion - Expiration date and time
+   * @param {string} specialist.name - Specialist's first name
+   * @param {string} expiracion - Subscription expiration date
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send hourly renewal reminder
    * await mailService.reminderRenewalSubscription1hour(
-   *   userData,
-   *   specialistData,
-   *   '2024-03-20 14:30'
+   *   { name: 'John', email: 'john@example.com' },
+   *   { name: 'Dr. Smith' },
+   *   '2024-03-20'
    * );
    */
   async reminderRenewalSubscription1hour(user, specialist, expiracion) {
     const dataPayload = {
-      from: 'Hablaquí <renovaciones@mail.hablaqui.cl>',
+      from: 'Hablaquí <pagos@mail.hablaqui.cl>',
       to: user.name + '<' + user.email + '>',
-      subject: 'Tu suscripción en Hablaquí está por vencer',
+      subject: 'Su suscripción está por vencer',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
+      templateId: 'd-72d35079d0c2482da9be18b7e9a71958',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
         user_name: user.name,
         psy_name: specialist.name,
-        expiracion: dayjs.tz(expiracion).format('DD/MM/YYYY HH:mm'),
+        expiration_date: dayjs(expiracion).format('DD/MM/YYYY'),
+        landing_url: landing_url,
       },
     }
     await sendMails(dataPayload)
   },
+
   /**
-   * Sends a subscription renewal reminder email to a user
-   * Notifies 1 day before subscription expiration
+   * Sends a daily subscription renewal reminder to a user
+   * Notifies when subscription is about to expire
    * 
    * @param {Object} user - User information
+   * @param {string} user.name - User's first name
+   * @param {string} user.email - User's email address
    * @param {Object} specialist - Specialist information
-   * @param {string} expiracion - Expiration date and time
+   * @param {string} specialist.name - Specialist's first name
+   * @param {string} expiracion - Subscription expiration date
+   * @returns {Promise<void>}
+   * @throws {Error} If email sending fails
    * 
    * @example
    * // Send daily renewal reminder
    * await mailService.reminderRenewalSubscription1day(
-   *   userData,
-   *   specialistData,
-   *   '2024-03-20 14:30'
+   *   { name: 'John', email: 'john@example.com' },
+   *   { name: 'Dr. Smith' },
+   *   '2024-03-20'
    * );
    */
   async reminderRenewalSubscription1day(user, specialist, expiracion) {
     const dataPayload = {
-      from: 'Hablaquí <renovaciones@mail.hablaqui.cl>',
+      from: 'Hablaquí <pagos@mail.hablaqui.cl>',
       to: user.name + '<' + user.email + '>',
-      subject: 'Tu suscripción en Hablaquí vence mañana',
+      subject: 'Su suscripción está por vencer',
       reply_to: 'Hablaquí <soporte@hablaqui.cl>',
-      templateId: 'd-3e3f90ac1108463dbb2abbbef767625c',
+      templateId: 'd-72d35079d0c2482da9be18b7e9a71958',
       asm: {
         group_id: 16321,
       },
       dynamicTemplateData: {
         user_name: user.name,
         psy_name: specialist.name,
-        expiracion: dayjs.tz(expiracion).format('DD/MM/YYYY HH:mm'),
+        expiration_date: dayjs(expiracion).format('DD/MM/YYYY'),
+        landing_url: landing_url,
       },
     }
     await sendMails(dataPayload)

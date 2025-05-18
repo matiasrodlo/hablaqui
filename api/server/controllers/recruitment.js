@@ -17,7 +17,7 @@ const recruitmentController = {
       const { data, code } = await recruitmentService.register(user, body)
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error registrando el postulado')
+      errorCallback(e, res, 'Error registering the applicant')
     }
   },
   /**
@@ -34,7 +34,7 @@ const recruitmentController = {
       const { data, code } = await recruitmentService.update(body, step)
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error actualizando el especialista')
+      errorCallback(e, res, 'Error updating the specialist')
     }
   },
   /**
@@ -49,7 +49,7 @@ const recruitmentController = {
       const { data, code } = await recruitmentService.get(email)
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error obteniendo el postulante')
+      errorCallback(e, res, 'Error retrieving the applicant')
     }
   },
   /**
@@ -63,7 +63,7 @@ const recruitmentController = {
       const { data, code } = await recruitmentService.getAll()
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error obteniendo el postulante')
+      errorCallback(e, res, 'Error retrieving the applicants')
     }
   },
   /**
@@ -79,7 +79,7 @@ const recruitmentController = {
       const { data, code } = await recruitmentService.approve(user, email)
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error aprobando el postulante')
+      errorCallback(e, res, 'Error approving the applicant')
     }
   },
   /**
@@ -97,7 +97,7 @@ const recruitmentController = {
       )
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error aprobando el postulante')
+      errorCallback(e, res, 'Error updating onboarding flag for the applicant')
     }
   },
 }
