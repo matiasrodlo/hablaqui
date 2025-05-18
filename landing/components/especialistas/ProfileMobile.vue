@@ -1,25 +1,21 @@
 /**
  * ProfileMobile Component
- * 
- * A mobile-optimized view of a specialist's profile, providing a compact and
- * touch-friendly interface for viewing specialist information and scheduling sessions.
- * Features a responsive layout optimized for smaller screens with collapsible sections
- * and a simplified calendar view.
- * 
- * The component includes:
- * - Compact profile header with avatar and basic information
- * - Specialties and expertise tags
- * - Experience and formation history
- * - Professional and personal descriptions
- * - Session pricing and scheduling preferences
- * - Integrated mini-calendar for session booking
- * 
+ *
+ * Displays a mobile-optimized profile view for specialists, including bio, experience, and contact options.
+ *
+ * Key Features:
+ * - Mobile-friendly profile layout
+ * - Specialist bio and experience
+ * - Contact and booking options
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify card and list components
+ * - Vuex for state
+ *
  * @component
  * @example
- * <ProfileMobile
- *   :specialist="specialistData"
- *   :setSpecialist="handleSpecialistUpdate"
- * />
+ * <ProfileMobile :specialist="specialist" />
  */
 <template>
   <v-container fluid style="max-width: 600px">

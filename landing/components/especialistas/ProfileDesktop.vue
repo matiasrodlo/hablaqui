@@ -1,25 +1,21 @@
 /**
  * ProfileDesktop Component
- * 
- * A comprehensive desktop view of a specialist's profile, displaying detailed information
- * about their professional background, specialties, experience, and availability.
- * Features a responsive layout with a main profile section and an integrated calendar
- * for session scheduling.
- * 
- * The component includes:
- * - Professional profile with avatar and basic information
- * - Specialties and expertise tags
- * - Experience and formation history
- * - Professional and personal descriptions
- * - Session pricing and scheduling preferences
- * - Integrated calendar for session booking
- * 
+ *
+ * Displays a desktop-optimized profile view for specialists, including bio, experience, and contact options.
+ *
+ * Key Features:
+ * - Desktop-friendly profile layout
+ * - Specialist bio and experience
+ * - Contact and booking options
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify card and list components
+ * - Vuex for state
+ *
  * @component
  * @example
- * <ProfileDesktop
- *   :specialist="specialistData"
- *   :setSpecialist="handleSpecialistUpdate"
- * />
+ * <ProfileDesktop :specialist="specialist" />
  */
 <template>
   <v-container fluid style="max-width: 1080px">
