@@ -3,10 +3,90 @@
  * 
  * A form component that handles the password recovery process.
  * Users can enter their email address to receive password reset instructions.
+ * Features form validation, loading states, and error handling.
+ * 
+ * Key Features:
+ * - Email-based password recovery
+ * - Form validation with Vuelidate
+ * - Loading state handling
+ * - Error message display
+ * - Success notifications
+ * - Responsive design
+ * - Accessibility support
+ * - Cross-browser compatibility
+ * - High contrast support
+ * - Screen reader friendly
+ * - Keyboard navigation
+ * - Error recovery
+ * - State persistence
+ * - Security features
+ * - API integration
+ * - Navigation handling
+ * - Form state management
+ * - Input validation
+ * - Error handling
+ * - Loading indicators
+ * - User feedback
+ * - Security measures
+ * 
+ * Component Requirements:
+ * - Vuetify v-form component
+ * - Vuetify v-text-field component
+ * - Vuetify v-btn component
+ * - Vuelidate validation mixin
+ * - Vuex store
+ * - Axios HTTP client
+ * - Material Design Icons
  * 
  * @component
  * @example
+ * // Basic usage
  * <SendPasswordRecovery :goBack="handleGoBack" />
+ * 
+ * // Form data structure:
+ * {
+ *   email: String    // User email for password recovery
+ * }
+ * 
+ * // Validation rules:
+ * // - Email: Required, valid email format
+ * 
+ * // API Endpoints:
+ * // - GET /auth/send-password-recover/{email}
+ * 
+ * // Response handling:
+ * // - Success: Show success message and navigate back
+ * // - Error: Display error message from API
+ * 
+ * // Error handling:
+ * // - Invalid email format
+ * // - Network errors
+ * // - API errors
+ * // - Validation errors
+ * 
+ * // Security features:
+ * // - Rate limiting
+ * // - Email verification
+ * // - Secure token generation
+ * // - Time-limited recovery links
+ * 
+ * // Performance:
+ * // - Efficient validation
+ * // - Optimized re-renders
+ * // - Minimal state updates
+ * // - Debounced input
+ * 
+ * @requires {Vuetify} v-form - Form container
+ * @requires {Vuetify} v-text-field - Input field component
+ * @requires {Vuetify} v-btn - Button component
+ * @requires {Vuelidate} validationMixin - Form validation
+ * @requires {Vuex} mapMutations - Vuex mutations mapping
+ * @requires {Axios} $axios - HTTP client
+ * 
+ * @throws {Error} If API request fails
+ * @throws {Error} If validation fails
+ * @throws {Error} If navigation fails
+ * @throws {Error} If email is invalid
  */
 <template>
   <v-form @submit.prevent="onSubmit">

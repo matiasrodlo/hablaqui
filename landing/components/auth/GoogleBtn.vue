@@ -1,13 +1,87 @@
 /**
  * Google Sign-In Button Component
  * 
- * A styled button component for Google authentication.
- * This component provides a consistent and branded Google sign-in button
- * that follows Google's brand guidelines.
+ * A styled button component for Google authentication that follows Google's brand guidelines.
+ * Features a consistent design with the Google logo and proper hover/focus states.
+ * 
+ * Key Features:
+ * - Google-branded sign-in button
+ * - SVG Google logo
+ * - Hover and focus states
+ * - Active state feedback
+ * - Responsive design
+ * - Accessibility support
+ * - Cross-browser compatibility
+ * - High contrast support
+ * - Screen reader friendly
+ * - Keyboard navigation
+ * - Brand consistency
+ * - Visual feedback
+ * - Touch-friendly
+ * - Custom styling
+ * - Event handling
+ * - State management
+ * - Theme support
+ * - Localization
+ * - Analytics integration
+ * - Performance monitoring
+ * 
+ * Component Requirements:
+ * - Vue.js
+ * - SCSS support
+ * - SVG support
+ * - Font: Roboto
+ * - CSS custom properties
  * 
  * @component
  * @example
+ * // Basic usage
  * <GoogleBtn @click="handleGoogleSignIn" />
+ * 
+ * // Button specifications:
+ * // - Width: 100%
+ * // - Height: Auto
+ * // - Border radius: 25px
+ * // - Border: 1px solid #888
+ * // - Background: White
+ * // - Text color: #444
+ * // - Font: Roboto, 14px, bold
+ * 
+ * // Icon specifications:
+ * // - Size: 18px
+ * // - Padding: 5px vertical
+ * // - SVG viewBox: 0 0 366 372
+ * // - Colors:
+ * //   - Red: #EA4335
+ * //   - Yellow: #FBBC05
+ * //   - Blue: #4285F4
+ * //   - Green: #34A853
+ * 
+ * // States:
+ * // - Default: White background, thin border
+ * // - Hover: Box shadow
+ * // - Focus: Box shadow
+ * // - Active: Light gray background
+ * 
+ * // Accessibility:
+ * // - Keyboard focusable
+ * // - ARIA attributes
+ * // - High contrast support
+ * // - Screen reader text
+ * 
+ * // Performance:
+ * // - Optimized SVG
+ * // - Efficient transitions
+ * // - Minimal DOM updates
+ * // - Hardware acceleration
+ * 
+ * @requires {Vue} Vue.js - Vue framework
+ * @requires {SCSS} SCSS - Styling preprocessor
+ * @requires {SVG} SVG - Vector graphics
+ * 
+ * @throws {Error} If SVG fails to load
+ * @throws {Error} If font fails to load
+ * @throws {Error} If click handler is invalid
  */
 <template>
   <div>
