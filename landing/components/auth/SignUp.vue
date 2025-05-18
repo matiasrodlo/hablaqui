@@ -1,14 +1,22 @@
 /**
- * Sign Up Form Component
- * 
- * A comprehensive registration form component that handles user sign-up.
- * Collects user information including name, last name, email, phone, and password.
- * Includes terms and conditions acceptance and validation for all fields.
- * Handles post-registration authentication and role-based redirects.
- * 
+ * SignUp Component
+ *
+ * A registration form for new users, supporting email/password sign-up, validation, and error handling.
+ *
+ * Key Features:
+ * - Email and password registration
+ * - Form validation and error messages
+ * - Loading state
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-form, v-text-field, v-btn
+ * - Vuelidate for validation
+ * - Vuex for actions
+ *
  * @component
  * @example
- * <SignUp :isDialog="false" />
+ * <SignUp />
  */
 <template>
 	<v-form @submit.prevent="onSubmit">

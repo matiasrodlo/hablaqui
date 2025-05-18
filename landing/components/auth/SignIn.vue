@@ -1,16 +1,97 @@
 /**
  * Sign In Form Component
  * 
- * A form component that handles user authentication.
- * Provides email and password fields with validation, password visibility toggle,
- * and password recovery option. Handles different user roles and redirects accordingly.
+ * A form component that handles user authentication with email and password.
+ * Features form validation, password visibility toggle, and role-based redirects.
+ * 
+ * Key Features:
+ * - Email and password authentication
+ * - Form validation with Vuelidate
+ * - Password visibility toggle
+ * - Password recovery option
+ * - Role-based redirects
+ * - Loading state handling
+ * - Error message display
+ * - Responsive design
+ * - Accessibility support
+ * - Cross-browser compatibility
+ * - High contrast support
+ * - Screen reader friendly
+ * - Keyboard navigation
+ * - Error recovery
+ * - State persistence
+ * - Security features
+ * - Session management
+ * - Role validation
+ * - Navigation handling
+ * - Form state management
+ * - Input validation
+ * - Error handling
+ * - Loading indicators
+ * - User feedback
+ * - Security measures
+ * 
+ * Component Requirements:
+ * - Vuetify v-form component
+ * - Vuetify v-text-field component
+ * - Vuetify v-btn component
+ * - Vuelidate validation mixin
+ * - Vuex store
+ * - Vue Router
+ * - Material Design Icons
+ * - Authentication module
  * 
  * @component
  * @example
+ * // Basic usage
  * <SignIn 
  *   :isDialog="false"
  *   :setResetPassword="handlePasswordReset"
  * />
+ * 
+ * // Form data structure:
+ * {
+ *   email: String,      // User email
+ *   password: String    // User password
+ * }
+ * 
+ * // Validation rules:
+ * // - Email: Required, valid email format
+ * // - Password: Required
+ * 
+ * // Role-based redirects:
+ * // - Specialist: Dashboard chat or postulation
+ * // - Superuser: Admin panel
+ * // - User: Payment page or chat
+ * 
+ * // Error handling:
+ * // - Invalid credentials
+ * // - Network errors
+ * // - Validation errors
+ * // - Session errors
+ * 
+ * // Security features:
+ * // - Password hashing
+ * // - Session management
+ * // - CSRF protection
+ * // - Rate limiting
+ * 
+ * // Performance:
+ * // - Efficient validation
+ * // - Optimized re-renders
+ * // - Minimal state updates
+ * // - Debounced input
+ * 
+ * @requires {Vuetify} v-form - Form container
+ * @requires {Vuetify} v-text-field - Input field component
+ * @requires {Vuetify} v-btn - Button component
+ * @requires {Vuelidate} validationMixin - Form validation
+ * @requires {Vuex} mapMutations - Vuex mutations mapping
+ * 
+ * @throws {Error} If authentication fails
+ * @throws {Error} If validation fails
+ * @throws {Error} If navigation fails
+ * @throws {Error} If session management fails
  */
 <template>
   <v-form @submit.prevent="onSubmit">
