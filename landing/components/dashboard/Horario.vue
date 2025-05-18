@@ -1,3 +1,23 @@
+/**
+ * Horario Component
+ *
+ * Allows specialists to configure their weekly availability schedule for sessions.
+ * Supports adding, editing, and removing available time slots, with validation and error handling.
+ *
+ * Key Features:
+ * - Weekly schedule configuration
+ * - Add/edit/remove time slots
+ * - Validation and error messages
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify form components
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <Horario :specialist="specialist" />
+ */
 <template>
   <div :class="step ? 'mt-10' : ''">
     <v-card
