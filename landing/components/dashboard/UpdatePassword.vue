@@ -1,3 +1,26 @@
+/**
+ * UpdatePassword Component
+ *
+ * A form for users to update their account password. Includes validation for current and new passwords,
+ * password visibility toggles, and error handling for mismatched or invalid entries.
+ *
+ * Key Features:
+ * - Current and new password fields
+ * - Password visibility toggles
+ * - Form validation (required, min/max length, match)
+ * - Loading state
+ * - Error messages for each field
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-text-field, v-btn
+ * - Vuelidate for validation
+ * - Vuex for actions
+ *
+ * @component
+ * @example
+ * <UpdatePassword />
+ */
 <template>
   <v-row>
     <v-col cols="12" class="text-h6 py-0" style="color: #3c3c3b">
