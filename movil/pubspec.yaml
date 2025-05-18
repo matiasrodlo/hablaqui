@@ -1,10 +1,9 @@
-# Hablaquí Mobile Application
-# 
-# This is the Flutter project configuration file for the Hablaquí mobile application.
-# It defines the project metadata, dependencies, and asset configurations.
+# Flutter application configuration for Hablaqui mobile app
+# This file defines the app's dependencies, assets, and configuration
+# Used for managing Flutter/Dart packages and resources
 
 name: hablaqui
-description: A Flutter application for connecting users with language specialists, providing a seamless experience for language learning and practice.
+description: Hablaqui - Language Learning Platform Mobile App
 
 # Prevent accidental publishing to pub.dev
 publish_to: 'none'
@@ -20,7 +19,7 @@ version: 1.0.0+1
 
 # SDK constraints
 environment:
-  sdk: ">=2.12.0 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 # Project dependencies
 dependencies:
@@ -37,15 +36,15 @@ dependencies:
   connectivity_plus: ^5.0.1
 
   # Storage
-  shared_preferences: ^2.2.1
+  shared_preferences: ^2.2.0
   flutter_secure_storage: ^9.0.0
   hive: ^2.2.3
   hive_flutter: ^1.1.0
 
   # UI Components
-  cupertino_icons: ^1.0.6
+  cupertino_icons: ^1.0.2
   flutter_svg: ^2.0.7
-  cached_network_image: ^3.3.0
+  cached_network_image: ^3.2.3
   shimmer: ^3.0.0
   lottie: ^2.7.0
 
@@ -64,10 +63,11 @@ dependencies:
   intl: ^0.18.1
   logger: ^2.0.1
   path_provider: ^2.1.1
-  image_picker: ^1.0.4
-  url_launcher: ^6.1.14
+  image_picker: ^1.0.2
+  url_launcher: ^6.1.12
   package_info_plus: ^4.2.0
   device_info_plus: ^9.1.1
+  provider: ^6.0.5
 
 # Development dependencies
 dev_dependencies:
@@ -81,7 +81,7 @@ dev_dependencies:
   flutter_native_splash: ^2.3.2
 
   # Code Quality
-  flutter_lints: ^2.0.3
+  flutter_lints: ^2.0.2
   custom_lint: ^0.5.7
   dart_code_metrics: ^5.7.6
 

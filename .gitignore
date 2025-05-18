@@ -1,3 +1,85 @@
+# Git ignore configuration for Hablaqui project
+# This file specifies intentionally untracked files that Git should ignore
+# Files and directories that should not be committed to version control
+
+# Dependencies
+node_modules/
+.pnp/
+.pnp.js
+
+# Testing
+coverage/
+.nyc_output/
+
+# Production
+build/
+dist/
+out/
+
+# Environment variables
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Debug logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# IDE and editor files
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db
+
+# Mobile specific
+movil/.dart_tool/
+movil/.flutter-plugins
+movil/.flutter-plugins-dependencies
+movil/.packages
+movil/.pub-cache/
+movil/.pub/
+movil/build/
+movil/ios/Pods/
+movil/android/.gradle/
+movil/android/app/build/
+movil/android/local.properties
+
+# API specific
+api/node_modules/
+api/dist/
+api/.env
+api/coverage/
+api/.nyc_output/
+
+# Landing specific
+landing/node_modules/
+landing/dist/
+landing/.env
+landing/.nuxt/
+landing/.output/
+
+# Temporary files
+*.log
+*.tmp
+*.temp
+.cache/
+.temp/
+.tmp/
+
+# System files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
 api/package-lock.json
 api/yarn.lock
 landing/package-lock.json
@@ -45,7 +127,6 @@ bower_components
 build/Release
 
 # Dependency directories
-node_modules/
 jspm_packages/
 
 # TypeScript v1 declaration files
@@ -76,10 +157,8 @@ typings/
 .yarn-integrity
 
 # dotenv environment variables file
-.env
 .env.test
 .env.example
-.env.local
 
 # parcel-bundler cache (https://parceljs.org/)
 .cache
