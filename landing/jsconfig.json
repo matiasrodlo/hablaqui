@@ -1,21 +1,34 @@
 {
+  // Compiler options for JavaScript language service
   "compilerOptions": {
+    // Base URL for resolving non-relative module names
     "baseUrl": ".",
+    // Path mapping for module resolution
     "paths": {
+      // Alias for source files in the src directory
       "~/*": ["./src/*"],
       "@/*": ["./src/*"],
+      // Alias for root directory files
       "~~/*": ["./*"],
       "@@/*": ["./*"]
-      }
-    },
-    "include": [
-        "./components/**/*",
-        "./layout/**/*",
-        "./pages/**/*",
-    ],
-    "exclude": [
-        "node_modules",
-        ".nuxt",
-        "dist"
-    ]
+    }
+  },
+  // Files to include in the JavaScript language service
+  "include": [
+    // Vue components
+    "./components/**/*",
+    // Page layouts
+    "./layout/**/*",
+    // Application pages
+    "./pages/**/*"
+  ],
+  // Files to exclude from the JavaScript language service
+  "exclude": [
+    // Node modules directory
+    "node_modules",
+    // Nuxt build directory
+    ".nuxt",
+    // Production build directory
+    "dist"
+  ]
 }

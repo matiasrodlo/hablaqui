@@ -2,6 +2,7 @@
   "name": "landing",
   "version": "1.0.3",
   "private": true,
+  "description": "Hablaquí Landing Page - A Nuxt.js application for the Hablaquí platform, providing online therapy services and specialist connections.",
   "scripts": {
     "dev": "nuxt",
     "build": "node --max-old-space-size=4096 node_modules/nuxt/bin/nuxt.js build",

@@ -1,7 +1,21 @@
+/**
+ * Sign In Form Component
+ * 
+ * A form component that handles user authentication.
+ * Provides email and password fields with validation, password visibility toggle,
+ * and password recovery option. Handles different user roles and redirects accordingly.
+ * 
+ * @component
+ * @example
+ * <SignIn 
+ *   :isDialog="false"
+ *   :setResetPassword="handlePasswordReset"
+ * />
+ */
 <template>
   <v-form @submit.prevent="onSubmit">
     <v-row no-gutters>
-      <!-- email -->
+      <!-- Email input field -->
       <v-col cols="12">
         <v-text-field
           v-model="form.email"
@@ -13,7 +27,7 @@
           :error-messages="emailErrors"
         ></v-text-field>
       </v-col>
-      <!-- contraseña -->
+      <!-- Password input field with visibility toggle -->
       <v-col cols="12">
         <v-text-field
           v-model="form.password"
@@ -26,7 +40,7 @@
           @click:append="showPassword = !showPassword"
         ></v-text-field>
       </v-col>
-      <!-- boton olvido contraseña -->
+      <!-- Password recovery button -->
       <v-col cols="12" class="text-left">
         <v-btn
           text
@@ -37,7 +51,7 @@
         >
       </v-col>
     </v-row>
-    <!-- ingresar -->
+    <!-- Submit button -->
     <v-row>
       <v-col cols="12">
         <v-btn :loading="loading" type="submit" block rounded color="primary">
@@ -61,16 +75,34 @@ import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn'
 export default {
   name: 'SignIn',
   mixins: [validationMixin],
+
+  /**
+   * Component props
+   * @property {Boolean} isDialog - Whether the component is rendered in a dialog
+   * @property {Function} setResetPassword - Function to handle password reset navigation
+   */
   props: {
     isDialog: {
       type: Boolean,
       default: false,
+      description: 'Whether the component is rendered in a dialog'
     },
     setResetPassword: {
       type: Function,
       required: true,
+      description: 'Function to handle password reset navigation'
     },
   },
+
+  /**
+   * Component data
+   * @returns {Object} Component data
+   * @property {Object} mdiEye - Material Design icon for visible password
+   * @property {Object} mdiEyeOff - Material Design icon for hidden password
+   * @property {Boolean} showPassword - Controls password field visibility
+   * @property {Object} form - Form data object
+   * @property {Boolean} loading - Loading state for form submission
+   */
   data() {
     return {
       mdiEye,
@@ -80,10 +112,11 @@ export default {
       loading: false,
     }
   },
+
   computed: {
     /**
-     * Verifica que el email sea valido
-     * @returns array con los errores
+     * Validates email input and returns error messages
+     * @returns {Array} Array of error messages
      */
     emailErrors() {
       const errors = []
@@ -94,9 +127,10 @@ export default {
         errors.push('Escriba un correo electrónico valido')
       return errors
     },
+
     /**
-     * Verifica que la contraseña sea valida
-     * @returns array con los errores
+     * Validates password input and returns error messages
+     * @returns {Array} Array of error messages
      */
     passwordErrors() {
       const errors = []
@@ -105,52 +139,50 @@ export default {
       return errors
     },
   },
+
+  /**
+   * Lifecycle hook that initializes form data
+   */
   created() {
-    // establece los valores por defecto del formulacio
     this.defaultData()
   },
+
   methods: {
     /**
-     * Metodo para iniciar sesion
+     * Handles form submission for user authentication
+     * Manages login process and role-based redirects
+     * @returns {Promise<void>}
      */
     async onSubmit() {
-      // verificamos validacion
       this.$v.$touch()
       if (!this.$v.$invalid) {
         try {
-          // activamos el loader
           this.loading = true
-          // iniciamos sesion y obtenemos en la respuesta el user
           const response = await this.$auth.loginWith('local', {
             data: this.form,
           })
-          // establecemos el user en el store y localstorage
           this.$auth.setUser(response.data.user)
-          // verificamos una vez más si esta logeado
+          
           if (this.$auth.$state.loggedIn) {
-            // si llegamos al login con un query from=spec
+            // Handle special evaluation redirect
             if (this.$route.query.from === 'spec')
               return this.$router.push({ name: 'evaluacion' })
-            // si es role especialista y esta aprobado
-            if (
-              response.data.user.role === 'specialist' &&
-              this.$auth.$state.user.specialist
-            ) {
-              return this.$router.push({ name: 'dashboard-chat' })
-            }
-            // si es role especialista y no esta aprobado
-            if (
-              response.data.user.role === 'specialist' &&
-              !this.$auth.$state.user.specialist
-            ) {
+            
+            // Handle specialist role redirects
+            if (response.data.user.role === 'specialist') {
+              if (this.$auth.$state.user.specialist) {
+                return this.$router.push({ name: 'dashboard-chat' })
+              }
               return this.$router.push({ name: 'postulacion' })
             }
-            // si es un superuser enviamos al panel
+            
+            // Handle superuser redirect
             if (response.data.user.role === 'superuser')
               return this.$router.push({ name: 'dashboard-panel' })
-            // si es un usuario
+            
+            // Handle regular user redirects
             if (response.data.user.role === 'user') {
-              // redirecionamos de nuevo a pagos luego de ingresar
+              // Redirect to payment page if payment details are present
               if (
                 this.$route.query.date &&
                 this.$route.query.start &&
@@ -160,7 +192,7 @@ export default {
                   `/especialistas/pagos/?username=${this.$route.query.specialist}&date=${this.$route.query.date}&start=${this.$route.query.start}&end=${this.$route.query.end}`
                 )
               }
-              // redirecionamos de nuevo a chat luego de ingresar
+              // Redirect to chat if specialist is specified
               if (this.$route.query.specialist) {
                 return this.$router.push(
                   `/${this.$route.query.specialist}/?chat=true`
@@ -173,26 +205,33 @@ export default {
           if (error.response.status === 401) {
             alert('Correo o contraseña invalida')
           } else {
-            // muestra mensaje de error
             this.snackBar({
               content: evaluateErrorReturn(error),
               color: 'error',
             })
           }
         } finally {
-          // desactivamos el loader
           this.loading = false
         }
       }
     },
+
+    /**
+     * Initializes form data with default values
+     */
     defaultData() {
       this.form = { email: '', password: '' }
     },
+
     ...mapMutations({
       setResumeView: 'Specialist/setResumeView',
       snackBar: 'Snackbar/showMessage',
     }),
   },
+
+  /**
+   * Form validation rules
+   */
   validations: {
     form: {
       email: {
@@ -206,3 +245,7 @@ export default {
   },
 }
 </script>
+
+<style scoped>
+/* Component-specific styles */
+</style>

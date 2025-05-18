@@ -1,6 +1,16 @@
+/**
+ * Password Recovery Form Component
+ * 
+ * A form component that handles the password recovery process.
+ * Users can enter their email address to receive password reset instructions.
+ * 
+ * @component
+ * @example
+ * <SendPasswordRecovery :goBack="handleGoBack" />
+ */
 <template>
   <v-form @submit.prevent="onSubmit">
-    <!-- correo electronico -->
+    <!-- Email input field -->
     <v-row no-gutters>
       <v-col cols="12">
         <v-text-field
@@ -13,7 +23,7 @@
         ></v-text-field>
       </v-col>
     </v-row>
-    <!-- boton enviar -->
+    <!-- Submit button -->
     <v-row>
       <v-col cols="12">
         <v-btn
@@ -43,22 +53,36 @@ import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn'
 export default {
   name: 'SendEmailRecoveryPassword',
   mixins: [validationMixin],
+  
+  /**
+   * Component props
+   * @property {Function} goBack - Function to handle navigation back to previous route
+   */
   props: {
     goBack: {
       type: Function,
       required: true,
+      description: 'Function to handle navigation back to previous route'
     },
   },
+
+  /**
+   * Component data
+   * @returns {Object} Component data
+   * @property {String} email - User's email address
+   * @property {Boolean} loading - Loading state for form submission
+   */
   data() {
     return {
       email: '',
       loading: false,
     }
   },
+
   computed: {
     /**
-     * Verifica que el email sea valido
-     * @returns array con los errores
+     * Validates email input and returns error messages
+     * @returns {Array} Array of error messages
      */
     emailErrors() {
       const errors = []
@@ -69,40 +93,45 @@ export default {
       return errors
     },
   },
+
   methods: {
     /**
-     * Envia la peticion de cambio de contraseña
+     * Handles form submission for password recovery
+     * Sends a request to the API to initiate password recovery process
+     * @returns {Promise<void>}
      */
     async onSubmit() {
       this.$v.$touch()
       if (!this.$v.$invalid) {
         try {
-          // activamos el loading
           this.loading = true
-          // request a la api
           const { data } = await this.$axios.get(
             `/auth/send-password-recover/${this.email}`
           )
-          // muestra mensaje satisfactorio
           this.snackBar({
             content: data.message,
             color: 'success',
           })
-          // Ejecuta la funcion para regresar a la ruta anterior
           this.goBack()
         } catch (error) {
-          // muestra mensaje de error
-          this.snackBar({ content: evaluateErrorReturn(error), color: 'error' })
+          this.snackBar({ 
+            content: evaluateErrorReturn(error), 
+            color: 'error' 
+          })
         } finally {
-          // desactivamos el loading
           this.loading = false
         }
       }
     },
+
     ...mapMutations({
       snackBar: 'Snackbar/showMessage',
     }),
   },
+
+  /**
+   * Form validation rules
+   */
   validations: {
     email: {
       required,

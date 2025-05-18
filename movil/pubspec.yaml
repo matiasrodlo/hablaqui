@@ -1,72 +1,61 @@
+# Hablaquí Mobile Application
+# 
+# This is the Flutter project configuration file for the Hablaquí mobile application.
+# It defines the project metadata, dependencies, and asset configurations.
+
 name: movil
-description: A new Flutter project.
+description: Hablaquí mobile application for online therapy and specialist consultations.
 
-# The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+# Prevent accidental publishing to pub.dev
+publish_to: 'none'
 
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# Version information
+# Format: version_name+version_code
+# - version_name: Semantic version (MAJOR.MINOR.PATCH)
+# - version_code: Build number for app stores
+# 
+# Android: version_name = versionName, version_code = versionCode
+# iOS: version_name = CFBundleShortVersionString, version_code = CFBundleVersion
 version: 1.0.0+1
 
+# SDK constraints
 environment:
   sdk: ">=2.7.0 <3.0.0"
 
+# Project dependencies
 dependencies:
   flutter:
     sdk: flutter
 
+  # UI Components
+  cupertino_icons: ^1.0.2  # iOS-style icons
+  carousel_slider: ^3.0.0  # Image carousel widget
+  font_awesome_flutter: ^9.1.0  # Font Awesome icons
 
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  carousel_slider: ^3.0.0
-  http: ^0.13.3
-  shared_preferences: ^2.0.6
-  flutter_pusher: ^1.0.2
-  intl: ^0.17.0
-  url_launcher: ^6.0.9
-  font_awesome_flutter: ^9.1.0
+  # Networking and Data
+  http: ^0.13.3  # HTTP client for API requests
+  shared_preferences: ^2.0.6  # Local storage
+  flutter_pusher: ^1.0.2  # Real-time updates
+  intl: ^0.17.0  # Internationalization and formatting
 
+  # Platform Integration
+  url_launcher: ^6.0.9  # URL handling and external links
+
+# Development dependencies
 dev_dependencies:
   flutter_test:
     sdk: flutter
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
+# Flutter-specific configuration
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
+  # Enable Material Design
   uses-material-design: true
 
-  # To add assets to your application, add an assets section, like this:
+  # Asset configuration
   assets:
-    - images/
-  #   - images/a_dot_ham.jpeg
+    - images/  # Application images and icons
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
-
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
+  # Font configuration (commented out - add when needed)
   # fonts:
   #   - family: Schyler
   #     fonts:
@@ -78,6 +67,3 @@ flutter:
   #       - asset: fonts/TrajanPro.ttf
   #       - asset: fonts/TrajanPro_Bold.ttf
   #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
