@@ -1,3 +1,12 @@
+/**
+ * Frequently Asked Questions (FAQ) Page Component
+ * 
+ * This component displays a searchable FAQ section with categorized questions and answers.
+ * It includes a search functionality and an expandable panel interface for viewing answers.
+ * 
+ * @module utils/page-trash/faq
+ */
+
 <template>
   <div>
     <div class="primary-color pb-16">
@@ -212,11 +221,29 @@
 import { mapMutations } from 'vuex'
 import { mdiChevronRight } from '@mdi/js'
 
+/**
+ * FAQ Page Component
+ * 
+ * @component FAQ
+ * @description Displays a searchable and categorized FAQ section
+ * 
+ * @property {string} search - Search query for filtering FAQs
+ * @property {Object} selectedItem - Currently selected FAQ category
+ * @property {Array} items - List of FAQ categories and their questions
+ * 
+ * @example
+ * // Access via URL: /faq
+ */
 export default {
   components: {
     Appbar: () => import('@/components/AppbarWhite'),
     Icon: () => import('~/components/Icon'),
   },
+  /**
+   * Component data
+   * 
+   * @returns {Object} Component data
+   */
   data() {
     return {
       mdiChevronRight,
@@ -225,6 +252,11 @@ export default {
       items: [],
     }
   },
+  /**
+   * Generates meta information for SEO
+   * 
+   * @returns {Object} Meta information for the page
+   */
   head() {
     return {
       title: 'Preguntas frecuentes | Hablaquí',
@@ -243,6 +275,11 @@ export default {
       ],
     }
   },
+  /**
+   * Computed property that filters FAQ items based on search query
+   * 
+   * @returns {Array} Filtered FAQ items
+   */
   computed: {
     itemsFilter() {
       if (this.search.length) {

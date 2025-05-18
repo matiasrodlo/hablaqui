@@ -1,3 +1,12 @@
+/**
+ * For Specialists Landing Page Component
+ *
+ * This component displays information and benefits for specialists interested in joining the Hablaquí platform.
+ * It highlights features, advantages, and the process for becoming a specialist.
+ *
+ * @module utils/page-trash/para-especialistas
+ */
+
 <template>
   <div>
     <div class="primary" style="marigin-bottom: 93px">
@@ -444,6 +453,15 @@
 </template>
 
 <script>
+/**
+ * For Specialists Landing Page Component
+ *
+ * @component ParaEspecialistas
+ * @description Renders the landing page for specialists, including benefits, features, and joining instructions.
+ *
+ * @example
+ * // Access via URL: /para-especialistas
+ */
 import { mdiCheck } from '@mdi/js'
 
 export default {

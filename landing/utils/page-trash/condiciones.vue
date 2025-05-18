@@ -1,3 +1,12 @@
+/**
+ * General Terms and Conditions Page Component
+ *
+ * This component displays the general terms and conditions of use for users on the Hablaquí platform.
+ * It provides legal, operational, and payment information for users of the platform.
+ *
+ * @module utils/page-trash/condiciones
+ */
+
 <template>
   <div>
     <div class="primary-color">
@@ -749,6 +758,15 @@
 </template>
 
 <script>
+/**
+ * General Terms and Conditions Page Component
+ *
+ * @component Condiciones
+ * @description Renders the general terms and conditions for users, including platform usage, payment, and appointment policies.
+ *
+ * @example
+ * // Access via URL: /condiciones
+ */
 export default {
   components: {
     Appbar: () => import('@/components/AppbarWhite'),
