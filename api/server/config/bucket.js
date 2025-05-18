@@ -16,6 +16,7 @@
 
 'use strict'
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3' // Se importa para poder usar el servicio de S3
+const logger = require('../utils/logger');
 
 /**
  * Initialize S3 client with AWS credentials
@@ -76,11 +77,13 @@ const uploadFile = async (key, data) => {
   // Se sube el archivo
   try {
     const response = await s3Client.send(command)
-    console.log(`Object uploaded successfully at ${response.ETag}`)
+    logger.info(`Object uploaded successfully at ${response.ETag}`)
     const response2 = await s3Client.send(command2)
-    console.log(`Object uploaded successfully at ${response2.ETag}`)
+    logger.info(`Object uploaded successfully at ${response2.ETag}`)
+    return response;
   } catch (error) {
-    console.log(error)
+    logger.error('Error uploading file:', error)
+    throw error;
   }
 }
 
@@ -98,11 +101,9 @@ const deleteFile = async (key) => {
 
   try {
     const response = await s3Client.send(command)
-    console.log(
-      `Object deleted successfully with status code ${response.$metadata.httpStatusCode}`
-    )
+    logger.info(`Object deleted successfully with status code ${response.$metadata.httpStatusCode}`)
   } catch (error) {
-    console.log(error)
+    logger.error('Error deleting file:', error)
   }
 }
 

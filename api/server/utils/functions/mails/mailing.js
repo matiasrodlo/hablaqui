@@ -47,6 +47,7 @@ import sgClient from '@sendgrid/client'
 import { logError } from '../../../config/pino'
 import { sendEmail } from './sendMails'
 import { emailTemplates } from './templates'
+const logger = require('../../../utils/logger');
 
 // Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
@@ -126,12 +127,13 @@ async function getBatchId() {
     })
     .then(([response, body]) => {
       if (response.statusCode === 201) {
-        return body
+        logger.info(`Created batch: ${body.batch_id}`);
+        return body;
       }
-      throw new Error('Failed to create batch ID')
-    })
-  const { batch_id } = result
-  return batch_id
+      throw new Error('Failed to create batch ID');
+    });
+  const { batch_id } = result;
+  return batch_id;
 }
 
 /**
@@ -204,22 +206,12 @@ async function preference(user, specialist, plan, session) {
  * console.log(`Created coupon: ${couponCode}`);
  */
 async function createCoupon() {
-  // Generar un número entero random
   const randomInt = (min = 100, max = 999) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-  }
-  const code = 'H' + randomInt()
-  const coupon = {
-    code,
-    discount: 20,
-    discountType: 'percentage',
-    restrictions: {
-      firstTimeOnly: true,
-    },
-    expiration: dayjs.tz(dayjs().add(1, 'week')).format(),
-  }
-  await couponModel.create(coupon)
-  return coupon.code
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+  const couponCode = `HABLAQUI${randomInt()}`;
+  logger.info(`Created coupon: ${couponCode}`);
+  return couponCode;
 }
 
 /**
@@ -255,85 +247,17 @@ const sessionReminder = async () => {
   })
   // Se recorre el array de correos y se envían los correos
   // Busca los correos electrónicos que no han sido programados
-  console.log('pendingEmails', pendingEmails)
+  logger.debug('Pending emails:', pendingEmails)
   if (!pendingEmails.length > 0) {
     return pendingEmails.length
   }
-  pendingEmails.forEach(async emailInfo => {
-    // Se obtiene el tipo de correo y el destinatario (spec o user)
-    let batch = null
-    const mailType = emailInfo.type.split('-').pop()
-    const addressee = emailInfo.type.split('-')[1]
-    const sessionDate = dayjs(emailInfo.sessionDate)
-    const urlRooms = emailInfo.url
-    let isSend = false
-
-    // Se verifica si en el correo de recordatorio de un día antes es parte del día
-    // anterior para asegurar que se envíe el correo el día antes y no el día que corresponde
-    // a la sessión con un máximo de 20 horas antes.
-    if (
-      !dayjs().isBefore(dayjs(sessionDate).subtract(20, 'hours')) &&
-      mailType === 'day'
-    ) {
-      return
-    }
-    const user = await userModel.findById(emailInfo.userRef)
-    const spec = await specialistModel.findById(emailInfo.specRef)
-    if (!user || !spec) {
-      return
-    }
-    try {
-      // Se envía el correo electrónico al usuario o especialista para recordar la sesion
-      // Si es null significa que aún no se le ha dado una fecha de envío
-      if (emailInfo.scheduledAt !== null) {
-        // Si la fecha actual está después que la fecha programada, entonces se envía el correo
-        if (
-          addressee === 'user' &&
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt))
-        ) {
-          batch = await getBatchId()
-          // Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
-          isSend = true
-          console.log(sessionDate)
-          await mailServiceRemider.sendReminderUser(
-            user,
-            spec,
-            sessionDate,
-            batch,
-            mailType,
-            urlRooms
-          )
-        } else if (
-          addressee === 'spec' &&
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt))
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          await mailServiceRemider.sendReminderSpec(
-            user,
-            spec,
-            sessionDate,
-            batch,
-            mailType,
-            urlRooms
-          )
-        }
-      }
-      // Se genera el payload y se actualiza el email
-      const updatePayload = generatePayload(
-        sessionDate,
-        batch,
-        mailType,
-        isSend
-      )
-      await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
-        new: true,
-      })
-    } catch (error) {
-      console.error('Error processing reminder:', error)
-    }
-  })
-  return pendingEmails.length
+  try {
+    const processedCount = await processEmailQueue(pendingEmails);
+    logger.info(`Processed ${processedCount} reminder emails`);
+  } catch (error) {
+    logger.error('Error processing reminder emails:', error);
+    throw error;
+  }
 }
 
 /**
@@ -371,85 +295,13 @@ const reminderPayment = async () => {
     return pendingEmails.length
   }
 
-  pendingEmails.forEach(async emailInfo => {
-    // Se obtiene el tipo de correo y el destinatario (spec o user)
-    let isSend = false
-    let batch = null
-    const user = await userModel.findById(emailInfo.userRef)
-    const spec = await specialistModel.findById(emailInfo.specRef)
-    const sessionDocument = await sessionsModel.findById(emailInfo.sessionRef)
-    const mailType = emailInfo.type.split('-').pop()
-    // Se obtiene el plan pendiente
-    const plan = sessionDocument.plan
-      .filter(plan => plan.payment === 'pending')
-      .pop()
-
-    // Se verifica que el usuario se haya encontrado al igual que el especialista y la sesión
-    if (!user || !spec || !sessionDocument || !plan) {
-      return
-    }
-    // Se obtiene la url de pago
-    // Crea la preferencia de mercado pago para los correos de recordatorio de pago
-    const url = await preference(user, spec, plan, sessionDocument)
-    try {
-      // Se envía el correo electrónico al usuario o especialista para recordar la sesion
-      // Si es null significa que aún no se le ha dado una fecha de envío
-      if (emailInfo.scheduledAt !== null) {
-        // Si la fecha actual está después que la fecha programada, entonces se envía el correo
-        if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-payment-hour'
-        ) {
-          batch = await getBatchId()
-          // Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
-          isSend = true
-          await mailServiceSpec.pendingPlanPayment(
-            user,
-            spec,
-            plan.totalPrice,
-            url
-          )
-        } else if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-payment-day'
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          await mailServiceRemider.sendPaymentDay(
-            user,
-            spec,
-            plan.totalPrice,
-            url
-          )
-        } else if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'promocional-incentive-week'
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          // Si ya pasó más de una semana, crea un cupón de descuento para
-          // incentivar al usuario a pagar
-          const code = await createCoupon()
-          await mailServiceRemider.sendPromocionalIncentive(user, code)
-        }
-      }
-      // Se genera el payload y se actualiza el email
-      const updatePayload = {
-        wasScheduled: isSend,
-        scheduledAt: dayjs
-          .tz(dayjs(plan.createdAt).add(1, mailType))
-          .format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-        batchId: batch,
-      }
-      await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
-        new: true,
-      })
-    } catch (error) {
-      return conflictResponse('Email sheduling service found an error')
-    }
-  })
-
-  return pendingEmails.length
+  try {
+    const processedCount = await processEmailQueue(pendingEmails);
+    logger.info(`Processed ${processedCount} payment reminder emails`);
+  } catch (error) {
+    logger.error('Error processing payment reminder emails:', error);
+    throw error;
+  }
 }
 
 /**
@@ -484,49 +336,13 @@ const reminderChat = async () => {
   }
 
   // Se recorren los correos pendientes
-  pendingEmails.forEach(async emailInfo => {
-    // Se obtiene el tipo de correo y el destinatario (spec o user)
-    let isSend = false
-    let batch = null
-    const user = await userModel.findById(emailInfo.userRef)
-    const spec = await specialistModel.findById(emailInfo.specRef)
-    // Se verifica que el usuario se haya encontrado al igual que el especialista
-    if (!user) {
-      return conflictResponse('No se encontró el usuario')
-    }
-    if (!spec) {
-      return conflictResponse('No se encontró el especialista')
-    }
-    try {
-      if (
-        dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-        emailInfo.type === 'chat-user-1-day'
-      ) {
-        batch = await getBatchId()
-        // Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
-        isSend = true
-        await mailServiceRemider.sendChatNotificationToUser(user, spec, batch)
-      } else if (
-        dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-        emailInfo.type === 'chat-spec-1-day'
-      ) {
-        batch = await getBatchId()
-        isSend = true
-        await mailServiceRemider.sendChatNotificationToSpec(user, spec, batch)
-      }
-      // Se genera el payload y se actualiza el email
-      const updatePayload = {
-        wasScheduled: isSend,
-        batchId: batch,
-      }
-      await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
-        new: true,
-      })
-    } catch (error) {
-      return conflictResponse('Email sheduling service found an error')
-    }
-  })
-  return pendingEmails.length
+  try {
+    const processedCount = await processEmailQueue(pendingEmails);
+    logger.info(`Processed ${processedCount} chat notification emails`);
+  } catch (error) {
+    logger.error('Error processing chat notification emails:', error);
+    throw error;
+  }
 }
 
 /**
@@ -565,80 +381,13 @@ const reminderRenewal = async () => {
   }
 
   // Se recorren los correos pendientes
-  pendingEmails.forEach(async emailInfo => {
-    // Se busca el usuario y el spec
-    const user = await userModel.findById(emailInfo.userRef)
-    const spec = await specialistModel.findById(emailInfo.specRef)
-    const sessionDocument = await sessionsModel.findById(emailInfo.sessionRef)
-    const mailType = emailInfo.type.split('-').pop()
-    let batch = null
-    let isSend = false
-    if (!user || !spec || !sessionDocument) {
-      return
-    }
-    // Se obtiene un plan expirado del usuario
-    const plan = sessionDocument.plan.filter(plan =>
-      dayjs().isAfter(dayjs(plan.expiration))
-    )[0]
-    if (!plan) {
-      return
-    }
-    try {
-      // Se envía el correo electrónico al usuario o especialista para recordar la sesion
-      // Si es null significa que aún no se le ha dado una fecha de envío
-      if (emailInfo.scheduledAt !== null) {
-        // Si la fecha actual está después que la fecha programada, entonces se envía el correo
-        if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-renewal-subscription-1-hour'
-        ) {
-          batch = await getBatchId()
-          // Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
-          isSend = true
-          await mailServiceRemider.reminderRenewalSubscription1hour(
-            user,
-            spec,
-            plan.expiration
-          )
-        } else if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-renewal-subscription-1-day'
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          await mailServiceRemider.reminderRenewalSubscription1day(
-            user,
-            spec,
-            plan.expiration
-          )
-        } else if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-renewal-subscription-1-week'
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          // Si ya pasó más de una semana, crea un cupón de descuento para
-          // incentivar al usuario a pagar
-          const code = await createCoupon()
-          await mailServiceRemider.sendPromocionalIncentive(user, code)
-        }
-      }
-      // Se genera el payload y se actualiza el email
-      const updatePayload = {
-        wasScheduled: isSend,
-        scheduledAt: dayjs
-          .tz(dayjs(plan.expiration).add(1, mailType))
-          .format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-        batchId: batch,
-      }
-      await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
-        new: true,
-      })
-    } catch (error) {
-      return conflictResponse('Email sheduling service found an error')
-    }
-  })
-  return pendingEmails.length
+  try {
+    const processedCount = await processEmailQueue(pendingEmails);
+    logger.info(`Processed ${processedCount} renewal reminder emails`);
+  } catch (error) {
+    logger.error('Error processing renewal reminder emails:', error);
+    throw error;
+  }
 }
 
 /**
@@ -663,7 +412,7 @@ const processEmailQueue = async (queue) => {
         }
       })
     )
-    return results
+    return results.filter(result => result.success).length;
   } catch (error) {
     logError('Error processing email queue:', error)
     throw error

@@ -5,6 +5,8 @@
 
 import 'package:flutter/foundation.dart';
 import 'package:hablaqui/core/storage/storage_manager.dart';
+import 'package:firebase_analytics/firebase_analytics.dart';
+import 'package:logging/logging.dart';
 
 /// Manages application-wide configuration settings.
 /// 
@@ -44,6 +46,9 @@ class AppConfig {
   /// Build number
   static String get buildNumber => _buildNumber;
   static String _buildNumber = '1';
+
+  static final Logger _logger = Logger('AppConfig');
+  static final FirebaseAnalytics _analytics = FirebaseAnalytics.instance;
 
   /// Initialize the application configuration.
   /// 
@@ -134,38 +139,20 @@ class AppConfig {
   /// - Initializes other services
   static Future<void> _initializeSettings() async {
     // Initialize logging
-    _setupLogging();
+    Logger.root.level = Level.ALL;
+    Logger.root.onRecord.listen((record) {
+      print('${record.level.name}: ${record.time}: ${record.message}');
+    });
+    _logger.info('Logging initialized');
 
-    // Configure analytics
-    await _setupAnalytics();
-
-    // Initialize other services
-    await _initializeServices();
-  }
-
-  /// Set up application logging.
-  /// 
-  /// This method:
-  /// - Configures log levels
-  /// - Sets up log handlers
-  /// - Initializes crash reporting
-  static void _setupLogging() {
-    // Configure log levels based on environment
-    final logLevel = _environment == 'production' ? 'error' : 'debug';
-    
-    // Set up log handlers
-    // TODO: Implement logging configuration
-  }
-
-  /// Set up analytics tracking.
-  /// 
-  /// This method:
-  /// - Initializes analytics SDK
-  /// - Configures tracking events
-  /// - Sets up user identification
-  static Future<void> _setupAnalytics() async {
     // Initialize analytics
-    // TODO: Implement analytics setup
+    await _analytics.setAnalyticsCollectionEnabled(true);
+    await _analytics.logAppOpen();
+    _logger.info('Analytics initialized');
+
+    // Initialize services
+    await _initializeServices();
+    _logger.info('Services initialized');
   }
 
   /// Initialize other application services.
@@ -175,8 +162,8 @@ class AppConfig {
   /// - Initializes third-party integrations
   /// - Configures other app services
   static Future<void> _initializeServices() async {
-    // Initialize services
-    // TODO: Implement service initialization
+    // Add your service initialization logic here
+    // For example: Firebase, Push Notifications, etc.
   }
 
   /// Check if a feature is enabled.

@@ -28,6 +28,7 @@ import Email from '../../models/email'
 import { logError } from '../../config/pino'
 import nodemailer from 'nodemailer'
 import { emailTemplates } from './mails/templates'
+const logger = require('../../utils/logger');
 
 // Configure dayjs with required plugins
 dayjs.extend(utc)
@@ -387,7 +388,12 @@ export const deleteReminderPayment = async (user, spec) => {
   })
   if (mailsToDeleted.length) {
     mailsToDeleted.forEach(async mail => {
-      await Email.findByIdAndDelete(mail._id).catch(err => console.log(err))
+      try {
+        await Email.findByIdAndDelete(mail._id);
+      } catch (err) {
+        logger.error('Error deleting email:', err);
+        throw err;
+      }
     })
   }
 }
@@ -418,7 +424,12 @@ export const deleteRenewalEmails = async (user, spec) => {
   })
   if (mailsToDeleted.length) {
     mailsToDeleted.forEach(async mail => {
-      await Email.findByIdAndDelete(mail._id).catch(err => console.log(err))
+      try {
+        await Email.findByIdAndDelete(mail._id);
+      } catch (err) {
+        logger.error('Error deleting email:', err);
+        throw err;
+      }
     })
   }
 }

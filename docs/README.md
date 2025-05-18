@@ -1,79 +1,124 @@
 # Hablaquí Documentation
 
 ## Overview
-// This documentation provides comprehensive information about the Hablaquí platform, including the API, frontend, and mobile applications.
+This documentation provides comprehensive information about the Hablaquí platform, including API specifications, development guidelines, deployment procedures, and more.
+
+## Table of Contents
+
+### 1. Getting Started
+- [Project Overview](../README.md)
+- [Technology Stack](../README.md#technology-stack)
+- [Installation Guide](../README.md#getting-started)
+- [Environment Setup](../README.md#environment-setup)
+
+### 2. API Documentation
+- [API Overview](API.md)
+- [Authentication](API.md#authentication)
+- [Endpoints](API.md#endpoints)
+- [Error Handling](API.md#error-handling)
+- [Rate Limiting](API.md#rate-limiting)
+- [Webhooks](API.md#webhooks)
+
+### 3. Development Guidelines
+- [Code Style](../README.md#code-style)
+- [Project Structure](../README.md#project-structure)
+- [Testing](../README.md#testing)
+- [Best Practices](API.md#best-practices)
+
+### 4. Deployment
+- [Deployment Overview](../README.md#deployment)
+- [Environment Configuration](../README.md#environment-setup)
+- [Docker Configuration](../README.md#project-structure)
+- [Cloud Platform Setup](../README.md#deployment)
+
+### 5. Package Management
+- [Package.json Guide](PACKAGE_JSON.md)
+- [Dependencies Overview](PACKAGE_JSON.md)
+- [Scripts Reference](PACKAGE_JSON.md)
 
 ## Documentation Structure
 
-### API Documentation
-// Core backend documentation covering endpoints, authentication, and data models
-- [API Overview](api/README.md) // High-level overview of the API architecture
-- [API Reference](api/reference.md) // Detailed endpoint documentation with examples
-- [Authentication](api/authentication.md) // Authentication flows and security
-- [Endpoints](api/endpoints.md) // Complete list of available endpoints
-- [Data Models](api/models.md) // Database schemas and data structures
-- [Error Handling](api/errors.md) // Error codes and handling strategies
-- [Rate Limiting](api/rate-limiting.md) // API usage limits and quotas
-- [Security](api/security.md) // Security measures and best practices
-- [Performance](api/performance.md) // Performance metrics and optimization
-- [Deployment](api/deployment.md) // Deployment procedures and environments
+### Main Documentation Files
+1. `README.md` (Root)
+   - Project overview
+   - Technology stack
+   - Getting started guide
+   - Project structure
+   - Development setup
 
-### Frontend Documentation
-// Web application documentation covering components, state management, and UI/UX
-- [Frontend Overview](frontend/README.md) // Introduction to the frontend architecture
-- [Component Library](frontend/components.md) // Reusable UI components
-- [State Management](frontend/state.md) // Vuex store and state handling
-- [Routing](frontend/routing.md) // Navigation and routing configuration
-- [Theming](frontend/theming.md) // UI theme and styling system
-- [Accessibility](frontend/accessibility.md) // Accessibility guidelines
-- [Performance](frontend/performance.md) // Frontend optimization
-- [Build & Deploy](frontend/deployment.md) // Build process and deployment
-- [Testing](frontend/testing.md) // Testing strategies and tools
+2. `docs/API.md`
+   - API specifications
+   - Endpoint documentation
+   - Authentication
+   - Error handling
+   - Rate limiting
+   - Webhooks
 
-### Mobile App Documentation
-// Mobile application documentation covering widgets, features, and platform specifics
-- [Mobile Overview](mobile/README.md) // Introduction to the mobile app
-- [Widget Library](mobile/widgets.md) // Reusable Flutter widgets
-- [State Management](mobile/state.md) // State management patterns
-- [Platform Features](mobile/platforms.md) // Platform-specific features
-- [Offline Support](mobile/offline.md) // Offline functionality
-- [Push Notifications](mobile/notifications.md) // Notification system
-- [Deep Linking](mobile/deep-linking.md) // Deep linking implementation
-- [Release Process](mobile/release.md) // App store release process
-- [Testing](mobile/testing.md) // Mobile testing strategies
+3. `docs/PACKAGE_JSON.md`
+   - Package management
+   - Dependencies
+   - Scripts
+   - Configuration
 
-### Development Guides
-// General development guidelines and best practices
-- [Getting Started](development/getting-started.md) // Setup and installation
-- [Architecture](development/architecture.md) // System architecture overview
-- [Code Style](development/code-style.md) // Coding standards
-- [Testing Strategy](development/testing.md) // Testing approach
-- [Security Guidelines](development/security.md) // Security best practices
-- [Performance Guidelines](development/performance.md) // Performance optimization
-- [Contributing](development/contributing.md) // Contribution guidelines
+### Directory-Specific Documentation
+Each major directory should contain a brief README.md with:
+- Purpose of the directory
+- Key files and their functions
+- Setup instructions
+- Common issues and solutions
 
-### Deployment
-// Deployment and infrastructure documentation
-- [Deployment Overview](deployment/README.md) // Deployment process overview
-- [Infrastructure](deployment/infrastructure.md) // Infrastructure setup
-- [CI/CD](deployment/ci-cd.md) // Continuous integration/deployment
-- [Monitoring](deployment/monitoring.md) // System monitoring
-- [Scaling](deployment/scaling.md) // Scaling strategies
-- [Backup & Recovery](deployment/backup.md) // Backup procedures
-- [Security](deployment/security.md) // Deployment security
+## Documentation Best Practices
 
-## Quick Links
-// Frequently accessed documentation sections
-- [API Reference](api/reference.md) // API documentation
-- [Component Library](frontend/components.md) // Frontend components
-- [Widget Library](mobile/widgets.md) // Mobile widgets
-- [Getting Started](development/getting-started.md) // Setup guide
-- [Deployment Guide](deployment/README.md) // Deployment instructions
+1. **Keep Documentation Close to Code**
+   - Place relevant documentation in the same directory as the code
+   - Use README.md files in each major directory
+   - Include JSDoc/TSDoc comments in code
 
-## Contributing
-// Guidelines for contributing to the documentation
-Please read our [Contributing Guide](development/contributing.md) before submitting changes to the documentation.
+2. **Maintain Consistency**
+   - Use consistent formatting
+   - Follow the same structure across all documentation
+   - Keep language and tone professional
+
+3. **Regular Updates**
+   - Update documentation with code changes
+   - Review and validate documentation regularly
+   - Remove outdated information
+
+4. **Clear Organization**
+   - Use clear headings and subheadings
+   - Include table of contents for longer documents
+   - Use code blocks for examples
+
+5. **Version Control**
+   - Track documentation changes in git
+   - Include documentation in code reviews
+   - Tag documentation with release versions
+
+## Contributing to Documentation
+
+1. **Adding New Documentation**
+   - Create new files in the appropriate directory
+   - Update the main README.md with links
+   - Follow the established format
+
+2. **Updating Existing Documentation**
+   - Keep the existing structure
+   - Update all related sections
+   - Validate links and examples
+
+3. **Documentation Review**
+   - Review for accuracy
+   - Check for broken links
+   - Verify code examples
+   - Ensure consistency
 
 ## Support
-// Support information and contact details
-For support, please contact the development team or create an issue in the repository. 
+
+For documentation issues or improvements:
+- Create an issue in the repository
+- Contact the development team
+- Submit a pull request with changes
+
+## License
+
+This documentation is part of the Hablaquí project and is subject to the same license terms. 

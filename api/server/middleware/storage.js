@@ -9,6 +9,7 @@
 
 import { s3Client } from '../config/bucket'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
+const logger = require('../utils/logger');
 
 /**
  * Middleware for saving files to AWS S3 storage
@@ -45,13 +46,13 @@ const storage = async (req, res, next) => {
   // Se sube el archivo
   try {
     const response = await s3Client.send(command)
-    console.log(`Object uploaded successfully at ${response.Location}`)
+    logger.info(`Object uploaded successfully at ${response.Location}`)
     req.file.cloudStorageObject = req.file.originalname
     req.file.cloudStoragePublicUrl = getPublicUrl(awsname)
     next()
   } catch (error) {
     req.file.cloudStorageError = error
-    console.log(error)
+    logger.error('Error uploading file:', error)
     next(err)
   }
 }

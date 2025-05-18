@@ -830,6 +830,11 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		logDebug(message, data) {
+			if (process.env.NODE_ENV !== 'production') {
+				console.debug(`[EspecialistasDesktop] ${message}`, data);
+			}
+		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
 		 */
@@ -875,10 +880,8 @@ export default {
 		 */
 		getSessions(id) {
 			const temp = this.sessions.find(element => element.specialist === id);
-			if (id === '63e1727b384b67ddc9eebc33') {
-				console.log('sessions', this.sessions);
-				console.log('temp', temp);
-			}
+			this.logDebug('Current sessions:', this.sessions);
+			this.logDebug('Found session data:', temp);
 			if (!temp) {
 				return [];
 			}

@@ -8,65 +8,39 @@ Hablaquí was born at the Startup School of Adolfo Ibáñez University and was l
 
 [Watch Product Demo](https://www.youtube.com/watch?v=3OhoPxWkAcM)
 
-## Table of Contents
-- [Features](#features)
-- [Technology Stack](#technology-stack)
-- [Getting Started](#getting-started)
-- [Development](#development)
-- [Deployment](#deployment)
-- [Contributing](#contributing)
-- [License](#license)
-- [Contact](#contact)
+## Documentation Structure
 
-## Features
-Hablaquí provides a comprehensive solution for mental health services:
+### Core Components
 
-- **Appointment Scheduling**: Intuitive interface for users to find and book appointments with mental health specialists based on availability, specialty, and price.
+1. **Backend API** (`/api`)
+   - [API Documentation](docs/API.md)
+   - [Server Implementation](api/server/README.md)
+   - [Testing Guide](api/tests/README.md)
 
-- **Video Consultations**: Secure, HIPAA-compliant video consultation system enabling private sessions between users and specialists from any location.
+2. **Mobile Application** (`/movil`)
+   - [Mobile App Documentation](movil/README.md)
+   - [Flutter Implementation](movil/lib/README.md)
+   - [Testing Guide](movil/test/README.md)
 
-- **Payment Processing**: Integrated MercadoPago payment system for handling transactions, including appointment fees, subscription plans, and specialist payouts.
+3. **Landing Page** (`/landing`)
+   - [Frontend Documentation](landing/README.md)
+   - [Component Library](landing/components/README.md)
+   - [Deployment Guide](landing/docs/deployment.md)
 
-- **Real-time Notifications**: Pusher-powered notification system for appointment reminders, messages, and important updates.
+### Development Resources
 
-- **User Management**: Complete user profiles for both clients and specialists, including credentials verification for mental health professionals.
+- [Getting Started Guide](docs/README.md#getting-started)
+- [Development Guidelines](docs/README.md#development-guidelines)
+- [Deployment Guide](docs/README.md#deployment)
+- [Package Management](docs/PACKAGE_JSON.md)
 
-- **Specialist Discovery**: Advanced search and filtering system to help users find the right specialist for their specific needs.
-
-
-## Technology Stack
-The project is built using modern technologies and best practices:
-
-### Backend
-- Node.js with ESM modules
-- MongoDB for data storage
-- Docker for containerization
-- Google Cloud Platform for hosting
-- Pusher for real-time features
-- SendGrid & Mailgun for email services
-- Google OAuth for authentication
-- MercadoPago for payments
-- Segment for analytics
-
-### Mobile
-- Flutter for cross-platform development
-- Dart SDK (>=2.7.0 <3.0.0)
-- Key packages for enhanced functionality
-- Material Design implementation
-
-### Frontend
-- Nuxt.js (Vue.js) framework
-- Modern component architecture
-- SEO optimization
-- Responsive design principles
-
-## Getting Started
+## Quick Start
 
 ### Prerequisites
 - Node.js (v14 or higher)
 - Flutter SDK
 - Docker and Docker Compose
-- Google Cloud SDK (for deployment)
+- Google Cloud SDK
 
 ### Installation
 
@@ -80,7 +54,7 @@ cd hablaqui
 ```bash
 cd api
 npm install
-# Create .env file with required environment variables (see cloudbuild.yaml for reference)
+# Create .env file with required environment variables
 docker-compose -f docker-compose-dev.yml up
 ```
 
@@ -95,11 +69,38 @@ flutter run
 ```bash
 cd landing
 npm install
-# Create .env file with required environment variables (see cloudbuild.yaml for reference)
+# Create .env file with required environment variables
 npm run dev
 ```
 
-## Development
+## Project Structure
+
+```
+hablaqui/
+├── api/                      # Backend API service
+│   ├── server/              # Server implementation
+│   ├── tests/              # API tests
+│   └── docs/               # API documentation
+│
+├── movil/                   # Flutter mobile application
+│   ├── lib/                # Dart source code
+│   ├── test/              # Mobile app tests
+│   └── docs/              # Mobile documentation
+│
+├── landing/                # Nuxt.js landing page
+│   ├── components/        # Vue components
+│   ├── pages/            # Vue pages
+│   └── docs/             # Frontend documentation
+│
+├── docs/                  # Project documentation
+│   ├── API.md            # API documentation
+│   ├── PACKAGE_JSON.md   # Package management
+│   └── README.md         # Documentation guide
+│
+└── scripts/              # Build and utility scripts
+```
+
+## Development Guidelines
 
 ### Code Style
 - ESLint for JavaScript/TypeScript
@@ -130,152 +131,39 @@ Create the following environment files:
 API_URL=your_api_url
 MONGODB_URI=your_mongodb_uri
 PUSHER_APP_ID=your_pusher_id
-# ... other variables from cloudbuild.yaml
 ```
 
 2. Frontend (`landing/.env`):
 ```env
 API_ABSOLUTE=your_api_url
 FRONTEND_URL=your_frontend_url
-# ... other variables from cloudbuild.yaml
 ```
 
 ## Deployment
 The application is deployed to Google Cloud Platform:
 - Frontend landing page: www.hablaqui.cl
 - Backend API: api.hablaqui.cl
-- Deployment is managed through Cloud Build (cloudbuild.yaml)
+- Deployment is managed through Cloud Build
 - Routing is configured in dispatch.yaml
 
-## Project Structure
-```
-hablaqui/
-├── api/                      # Backend API service
-│   ├── server/              # Server implementation
-│   │   ├── controllers/     # Request handlers
-│   │   ├── models/         # Database models
-│   │   ├── routes/         # API routes
-│   │   ├── services/       # Business logic
-│   │   └── utils/          # Helper functions
-│   ├── tests/              # API tests
-│   ├── Dockerfile.dev      # Development Docker configuration
-│   ├── Dockerfile.cloud    # Production Docker configuration
-│   └── app.yaml           # Google Cloud configuration
-│
-├── movil/                   # Flutter mobile application
-│   ├── lib/                # Dart source code
-│   │   ├── screens/       # UI screens
-│   │   ├── widgets/       # Reusable components
-│   │   ├── models/        # Data models
-│   │   ├── services/      # API services
-│   │   └── utils/         # Helper functions
-│   ├── android/           # Android platform code
-│   ├── ios/               # iOS platform code
-│   ├── web/               # Web platform code
-│   └── test/              # Mobile app tests
-│
-├── landing/                # Nuxt.js landing page
-│   ├── components/        # Vue components
-│   │   ├── common/       # Shared components
-│   │   ├── layout/       # Layout components
-│   │   └── sections/     # Page sections
-│   ├── pages/            # Vue pages
-│   ├── assets/           # Static assets
-│   │   ├── images/      # Image files
-│   │   ├── styles/      # CSS/SCSS files
-│   │   └── fonts/       # Font files
-│   └── plugins/          # Nuxt plugins
-│
-├── shared/                # Shared resources
-│   ├── constants/        # Shared constants
-│   ├── types/           # TypeScript types
-│   └── utils/           # Shared utilities
-│
-├── docs/                 # Documentation
-│   ├── api/             # API documentation
-│   ├── deployment/      # Deployment guides
-│   └── development/     # Development guides
-│
-├── scripts/             # Build and utility scripts
-│   ├── deploy/         # Deployment scripts
-│   └── setup/          # Setup scripts
-│
-├── .github/             # GitHub configuration
-│   ├── workflows/      # GitHub Actions
-│   └── templates/      # PR and issue templates
-│
-├── docker/             # Docker configuration
-│   ├── dev/           # Development environment
-│   └── prod/          # Production environment
-│
-└── config/            # Configuration files
-    ├── eslint/        # ESLint configuration
-    ├── prettier/      # Prettier configuration
-    └── jest/          # Jest configuration
-```
+## Contributing
 
-### Directory Structure Guidelines
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Create a Pull Request
 
-#### Backend (`/api`)
-- Follow a modular architecture with clear separation of concerns
-- Group related functionality in dedicated directories
-- Keep controllers thin and move business logic to services
-- Use middleware for cross-cutting concerns
+## Support
 
-#### Mobile App (`/movil`)
-- Organize screens by feature or module
-- Keep widgets reusable and independent
-- Separate business logic from UI components
-- Follow Flutter's recommended project structure
+For support:
+- Create an issue in the repository
+- Contact the development team
+- Join our Slack channel
 
-#### Landing Page (`/landing`)
-- Use atomic design principles for components
-- Keep pages simple and delegate to components
-- Organize assets by type and purpose
-- Use plugins for third-party integrations
+## License
 
-#### Shared Resources (`/shared`)
-- Share common code between projects
-- Keep shared utilities framework-agnostic
-- Use TypeScript for better type safety
-- Document shared functionality
-
-#### Documentation (`/docs`)
-- Keep documentation close to code
-- Include API specifications
-- Document deployment procedures
-- Maintain development guidelines
-
-#### Configuration (`/config`)
-- Centralize configuration files
-- Use environment-specific configs
-- Document configuration options
-- Keep sensitive data in environment variables
-
-### Best Practices
-1. **Naming Conventions**
-   - Use kebab-case for directories
-   - Use PascalCase for components
-   - Use camelCase for functions and variables
-   - Use UPPER_CASE for constants
-
-2. **File Organization**
-   - Keep related files together
-   - Use index files for clean exports
-   - Follow the principle of least surprise
-   - Maintain consistent structure across modules
-
-3. **Code Splitting**
-   - Split code by feature or module
-   - Keep files focused and small
-   - Use lazy loading where appropriate
-   - Maintain clear dependencies
-
-4. **Asset Management**
-   - Organize assets by type
-   - Use appropriate compression
-   - Implement caching strategies
-   - Follow naming conventions
+This project is private and confidential.
 
 ---
 

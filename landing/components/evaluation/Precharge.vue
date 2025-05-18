@@ -293,9 +293,9 @@ export default {
       }, 1500)
     }, 50)
   },
-}
-</script>
 
+  methods: {
+    logDebug(message, data) {
 <style lang="scss" scoped>
 /**
  * Component-specific styles

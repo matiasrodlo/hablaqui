@@ -24,6 +24,7 @@
  * @requires ./app - Express application
  * @requires ./config/pino - Logging configuration
  * @requires ./services/chat - Chat service
+ * @requires ./utils/logger - Custom logger utility
  * 
  * @example
  * // Start the server
@@ -45,6 +46,7 @@ const mongoose = require('mongoose')
 const { createServer } = require('http')
 const { Server } = require('socket.io')
 require('dotenv').config()
+const logger = require('./utils/logger')
 
 /**
  * Server Configuration
@@ -82,7 +84,7 @@ const io = new Server(httpServer, {
  * Manages real-time communication between clients
  */
 io.on('connection', (socket) => {
-  console.log('Client connected:', socket.id)
+  logger.info(`Client connected: ${socket.id}`)
 
   /**
    * Handle incoming chat messages
@@ -107,7 +109,7 @@ io.on('connection', (socket) => {
    * Logs when clients disconnect from the server
    */
   socket.on('disconnect', () => {
-    console.log('Client disconnected:', socket.id)
+    logger.info(`Client disconnected: ${socket.id}`)
   })
 })
 
@@ -118,22 +120,23 @@ io.on('connection', (socket) => {
 mongoose.connect(config.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true
-})
-.then(() => {
-  console.log('Connected to MongoDB')
+}).then(() => {
+  logger.info('MongoDB connected successfully');
   
   /**
    * Start HTTP server
    * Listens on configured port and logs server status
    */
   httpServer.listen(config.PORT, () => {
-    console.log(`Server running on port ${config.PORT}`)
-    console.log(`Environment: ${process.env.NODE_ENV}`)
+    logger.info(`Server running on port ${config.PORT}`)
+    logger.info(`Environment: ${process.env.NODE_ENV}`)
   })
-})
-.catch((error) => {
-  console.error('MongoDB connection error:', error)
-  process.exit(1)
+}).catch(error => {
+  logger.error('MongoDB connection error:', {
+    error: error.message,
+    stack: error.stack
+  });
+  process.exit(1);
 })
 
 /**
@@ -147,7 +150,10 @@ mongoose.connect(config.MONGODB_URI, {
  * @param {Error} error - The unhandled rejection error
  */
 process.on('unhandledRejection', (error) => {
-  console.error('Unhandled Promise Rejection:', error)
+  logger.error('Unhandled Promise Rejection:', {
+    error: error.message,
+    stack: error.stack
+  });
   httpServer.close(() => process.exit(1))
 })
 
@@ -157,6 +163,9 @@ process.on('unhandledRejection', (error) => {
  * @param {Error} error - The uncaught exception error
  */
 process.on('uncaughtException', (error) => {
-  console.error('Uncaught Exception:', error)
+  logger.error('Uncaught Exception:', {
+    error: error.message,
+    stack: error.stack
+  });
   httpServer.close(() => process.exit(1))
 })
