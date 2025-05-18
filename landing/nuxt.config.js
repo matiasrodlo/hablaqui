@@ -40,7 +40,7 @@ import pkg from './package.json';
 const isDev = process.env.DEPLOY_ENV === 'DEV';
 
 export default {
-	// Build target: static site generation
+	// Target: Static site generation
 	target: 'static',
 
 	/**
@@ -256,7 +256,7 @@ export default {
 	// Auto import components
 	components: true,
 
-	// Build modules
+	// Modules for dev and build
 	buildModules: [
 		'@nuxtjs/vuetify', // Vuetify integration
 		'@nuxtjs/eslint-module', // ESLint integration
@@ -289,13 +289,6 @@ export default {
 				sv: '6',
 			},
 		],
-		// '@nuxtjs/google-analytics',
-		// [
-		// 	'@nuxtjs/google-gtag',
-		// 	{
-		// 		id: 'UA-206733202-1',
-		// 	},
-		// ],
 		'@dansmaculotte/nuxt-segment',
 		'@nuxtjs/gtm',
 	],
@@ -327,22 +320,6 @@ export default {
 		disabled: false,
 		userRouter: true,
 	},
-
-	// 'google-gtag': {
-	// 	id: 'UA-206733202-1',
-	// 	config: {
-	// 		anonimize_ip: true,
-	// 		linker: {
-	// 			domains: ['hablaqui.cl', 'www.hablaqui.cl'],
-	// 		},
-	// 	},
-	// },
-	// googleAnalytics: {
-	// 	id: 'UA-206733202-1',
-	// 	autoTracking: {
-	// 		screenview: true,
-	// 	},
-	// },
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {
@@ -423,6 +400,7 @@ export default {
 		},
 		treeShake: true,
 	},
+
 	// Build Configuration: https://go.nuxtjs.dev/config-build
 	// build: {
 	// 	/*
