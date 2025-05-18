@@ -3,7 +3,7 @@
 # Used for managing Flutter/Dart packages and resources
 
 name: hablaqui
-description: Hablaqui - Language Learning Platform Mobile App
+description: Hablaqui - Mental Health Marketplace and SaaS Platform Mobile App
 
 # Prevent accidental publishing to pub.dev
 publish_to: 'none'

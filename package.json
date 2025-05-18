@@ -1,7 +1,7 @@
 {
   "name": "hablaqui",
   "version": "1.0.0",
-  "description": "Hablaqui - Language Learning Platform",
+  "description": "Hablaqui - Mental Health Marketplace and SaaS Platform",
   "private": true,
   "workspaces": [
     "api",

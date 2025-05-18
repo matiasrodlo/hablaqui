@@ -1,7 +1,7 @@
 {
   "name": "hablaqui-landing",
   "version": "1.0.0",
-  "description": "Landing page for Hablaqui Language Learning Platform",
+  "description": "Landing page for Hablaqui Mental Health Marketplace and SaaS Platform",
   "private": true,
   "scripts": {
     "dev": "nuxt dev",

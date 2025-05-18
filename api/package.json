@@ -1,7 +1,7 @@
 {
   "name": "hablaqui-api",
   "version": "1.0.0",
-  "description": "Backend API for Hablaqui Language Learning Platform",
+  "description": "Backend API for Hablaqui Mental Health Marketplace and SaaS Platform",
   "main": "src/index.js",
   "scripts": {
     "start": "node src/index.js",
