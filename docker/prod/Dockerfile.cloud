@@ -1,43 +1,72 @@
-# Establece la imagen base
-FROM node:14-alpine
+# Production Dockerfile
+# This file defines the container configuration for production environment.
+# It uses multi-stage builds to optimize the final image size and security.
 
-# Crea una carpeta con el parámetro -p, sin error si existe, crea directorios padre según sea necesario, 
-# con sus modos de archivo no afectados por ninguna opción -m.  Luego le cambia la propiedad a todos los
-# archivos de la carpeta /app asignandosela a node.
-RUN mkdir -p /home/node/app/node_modules && chown -R node:node /home/node/app
+# Stage 1: Dependencies
+# This stage installs all dependencies and builds the application
+FROM node:18-alpine AS builder
 
-# Variables de entorno para reemplazar lo que se hizo en el paso anterior
-ARG API_ABSOLUTE
-ARG VUE_APP_URL
-ARG VUE_APP_LANDING
-ENV API_ABSOLUTE=${API_ABSOLUTE}
-ENV VUE_APP_URL=${VUE_APP_URL}
-ENV VUE_APP_LANDING=${VUE_APP_LANDING}
+# Set working directory
+WORKDIR /app
 
-# 	Cambiar de directorio actual a /home/node/app
-WORKDIR /home/node/app
+# Install build dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git
 
-# Cambia el usuario actual a node
-USER node
+# Copy package files
+COPY package*.json ./
 
-# Copia todos los archivos de la carpeta actual a la carpeta /home/node/app
-COPY --chown=node:node package*.json ./
-COPY --chown=node:node . ./
+# Install dependencies
+# Production dependencies only, no dev dependencies
+RUN npm ci --only=production
 
-# Instala las dependencias del proyecto
-RUN npm run create-env
-RUN npm install
+# Copy source code
+COPY . .
 
-# Variables de entorno para que funcione Nuxt
-ENV HOST=0.0.0.0
-ENV PORT=9000
-ENV NODE_ENV=production
+# Build application
+# This step generates optimized production assets
+RUN npm run build
 
-# Crea el archivo .env con las variables de entorno y genera el proyecto
-RUN npm run generate
+# Stage 2: Production
+# This stage creates the final production image
+FROM node:18-alpine
 
-# Se expone el puerto 9000 y 8080
-EXPOSE 9000
+# Set working directory
+WORKDIR /app
 
-# Ejecuta el comando npm run start
-ENTRYPOINT ["npm", "run", "start"]
+# Install production dependencies only
+RUN apk add --no-cache \
+    curl \  # For health checks
+    tini \  # For proper process management
+    && npm install -g pm2  # For process management
+
+# Copy built application from builder stage
+COPY --from=builder /app/dist ./dist
+COPY --from=builder /app/node_modules ./node_modules
+COPY --from=builder /app/package*.json ./
+
+# Set production environment variables
+ENV NODE_ENV=production \
+    PORT=3000 \
+    HOST=0.0.0.0
+
+# Create non-root user for security
+RUN addgroup -S appgroup && adduser -S appuser -G appgroup \
+    && chown -R appuser:appgroup /app
+
+# Switch to non-root user
+USER appuser
+
+# Expose production port
+EXPOSE 3000
+
+# Use tini as init process
+# This ensures proper signal handling and zombie process reaping
+ENTRYPOINT ["/sbin/tini", "--"]
+
+# Start application with PM2
+# PM2 provides process management, monitoring, and automatic restarts
+CMD ["pm2-runtime", "start", "dist/server.js", "--name", "hablaqui"]
