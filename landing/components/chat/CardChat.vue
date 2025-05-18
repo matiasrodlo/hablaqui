@@ -286,6 +286,27 @@ dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
+/**
+ * CardChat Component
+ *
+ * A responsive chat interface for users and specialists, supporting real-time messaging, search, and video call integration.
+ *
+ * Key Features:
+ * - Real-time messaging
+ * - Specialist search and selection
+ * - Video call integration
+ * - Message history and input
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-card, v-list, v-text-field, v-textarea, v-btn, v-img
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <CardChat :selected="specialist" :chat="chatData" />
+ */
+
 export default {
   components: {
     avatar: () => import('~/components/Avatar.vue'),

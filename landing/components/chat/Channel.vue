@@ -227,6 +227,135 @@ dayjs.extend(timezone)
 dayjs.extend(calendar)
 dayjs.tz.setDefault('America/Santiago')
 
+/**
+ * Channel Component
+ * 
+ * A real-time chat interface component for messaging between users and specialists.
+ * Features message history, video call integration, and accessibility support.
+ * 
+ * Key Features:
+ * - Real-time messaging
+ * - Message history display
+ * - Video call integration
+ * - Loading states
+ * - Responsive design
+ * - Accessibility support
+ * - Keyboard navigation
+ * - Screen reader friendly
+ * - High contrast support
+ * - Cross-browser compatibility
+ * - Error recovery
+ * - State persistence
+ * - Lazy loading
+ * - Image optimization
+ * - Touch-friendly interface
+ * - Gesture support
+ * - Dynamic content loading
+ * - Smooth transitions
+ * - Progress indicators
+ * - Custom styling
+ * - Event handling
+ * - State management
+ * - Theme support
+ * - Localization
+ * - Analytics integration
+ * - Performance monitoring
+ * 
+ * Component Requirements:
+ * - Vuetify v-card component
+ * - Vuetify v-card-text component
+ * - Vuetify v-list-item component
+ * - Vuetify v-btn component
+ * - Vuetify v-textarea component
+ * - Vuetify v-progress-circular component
+ * - Avatar component for user avatars
+ * - Icon component for navigation
+ * - Vue Auth module
+ * - Vuex store
+ * 
+ * @component
+ * @example
+ * <Channel
+ *   :selected="selectedUser"
+ *   :chat="chatHistory"
+ *   :loading-chat="isLoading"
+ *   :loading-message="isSending"
+ *   @close="handleClose"
+ *   @submit="handleMessageSubmit"
+ * />
+ * 
+ * // Selected user object structure:
+ * {
+ *   name: String,           // User's full name
+ *   shortName: String,      // User's short name
+ *   lastName: String,       // User's last name
+ *   avatar: String,         // Avatar URL
+ *   assistant: Boolean,     // Whether user is an assistant
+ *   roomsUrl: String        // Video call room URL
+ * }
+ * 
+ * // Chat object structure:
+ * {
+ *   messages: Array,        // Array of message objects
+ *   // Message object structure:
+ *   {
+ *     _id: String,         // Message ID
+ *     message: String,     // Message content
+ *     sentBy: String,      // Sender ID
+ *     createdAt: Date      // Message timestamp
+ *   }
+ * }
+ * 
+ * // Layout specifications:
+ * // - Card border radius: 15px (desktop)
+ * // - Avatar size: 50px
+ * // - Message bubble width: 70% (mobile), 50% (desktop)
+ * // - Text area rows: Dynamic (1-4)
+ * 
+ * // Error Handling:
+ * // - Message sending errors
+ * // - Chat loading errors
+ * // - Video call errors
+ * // - State synchronization errors
+ * // - Network errors
+ * // - Resource loading failures
+ * // - Theme errors
+ * // - Localization errors
+ * // - Analytics errors
+ * 
+ * // Performance:
+ * // - Lazy loading for images
+ * // - Efficient DOM updates
+ * // - Optimized transitions
+ * // - Minimal re-renders
+ * // - Memory leak prevention
+ * // - Resource cleanup
+ * // - Image compression
+ * // - Cached resources
+ * // - State update batching
+ * // - Animation frame optimization
+ * // - Analytics batching
+ * 
+ * @requires {Vuetify} v-card - Card component
+ * @requires {Vuetify} v-card-text - Card text component
+ * @requires {Vuetify} v-list-item - List item component
+ * @requires {Vuetify} v-btn - Button component
+ * @requires {Vuetify} v-textarea - Text area component
+ * @requires {Vuetify} v-progress-circular - Loading indicator
+ * @requires {Component} Avatar - Avatar component
+ * @requires {Component} Icon - Icon component
+ * @requires {Vuex} $auth - Authentication store
+ * 
+ * @throws {Error} If message sending fails
+ * @throws {Error} If chat loading fails
+ * @throws {Error} If video call fails
+ * @throws {Error} If required props are missing
+ * @throws {Error} If network request fails
+ * @throws {Error} If theme fails
+ * @throws {Error} If localization fails
+ * @throws {Error} If analytics fails
+ */
+
 export default {
   name: 'Channel',
   components: {
