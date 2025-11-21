@@ -1,0 +1,85 @@
+# Development Docker Compose Configuration
+# This file defines the services and their configurations for local development environment.
+# It includes hot-reloading, volume mounts, and development-specific settings.
+
+version: '3.8'  # Using Docker Compose version 3.8 for latest features
+
+services:
+  # Frontend service configuration
+  landing-ui:
+    build:
+      context: ../..  # Build context is the root directory
+      dockerfile: docker/prod/Dockerfile.dev  # Using development Dockerfile
+    container_name: hablaqui-landing-ui  # Fixed container name for easy reference
+    ports:
+      - "9000:9000"  # Frontend development server port
+      - "8080:8080"  # Nuxt.js development server port
+    volumes:
+      - ../../landing:/app  # Mount source code for hot-reloading
+      - /app/node_modules  # Preserve container node_modules
+    environment:
+      - API_ABSOLUTE=http://localhost:3000  # Backend API URL
+      - NODE_ENV=development  # Development environment
+      - VUE_APP_URL=http://localhost:3000/api/v1  # API endpoint for Vue app
+      - HOST=0.0.0.0  # Host binding for Nuxt
+      - PORT=8080  # Port for Nuxt server
+    networks:
+      - hablaqui-network  # Connect to custom network
+    depends_on:
+      - api-restful  # Ensure backend is started first
+
+  # Backend service configuration
+  api-restful:
+    build:
+      context: ../..  # Build context is the root directory
+      dockerfile: docker/prod/Dockerfile.dev  # Using development Dockerfile
+    container_name: hablaqui-api  # Fixed container name for easy reference
+    ports:
+      - "3000:3000"  # Backend API port
+    volumes:
+      - ../../api:/app  # Mount source code for hot-reloading
+      - /app/node_modules  # Preserve container node_modules
+    environment:
+      # Database configuration
+      - URLDB=mongodb+srv://hablaquistaging:oMOidIoeoTODtMHz@staging.qxxhuqm.mongodb.net/hablaqui
+      - NODE_ENV=development
+      - PORT=3000
+
+      # JWT configuration
+      - JWT_SECRET=api-hablaqui2021
+      - JWT_ALGORITHM=HS256
+      - JWT_EXPIRATION=30d
+      - JWT_EXPIRATION_REFRESH=3d
+      - JWT_SECRET_REFRESH=api-refresh-hablaqui2021
+      - PASSWORD_RECOVERY_JWT_EXPIRATION=40m
+
+      # External service configuration
+      - API_URL=http://localhost:3000/
+      - VUE_APP_LANDING=http://localhost:9000/
+      - BUCKETNAME=hablaqui-content
+      - AWS_ACCESS_KEY_ID=AKIA3MM3IMZHAI2KVI6C
+      - AWS_SECRET_ACCESS_KEY=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
+      - AWS_REGION=sa-east-1
+      - MERCADOPAGO_KEY=TEST-6216809522314002-121800-d3f74fc45c5b7866a4a5072338f358eb-689750603
+      - NO_REPLY_EMAIL=no-reply@hablaqui.com
+      - NO_REPLY_PASSWORD=hablaqui2021com
+      - SENDGRID_API_KEY=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
+      - SEGMENT_API_KEY=AH7mDfjeF72C2T0wnKcrZUO3S9YR4irK
+      - KEY_API_TESTMAILS=b70d3654-615f-4cf2-82b4-b0728c150646
+      - NAMESPACE_TESTMAILS=bnwxe
+    networks:
+      - hablaqui-network  # Connect to custom network
+
+# Custom network configuration
+networks:
+  hablaqui-network:
+    driver: bridge  # Use bridge network driver
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.81.0/24  # Custom subnet for development
+
+# Define named volumes for data persistence
+volumes:
+  mongodb_data:  # Volume for MongoDB data
+  redis_data:    # Volume for Redis data

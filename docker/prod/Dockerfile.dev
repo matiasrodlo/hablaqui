@@ -1,0 +1,35 @@
+# Development Dockerfile
+# This file defines the development environment for the application
+
+# Use Node.js LTS version as the base image
+FROM node:18-alpine
+
+# Set working directory in the container
+WORKDIR /app
+
+# Install system dependencies
+RUN apk add --no-cache \
+    python3 \
+    make \
+    g++ \
+    git \
+    curl
+
+# Copy package files
+COPY package*.json ./
+
+# Install dependencies
+RUN npm install
+
+# Copy application code
+COPY . .
+
+# Expose the port the app runs on
+EXPOSE 3000
+
+# Set environment variables
+ENV NODE_ENV=development
+ENV PORT=3000
+
+# Start the development server
+CMD ["npm", "run", "dev"]

@@ -1,0 +1,70 @@
+# Docker ignore configuration
+# This file specifies which files and directories should be excluded when building Docker images
+
+# Version control
+.git                # Git repository
+.gitignore          # Git ignore file
+.gitattributes      # Git attributes file
+
+# Node.js specific
+node_modules        # Node.js dependencies
+npm-debug.log       # npm debug logs
+yarn-debug.log      # yarn debug logs
+yarn-error.log      # yarn error logs
+.pnpm-debug.log     # pnpm debug logs
+
+# Development files
+.env                # Environment variables
+.env.*             # All environment files
+*.log              # Log files
+coverage           # Test coverage reports
+.nyc_output        # NYC test coverage output
+
+# IDE and editor files
+.idea              # JetBrains IDE files
+.vscode            # VS Code files
+*.swp              # Vim swap files
+*.swo              # Vim swap files
+.DS_Store          # macOS system files
+Thumbs.db          # Windows thumbnail cache
+
+# Build output
+dist               # Distribution files
+build              # Build output
+out                # Output directory
+.next              # Next.js build output
+.nuxt              # Nuxt.js build output
+
+# Documentation
+docs               # Documentation files
+*.md               # Markdown files
+LICENSE            # License file
+CHANGELOG.md       # Changelog file
+
+# Test files
+__tests__          # Test directories
+*.test.*           # Test files
+*.spec.*           # Test files
+test               # Test directory
+tests              # Test directory
+
+# Temporary files
+*.tmp              # Temporary files
+*.temp             # Temporary files
+.cache             # Cache directory
+.temp              # Temporary directory
+.tmp               # Temporary directory
+
+# System files
+.DS_Store          # macOS system files
+.DS_Store?         # macOS system files
+._*                # macOS resource forks
+.Spotlight-V100    # macOS Spotlight index
+.Trashes           # macOS trash info
+ehthumbs.db        # Windows thumbnail cache
+Thumbs.db          # Windows thumbnail cache
+
+# Docker specific
+Dockerfile         # Dockerfile
+docker-compose.yml # Docker Compose file
+.dockerignore      # Docker ignore file 
