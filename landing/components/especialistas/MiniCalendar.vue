@@ -1,5 +1,24 @@
+/**
+ * MiniCalendar Component
+ *
+ * A compact calendar component for selecting dates, used in scheduling and availability features.
+ *
+ * Key Features:
+ * - Date selection
+ * - Compact, mobile-friendly design
+ * - Customizable appearance
+ * - Responsive layout
+ *
+ * Requirements:
+ * - Vuetify calendar or date-picker components
+ *
+ * @component
+ * @example
+ * <MiniCalendar />
+ */
 <template>
   <div class="my-3">
+    <!-- Next Date Header -->
     <div class="d-flex mb-2">
       <icon size="24px" color="#3c3c3b" :icon="mdiCalendarOutline" />
       <span class="pt-1 ml-2 body-2 font-weight-medium" style="color: #3c3c3b">
@@ -9,7 +28,10 @@
         </span>
       </span>
     </div>
+
+    <!-- Available Time Slots -->
     <div v-if="sessionsAvailable" class="d-flex">
+      <!-- Time Slot Buttons -->
       <template v-for="(n, r) in sessionsAvailable.available">
         <span
           v-if="r < 3"
@@ -27,6 +49,8 @@
           {{ n }}
         </span>
       </template>
+
+      <!-- View More Button -->
       <span
         rounded
         class="text-center my-3 pa-1 primary--text font-weight-medium caption"
@@ -41,6 +65,8 @@
         Ver más
         <icon size="16px" :icon="mdiChevronRight" />
       </span>
+
+      <!-- Full Calendar Dialog -->
       <v-dialog
         v-model="dialog"
         fullscreen
@@ -49,6 +75,7 @@
         <v-card
           style="height: fit-content; display: flex; flex-direction: column"
         >
+          <!-- Dialog Header -->
           <v-card-title
             style="flex: 0"
             class="titleColor d-flex justify-space-between"
@@ -58,6 +85,8 @@
               <icon size="30px" color="#717171" :icon="mdiCloseCircle" />
             </v-btn>
           </v-card-title>
+
+          <!-- Calendar Content -->
           <v-card-text style="flex: 1" class="pa-0">
             <calendar
               :id-spec="idSpec"
@@ -68,6 +97,8 @@
               :set-minimal-card="(id) => fullcard.filter((id) => idSpec !== id)"
             />
           </v-card-text>
+
+          <!-- Dialog Actions -->
           <v-card-actions style="flex: 0">
             <v-btn
               color="primary"
@@ -87,6 +118,8 @@
         </v-card>
       </v-dialog>
     </div>
+
+    <!-- Schedule Button (Slug Route) -->
     <div v-if="$route.name === 'slug'">
       <v-btn
         block
@@ -109,23 +142,46 @@ import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+// Configure dayjs plugins
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
-/** * mini calendario */
-
 export default {
+  name: 'MiniCalendar',
+
+  /**
+   * Component dependencies
+   */
   components: {
     Icon: () => import('~/components/Icon'),
     Calendar: () => import('~/components/CalendarSpecialist'),
   },
+
+  /**
+   * Component properties
+   * @property {string} idSpec - Specialist's unique identifier
+   * @property {string} username - Specialist's username
+   * @property {Array} sessions - Array of available sessions
+   */
   props: {
     idSpec: { type: String, default: '' },
     username: { type: String, default: '' },
     sessions: { type: Array, default: () => [] },
   },
+
+  /**
+   * Component data
+   * @returns {Object} Component data
+   * @property {Array} fullcard - Array of expanded calendar IDs
+   * @property {Object} mdiCalendarOutline - Calendar icon
+   * @property {Object} mdiChevronRight - Chevron right icon
+   * @property {Object} mdiCloseCircle - Close circle icon
+   * @property {Object|null} selected - Currently selected time slot
+   * @property {Boolean} dialog - Dialog visibility state
+   */
   data() {
     return {
       fullcard: [],
@@ -136,9 +192,11 @@ export default {
       dialog: false,
     }
   },
+
   computed: {
     /**
-     * sesiones disponible
+     * Gets the next available session with more than 2 time slots
+     * @returns {Object|null} Next available session or null
      */
     sessionsAvailable() {
       const sessions = [...this.sessions]
@@ -146,15 +204,23 @@ export default {
       return items[0]
     },
   },
+
   methods: {
     /**
-     * formatea la fecha
+     * Formats a date string to a localized format
+     * @param {string} item - Date string in MM/DD/YYYY format
+     * @returns {string} Formatted date string
      */
     formatDate(item) {
       return dayjs.tz(dayjs(item, 'MM/DD/YYYY')).format('dddd DD MMMM YYYY')
     },
+
     /**
-     * ir a planes
+     * Handles navigation to plans/payment page
+     * Redirects to auth page if not logged in
+     * @param {Object} item - Session data
+     * @param {string} hour - Selected hour
+     * @param {number} index - Selected time slot index
      */
     goPlans(item, hour, index) {
       if (!this.$auth.$state.loggedIn) {
@@ -176,10 +242,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/**
+ * Selected time slot styling
+ */
 .itemSelected {
   border: 1px solid #0085ff;
   box-shadow: rgb(0 133 255) 0px 0px 3px inset;
 }
+
+/**
+ * Time slot button styling
+ */
 .item {
   white-space: nowrap;
   transition: transform 0.3s ease 0s, border 0.2s ease 0s,

@@ -1,3 +1,21 @@
+/**
+ * MyPlans Component
+ *
+ * Displays the user's or specialist's current subscription plans, with options to view details or upgrade.
+ *
+ * Key Features:
+ * - List of current and available plans
+ * - Plan details and upgrade options
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify card and list components
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <MyPlans />
+ */
 <template>
   <div>
     <template v-if="plans.length">

@@ -1,3 +1,24 @@
+/**
+ * Especialista Component
+ *
+ * Displays information about the user's assigned specialist, including avatar, code, specialties, and description.
+ * Allows users to change specialist or add a review.
+ *
+ * Key Features:
+ * - Specialist avatar and info display
+ * - Specialties as chips
+ * - Professional description
+ * - Change specialist and add review actions
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-card, v-avatar, v-btn, v-chip-group
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <Especialista :specialist="specialist" />
+ */
 <template>
   <v-card :loading="loading">
     <v-card-text v-if="loading">

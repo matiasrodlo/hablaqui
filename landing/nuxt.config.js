@@ -1,47 +1,106 @@
+/**
+ * Hablaquí Landing Page Configuration
+ * 
+ * This file contains the Nuxt.js configuration for the Hablaquí landing page.
+ * It defines the build settings, environment variables, server configuration,
+ * and various plugins and modules used in the application.
+ * 
+ * @module nuxt.config
+ * @requires axios
+ * @requires ./package.json
+ * 
+ * @property {Object} publicRuntimeConfig - Runtime configuration accessible on both client and server
+ * @property {string} publicRuntimeConfig.VUE_URL - Base URL for the Vue application
+ * @property {string} publicRuntimeConfig.API_URL - API endpoint URL
+ * @property {string} publicRuntimeConfig.API_ABSOLUTE - Absolute API URL for certain operations
+ * 
+ * @property {Object} server - Server configuration
+ * @property {number} server.port - Development server port
+ * @property {string} server.host - Network interface to listen on
+ * 
+ * @property {Object} generate - Static site generation configuration
+ * @property {string} generate.fallback - Fallback page for 404 errors
+ * @property {Function} generate.routes - Function to generate dynamic routes
+ * 
+ * @property {Object} loading - Loading bar configuration
+ * @property {string} loading.color - Loading bar color
+ * @property {string} loading.height - Loading bar height
+ * 
+ * @property {Object} head - Global page headers and meta tags
+ * @property {string} head.titleTemplate - Template for page titles
+ * @property {string} head.title - Default page title
+ * @property {Array} head.meta - Meta tags for SEO and social sharing
+ * @property {Array} head.link - External resources and links
+ */
+
 import axios from 'axios';
 import pkg from './package.json';
 
+// Determine if we're in development environment
 const isDev = process.env.DEPLOY_ENV === 'DEV';
 
 export default {
+	// Target: Static site generation
 	target: 'static',
+
+	/**
+	 * Runtime configuration accessible on both client and server
+	 * These values are available in both client and server-side code
+	 */
 	publicRuntimeConfig: {
+		// Base URL for the Vue application
 		VUE_URL:
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_LANDING
 				: 'http://localhost:9000/',
+		
+		// API endpoint URL for API requests
 		API_URL:
 			process.env.NODE_ENV === 'production'
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1',
+		
+		// Absolute API URL for certain operations requiring full URL
 		API_ABSOLUTE:
 			process.env.NODE_ENV === 'production'
 				? process.env.API_ABSOLUTE
 				: 'http://localhost:3000/',
 	},
+
+	/**
+	 * Server configuration for development environment
+	 * Defines how the development server should run
+	 */
 	server: {
-		port: 9000,
-		host: '0.0.0.0',
+		port: 9000, // Development server port
+		host: '0.0.0.0', // Listen on all network interfaces
 	},
+
+	/**
+	 * Static site generation configuration
+	 * Defines how the static site should be generated
+	 */
 	generate: {
-		fallback: '404.html',
-		// genera las rutas dinamicas
+		fallback: '404.html', // Fallback page for 404 errors
+		
+		/**
+		 * Generate dynamic routes for specialists and locations
+		 * This function is called during static site generation
+		 * 
+		 * @param {Function} callback - Callback function to return generated routes
+		 * @returns {Promise<void>}
+		 */
 		async routes(callback) {
 			const baseURL = process.env.VUE_APP_URL
 				? process.env.VUE_APP_URL
 				: 'http://localhost:3000/api/v1';
-			// const baseApi = process.env.API_ABSOLUTE
-			// 	? process.env.API_ABSOLUTE
-			// 	: 'http://localhost:3000/';
 
-			// generate routes especialistas
-			// Se ejecutan scripts para agregar profesion y cambiar rol
+			// Execute necessary scripts for data preparation
 			await axios.post(`${baseURL}/scripts/add-profesion`);
 			await axios.put(`${baseURL}/scripts/change-role`);
 			await axios.put(`${baseURL}/scripts/migrate-all`);
-			// await axios.post(`${baseURL}/scripts/remove-rol`);
-			// await axios.post(`${baseURL}/scripts/remove-profesion`);
 
+			// Fetch and generate routes for specialists
 			const res = await axios.get(`${baseURL}/specialists/all`);
 			const especialistas = res.data.specialists
 				.filter(specialist => specialist.username)
@@ -49,32 +108,38 @@ export default {
 					route: `/${specialist.username}`,
 					payload: specialist,
 				}));
-			// generate routes comunas
-			/* const response = await axios.get(`${baseApi}/comunas.json`);
-			const comunas = response.data.map(el => ({
-				route: `/especialistas/${el.comuna.slug}`,
-				payload: el.comuna,
-			}));
 
-			const routes = especialistas.concat(comunas); */
 			callback(null, especialistas);
 		},
 	},
+
+	/**
+	 * Loading bar configuration
+	 * Defines the appearance of the loading bar during page transitions
+	 */
 	loading: {
-		color: '#2070E5',
-		height: '3px',
+		color: '#2070E5', // Loading bar color
+		height: '3px', // Loading bar height
 	},
-	// Global page headers: https://go.nuxtjs.dev/config-head
+
+	/**
+	 * Global page headers and meta tags
+	 * Defines the default meta tags and external resources for all pages
+	 */
 	head: {
 		titleTemplate: '%s',
 		title: 'Especialistas online desde $15.500 - Terapia online efectiva',
 		meta: [
+			// Character encoding
 			{ charset: 'utf-8' },
+			// Viewport settings for responsive design
 			{ name: 'viewport', content: 'width=device-width, initial-scale=1' },
+			// Google site verification for search console
 			{
 				name: 'google-site-verification',
 				content: 'i6rcEEmyKQ04k5p5OJTGT3_8uEscgWNKme_lKpunAU4',
 			},
+			// SEO meta tags for search engines
 			{
 				name: 'robots',
 				content: 'index',
@@ -83,12 +148,14 @@ export default {
 				'http-equiv': 'Content-language',
 				content: 'es',
 			},
+			// Main description for SEO
 			{
 				hid: 'description',
 				name: 'description',
 				content:
 					'Elige un especialista online especialista para tu caso, e inicia la terapia online sin salir de casa. +350 Especialistas especialistas online. ¡Comienza ahora!',
 			},
+			// Twitter Card meta tags for social sharing
 			{
 				hid: 'twitter:card',
 				name: 'twitter:card',
@@ -118,9 +185,7 @@ export default {
 				name: 'twitter:image',
 				content: 'https://cdn.hablaqui.cl/static/logo_tiny.png',
 			},
-
-			// Open Graph
-			// Test on: https://developers.facebook.com/tools/debug/
+			// Open Graph meta tags for social sharing
 			{ hid: 'og:site_name', property: 'og:site_name', content: 'Hablaquí' },
 			{ hid: 'og:type', property: 'og:type', content: 'website' },
 			{
@@ -157,6 +222,7 @@ export default {
 				content: 'Especialista y terapia online de calidad sin salir de casa | Hablaquí',
 			},
 		],
+		// External resources and links
 		link: [
 			{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
 			{ rel: 'preconnect', href: 'https://fonts.gstatic.com' },
@@ -172,35 +238,39 @@ export default {
 		],
 	},
 
-	// Global CSS: https://go.nuxtjs.dev/config-css
-	css: ['vuetify/dist/vuetify.min.css', '~/assets/global.scss'],
-
-	// Plugins to run before rendering page: https://go.nuxtjs.dev/config-plugins
-	plugins: ['~/plugins/jsonld', '~/plugins/interceptor'],
-
-	// Auto import components: https://go.nuxtjs.dev/config-components
-	components: true,
-
-	// Modules for dev and build (recommended): https://go.nuxtjs.dev/config-modules
-	buildModules: [
-		// https://go.nuxtjs.dev/vuetify
-		'@nuxtjs/vuetify',
-		// https://go.nuxtjs.dev/eslint
-		'@nuxtjs/eslint-module',
-		// https://github.com/Developmint/nuxt-purgecss
-		// 'nuxt-purgecss',
-		'@nuxtjs/google-analytics',
+	/**
+	 * Global CSS files
+	 * These styles are applied globally across the application
+	 */
+	css: [
+		'vuetify/dist/vuetify.min.css', // Vuetify styles
+		'~/assets/global.scss', // Custom global styles
 	],
 
+	// Plugins to run before rendering page
+	plugins: [
+		'~/plugins/jsonld', // JSON-LD structured data
+		'~/plugins/interceptor', // Axios interceptors
+	],
+
+	// Auto import components
+	components: true,
+
+	// Modules for dev and build
+	buildModules: [
+		'@nuxtjs/vuetify', // Vuetify integration
+		'@nuxtjs/eslint-module', // ESLint integration
+		'@nuxtjs/google-analytics', // Google Analytics integration
+	],
+
+	// Socket.io configuration
 	io: {
-		// module options
 		sockets: [
 			{
 				name: 'main',
-				url:
-					process.env.NODE_ENV === 'production'
-						? process.env.API_ABSOLUTE
-						: 'http://localhost:3000',
+				url: process.env.NODE_ENV === 'production'
+					? process.env.VUE_APP_URL
+					: 'http://localhost:3000',
 			},
 		],
 	},
@@ -219,13 +289,6 @@ export default {
 				sv: '6',
 			},
 		],
-		// '@nuxtjs/google-analytics',
-		// [
-		// 	'@nuxtjs/google-gtag',
-		// 	{
-		// 		id: 'UA-206733202-1',
-		// 	},
-		// ],
 		'@dansmaculotte/nuxt-segment',
 		'@nuxtjs/gtm',
 	],
@@ -257,22 +320,6 @@ export default {
 		disabled: false,
 		userRouter: true,
 	},
-
-	// 'google-gtag': {
-	// 	id: 'UA-206733202-1',
-	// 	config: {
-	// 		anonimize_ip: true,
-	// 		linker: {
-	// 			domains: ['hablaqui.cl', 'www.hablaqui.cl'],
-	// 		},
-	// 	},
-	// },
-	// googleAnalytics: {
-	// 	id: 'UA-206733202-1',
-	// 	autoTracking: {
-	// 		screenview: true,
-	// 	},
-	// },
 
 	// Axios module configuration: https://go.nuxtjs.dev/config-axios
 	axios: {
@@ -353,6 +400,7 @@ export default {
 		},
 		treeShake: true,
 	},
+
 	// Build Configuration: https://go.nuxtjs.dev/config-build
 	// build: {
 	// 	/*

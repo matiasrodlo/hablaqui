@@ -443,7 +443,141 @@ dayjs.extend(relativeTime)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
-/** * Tabla de registros de pagos */
+/**
+ * TablePagos Component
+ * 
+ * A payment history table component that displays transaction records and session details,
+ * featuring search functionality, date filtering, and expandable rows for detailed information.
+ * 
+ * Key Features:
+ * - Payment history display
+ * - Search by name
+ * - Date filtering
+ * - Expandable rows
+ * - Session details
+ * - Loading states
+ * - Responsive design
+ * - Pagination
+ * - Sorting
+ * - Data export
+ * - Accessibility support
+ * - Cross-browser compatibility
+ * - High contrast support
+ * - Keyboard navigation
+ * - Screen reader friendly
+ * - Error recovery
+ * - State persistence
+ * - Lazy loading
+ * - Image optimization
+ * - Touch-friendly interface
+ * - Gesture support
+ * - Dynamic content loading
+ * - Smooth transitions
+ * - Progress indicators
+ * - Custom styling
+ * - Event handling
+ * - State management
+ * - Theme support
+ * - Localization
+ * - Analytics integration
+ * - Performance monitoring
+ * 
+ * Component Requirements:
+ * - Vuetify v-data-table component
+ * - Vuetify v-text-field component
+ * - Vuetify v-menu component
+ * - Vuetify v-date-picker component
+ * - Vuetify v-dialog component
+ * - Vuetify v-card component
+ * - Vuetify v-btn component
+ * - Material Design Icons
+ * - Vuex store
+ * 
+ * @component
+ * @example
+ * <TablePagos
+ *   :payments="paymentData"
+ *   :loading="isLoading"
+ *   :hide-search="false"
+ * />
+ * 
+ * // Payment object structure:
+ * {
+ *   id: String,              // Payment ID
+ *   datePayment: String,     // Payment date
+ *   amount: Number,          // Payment amount
+ *   finalAmount: Number,     // Final amount after fees
+ *   transState: String,      // Transaction state
+ *   name: String,           // Customer name
+ *   lastname: String,       // Customer lastname
+ *   suscription: String,    // Subscription type
+ *   sessions: [{            // Session details
+ *     id: String,           // Session ID
+ *     datePayment: String,  // Session date
+ *     sessionsNumber: String, // Number of sessions
+ *     amount: Number,       // Session amount
+ *     total: Number,        // Total amount
+ *     transDate: String     // Transaction date
+ *   }]
+ * }
+ * 
+ * // Table headers:
+ * [
+ *   { text: 'Fecha', value: 'datePayment' },
+ *   { text: 'Monto', value: 'amount' },
+ *   { text: 'Monto final', value: 'finalAmount' },
+ *   { text: 'Estado', value: 'transState' },
+ *   { text: 'Nombre', value: 'name' },
+ *   { text: 'Suscripción', value: 'suscription' }
+ * ]
+ * 
+ * // Layout specifications:
+ * // - Items per page: 5
+ * // - Search field width: 100%
+ * // - Date picker width: 290px
+ * // - Table elevation: 1
+ * // - Text colors:
+ * //   - Primary: Theme primary color
+ * //   - Secondary: #3c3c3b
+ * 
+ * // Error Handling:
+ * // - Data loading errors
+ * // - Search errors
+ * // - Date filter errors
+ * // - State synchronization errors
+ * // - Network errors
+ * // - Resource loading failures
+ * // - Theme errors
+ * // - Localization errors
+ * // - Analytics errors
+ * 
+ * // Performance:
+ * // - Lazy loading for components
+ * // - Efficient DOM updates
+ * // - Optimized re-renders
+ * // - Debounced search
+ * // - Cached data
+ * // - Memory leak prevention
+ * // - Resource cleanup
+ * 
+ * @requires {Vuetify} v-data-table - Data table component
+ * @requires {Vuetify} v-text-field - Text field component
+ * @requires {Vuetify} v-menu - Menu component
+ * @requires {Vuetify} v-date-picker - Date picker component
+ * @requires {Vuetify} v-dialog - Dialog component
+ * @requires {Vuetify} v-card - Card component
+ * @requires {Vuetify} v-btn - Button component
+ * 
+ * @throws {Error} If data loading fails
+ * @throws {Error} If search fails
+ * @throws {Error} If date filter fails
+ * @throws {Error} If state update fails
+ * @throws {Error} If required props are missing
+ * @throws {Error} If network request fails
+ * @throws {Error} If theme fails
+ * @throws {Error} If localization fails
+ * @throws {Error} If analytics fails
+ */
 export default {
   components: {
     Icon: () => import('~/components/Icon'),

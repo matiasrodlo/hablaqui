@@ -1,3 +1,16 @@
-node_modules/
+# ESLint Ignore Configuration
+# This file specifies which files and directories should be excluded from ESLint checking
+
+# Build output
+dist/
 .nuxt/
+.output/
+
+# Dependencies
+node_modules/
+
+# Generated files
+*.min.js
+*.bundle.js
+
 jsconfig.json

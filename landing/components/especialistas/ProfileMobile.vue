@@ -1,8 +1,29 @@
+/**
+ * ProfileMobile Component
+ *
+ * Displays a mobile-optimized profile view for specialists, including bio, experience, and contact options.
+ *
+ * Key Features:
+ * - Mobile-friendly profile layout
+ * - Specialist bio and experience
+ * - Contact and booking options
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify card and list components
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <ProfileMobile :specialist="specialist" />
+ */
 <template>
   <v-container fluid style="max-width: 600px">
+    <!-- Profile Header Card -->
     <v-card style="border-radius: 15px" class="shadowCard pt-6">
       <v-card-text class="px-6">
         <v-row no-gutters>
+          <!-- Avatar Section -->
           <v-col cols="4" sm="3" class="pb-4 d-flex align-start justify-center">
             <nuxt-link
               style="text-decoration: none"
@@ -19,7 +40,10 @@
               ></avatar>
             </nuxt-link>
           </v-col>
+
+          <!-- Profile Information -->
           <v-col cols="8" sm="9" class="pb-s pl-4 pt-5">
+            <!-- Name and Link -->
             <div>
               <nuxt-link
                 style="text-decoration: none"
@@ -36,12 +60,16 @@
                 </div>
               </nuxt-link>
             </div>
+
+            <!-- Specialist Code -->
             <div
               class="text-capitalize text-left mt-1 mb-2"
               style="color: #706f6f; font-size: 12px"
             >
               código {{ specialist.code ? specialist.code : '' }}
             </div>
+
+            <!-- Session Price -->
             <div
               class="text-left font-weight-medium body-2"
               style="color: #3c3c3b"
@@ -50,7 +78,10 @@
               / 50 min
             </div>
           </v-col>
+
+          <!-- Specialties and Calendar Section -->
           <v-col cols="12">
+            <!-- Specialties Tags -->
             <div>
               <v-chip-group :show-arrows="false">
                 <template v-for="(tag, s) in specialist.specialties">
@@ -62,14 +93,20 @@
                 </template>
               </v-chip-group>
             </div>
+
+            <!-- Professional Description -->
             <div class="mt-3 text-left" style="color: #54565a; font-size: 14px">
               {{ specialist.professionalDescription }}
             </div>
+
+            <!-- Mini Calendar -->
             <mini-calendar
               :id-spec="specialist._id"
               :username="specialist.username"
               :sessions="sessions"
             />
+
+            <!-- Chat Button -->
             <div class="mt-2 mb-6 text-left">
               <v-btn
                 v-if="
@@ -90,7 +127,10 @@
         </v-row>
       </v-card-text>
     </v-card>
+
+    <!-- Detailed Information Card -->
     <v-card class="shadowCard mt-10 pb-10" style="border-radius: 15px">
+      <!-- Specialties Section -->
       <v-card-text>
         <div class="text-left subtitle-1 primary--text">Especialidades</div>
         <div
@@ -109,7 +149,10 @@
         </div>
         <div v-else class="body-1 text-left text-capitalize">Vacío</div>
       </v-card-text>
+
       <v-divider class="mx-4"></v-divider>
+
+      <!-- Experience Section -->
       <v-card-text>
         <div class="mb-4 text-left subtitle-1 primary--text">Experiencia</div>
         <div class="body-1 text-left">
@@ -127,7 +170,10 @@
           </ul>
         </div>
       </v-card-text>
+
       <v-divider class="mx-4"></v-divider>
+
+      <!-- Models Section -->
       <v-card-text>
         <div class="mb-4 text-left subtitle-1 primary--text">
           Modelos de trabajo terapéutico
@@ -141,7 +187,10 @@
           <div v-else>Vacío</div>
         </div>
       </v-card-text>
+
       <v-divider class="mx-4"></v-divider>
+
+      <!-- Formation Section -->
       <v-card-text>
         <div class="mb-4 text-left subtitle-1 primary--text">Formación</div>
         <div class="body-1 text-left">
@@ -161,7 +210,10 @@
           </ul>
         </div>
       </v-card-text>
+
       <v-divider></v-divider>
+
+      <!-- Personal Description Section -->
       <v-card-text>
         <div class="mb-4 text-left subtitle-1 primary--text">
           Descripción personal
@@ -174,7 +226,10 @@
           }}
         </div>
       </v-card-text>
+
       <v-divider class="mx-4"></v-divider>
+
+      <!-- Rescheduling Policy Section -->
       <v-card-text>
         <div class="mb-4 text-left subtitle-1 primary--text">
           Reprogramación
@@ -193,14 +248,23 @@
 
 <script>
 import { mapGetters, mapActions, mapMutations } from 'vuex'
-/**
- * perfil de especialista mobile
- */
+
 export default {
+  name: 'ProfileMobile',
+
+  /**
+   * Component dependencies
+   */
   components: {
     Avatar: () => import('@/components/Avatar'),
     MiniCalendar: () => import('~/components/especialistas/MiniCalendar'),
   },
+
+  /**
+   * Component properties
+   * @property {Object} specialist - Specialist profile data
+   * @property {Function} setSpecialist - Callback function to update specialist data
+   */
   props: {
     specialist: {
       type: Object,
@@ -211,32 +275,40 @@ export default {
       required: true,
     },
   },
+
+  /**
+   * Component data
+   * @returns {Object} Component data
+   * @property {Object|null} channel - Chat channel reference
+   * @property {Boolean} fullcard - Calendar card expansion state
+   */
   data() {
     return {
       channel: null,
       fullcard: false,
     }
   },
+
   computed: {
+    /**
+     * Vuex getters mapped to component
+     * @returns {Object} Mapped getters
+     */
     ...mapGetters({
       sessions: 'Specialist/sessionsFormatted',
     }),
   },
+
   created() {
-    // chat flotante a false al ingresar en la ruta
+    // Disable floating chat when entering the route
     this.setFloatingChat(false)
-    // this.socket = this.$nuxtSocket({
-    // 	channel: '/liveData',
-    // });
-    // this.socket.on('getSpecialist', username => {
-    // 	if (username === this.specialist.username) {
-    // 		this.getSpecialist(username);
-    // 	}
-    // });
   },
+
   methods: {
     /**
-     * obtenemos el especialista
+     * Fetches specialist data from the API
+     * @param {Object} data - Specialist data object
+     * @param {string} data.username - Specialist's username
      */
     async getSpecialist(data) {
       const { specialist } = await this.$axios.$get(
@@ -244,8 +316,10 @@ export default {
       )
       this.setSpecialist(specialist)
     },
+
     /**
-     * Ir al chat si estamos logeados
+     * Handles navigation to chat interface
+     * Redirects to auth page if not logged in, otherwise starts a conversation
      */
     async goChat() {
       if (!this.$auth.$state.loggedIn) {
@@ -261,8 +335,11 @@ export default {
         this.setFloatingChat(true)
       }
     },
+
     /**
-     * string url del avatar
+     * Gets the avatar URL for a specialist
+     * @param {Object} specialist - Specialist object
+     * @returns {string} Avatar URL or empty string if not available
      */
     avatar(specialist) {
       if (!specialist.approveAvatar) return ''
@@ -270,6 +347,11 @@ export default {
       if (specialist.avatar) return specialist.avatar
       return ''
     },
+
+    /**
+     * Vuex actions and mutations mapped to component
+     * @returns {Object} Mapped actions and mutations
+     */
     ...mapActions({
       startConversation: 'Chat/startConversation',
     }),
@@ -281,11 +363,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+/**
+ * Sticky positioning for calendar section
+ */
 .sticky {
   position: -webkit-sticky !important;
   position: sticky !important;
   top: 0 !important;
 }
+
+/**
+ * Card shadow styling
+ */
 .shadowCard {
   box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
 }

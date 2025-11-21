@@ -1,21 +1,55 @@
 {
+  // JavaScript Configuration
+  // This file configures JavaScript language features and module resolution
+
+  // Compiler options
   "compilerOptions": {
+    // Base URL for non-relative module names
     "baseUrl": ".",
+
+    // Module resolution strategy
+    "module": "esnext",
+    "moduleResolution": "node",
+
+    // Target ECMAScript version
+    "target": "esnext",
+
+    // Enable all strict type checking options
+    "strict": true,
+
+    // Allow JavaScript files to be compiled
+    "allowJs": true,
+
+    // Allow default imports from modules with no default export
+    "allowSyntheticDefaultImports": true,
+
+    // Resolve modules using Node.js style
+    "resolveJsonModule": true,
+
+    // Enable experimental decorators
+    "experimentalDecorators": true,
+
+    // Path aliases for module imports
     "paths": {
-      "~/*": ["./src/*"],
-      "@/*": ["./src/*"],
-      "~~/*": ["./*"],
-      "@@/*": ["./*"]
-      }
-    },
-    "include": [
-        "./components/**/*",
-        "./layout/**/*",
-        "./pages/**/*",
-    ],
-    "exclude": [
-        "node_modules",
-        ".nuxt",
-        "dist"
-    ]
+      "~/*": ["./*"],
+      "@/*": ["./*"]
+    }
+  },
+
+  // Files to include in the project
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "**/*.vue",
+    "**/*.js",
+    "**/*.jsx"
+  ],
+
+  // Files to exclude from the project
+  "exclude": [
+    "node_modules",
+    "dist",
+    ".nuxt",
+    ".output"
+  ]
 }

@@ -1,3 +1,12 @@
+/**
+ * Specialist Terms and Conditions Page Component
+ *
+ * This component displays the terms and conditions of use for specialists on the Hablaquí platform.
+ * It provides legal and operational information, including payment policies, registration, and cancellation terms.
+ *
+ * @module utils/page-trash/terminos-y-condiciones-especialista
+ */
+
 <template>
   <div>
     <div class="primary-color">
@@ -773,6 +782,15 @@
 </template>
 
 <script>
+/**
+ * Specialist Terms and Conditions Page Component
+ *
+ * @component TerminosYCondicionesEspecialista
+ * @description Renders the terms and conditions for specialists, including platform usage, payment, and cancellation policies.
+ *
+ * @example
+ * // Access via URL: /terminos-y-condiciones-especialista
+ */
 export default {
   components: {
     Appbar: () => import('@/components/AppbarWhite'),

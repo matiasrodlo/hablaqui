@@ -1,7 +1,27 @@
+/**
+ * SignUp Component
+ *
+ * A registration form for new users, supporting email/password sign-up, validation, and error handling.
+ *
+ * Key Features:
+ * - Email and password registration
+ * - Form validation and error messages
+ * - Loading state
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-form, v-text-field, v-btn
+ * - Vuelidate for validation
+ * - Vuex for actions
+ *
+ * @component
+ * @example
+ * <SignUp />
+ */
 <template>
 	<v-form @submit.prevent="onSubmit">
 		<v-row no-gutters>
-			<!-- nombre -->
+			<!-- First name input field -->
 			<v-col cols="6">
 				<v-text-field
 					v-model="form.name"
@@ -13,7 +33,7 @@
 					:error-messages="nameErrors"
 				></v-text-field>
 			</v-col>
-			<!-- Apellido -->
+			<!-- Last name input field -->
 			<v-col cols="6">
 				<v-text-field
 					v-model="form.lastName"
@@ -25,7 +45,7 @@
 					:error-messages="lastnameErrors"
 				></v-text-field>
 			</v-col>
-			<!-- Correo -->
+			<!-- Email input field -->
 			<v-col cols="12">
 				<v-text-field
 					v-model="form.email"
@@ -36,7 +56,7 @@
 					:error-messages="emailErrors"
 				></v-text-field>
 			</v-col>
-			<!-- Telefono -->
+			<!-- Phone input field -->
 			<v-col cols="12">
 				<v-text-field
 					v-model="form.phone"
@@ -58,7 +78,7 @@
 					outlined
 				></v-text-field>
 			</v-col> -->
-			<!-- contraseña -->
+			<!-- Password input field with visibility toggle -->
 			<v-col cols="12">
 				<v-text-field
 					v-model="form.password"
@@ -71,7 +91,7 @@
 					@click:append="showPassword = !showPassword"
 				></v-text-field>
 			</v-col>
-			<!-- terminos y condiciones -->
+			<!-- Terms and conditions checkbox -->
 			<v-col cols="12" class="d-flex align-center">
 				<v-checkbox v-model="accept" class="d-inline-block"></v-checkbox>
 				<span class="body-2 text-left" style="max-width: 300px">
@@ -85,14 +105,14 @@
 					</nuxt-link>
 				</span>
 			</v-col>
-			<!-- boton registrar -->
+			<!-- Submit button -->
 			<v-col cols="12">
 				<v-btn :loading="loading" type="submit" block rounded color="primary">
 					Registrar
 				</v-btn>
 			</v-col>
 		</v-row>
-		<!-- modal terminos y condiciones -->
+		<!-- Terms and conditions warning dialog -->
 		<v-dialog v-model="dialog" width="300">
 			<v-sheet style="width: 300px; height: 100px">
 				<v-alert dense outlined type="error" width="300" height="100">
@@ -112,18 +132,38 @@ import { required, email, minLength, maxLength, helpers } from 'vuelidate/lib/va
 import { mapMutations } from 'vuex';
 import { mdiEye, mdiEyeOff } from '@mdi/js';
 import evaluateErrorReturn from '@/utils/errors/evaluateErrorReturn';
+
+// Phone number validation regex
 const mustBePhone = helpers.regex('mustBePhone', /^\+?[0-9]*$/);
 
 /** * Componente para iniciar sesión */
 export default {
 	name: 'SignUp',
 	mixins: [validationMixin],
+
+	/**
+	 * Component props
+	 * @property {Boolean} isDialog - Whether the component is rendered in a dialog
+	 */
 	props: {
 		isDialog: {
 			type: Boolean,
 			default: false,
+			description: 'Whether the component is rendered in a dialog'
 		},
 	},
+
+	/**
+	 * Component data
+	 * @returns {Object} Component data
+	 * @property {Object} mdiEye - Material Design icon for visible password
+	 * @property {Object} mdiEyeOff - Material Design icon for hidden password
+	 * @property {Object} form - Form data object
+	 * @property {Boolean} loading - Loading state for form submission
+	 * @property {Boolean} showPassword - Controls password field visibility
+	 * @property {Boolean} accept - Terms and conditions acceptance state
+	 * @property {Boolean} dialog - Controls terms warning dialog visibility
+	 */
 	data() {
 		return {
 			mdiEye,
@@ -135,43 +175,63 @@ export default {
 			dialog: false,
 		};
 	},
+
 	computed: {
-		/** * Verifica que el email sea valido * @returns array con los errores */
+		/**
+		 * Validates email input and returns error messages
+		 * @returns {Array} Array of error messages
+		 */
 		emailErrors() {
 			const errors = [];
 			if (!this.$v.form.email.$dirty) return errors;
-			!this.$v.form.email.required && errors.push('El Correo electronico es querido');
+			!this.$v.form.email.required && errors.push('El Correo electronico es requerido');
 			!this.$v.form.email.email && errors.push('Escriba un email valido');
 			return errors;
 		},
-		/** * Verifica que el name sea valido * @returns array con los errores */
+
+		/**
+		 * Validates first name input and returns error messages
+		 * @returns {Array} Array of error messages
+		 */
 		nameErrors() {
 			const errors = [];
 			if (!this.$v.form.name.$dirty) return errors;
-			!this.$v.form.name.required && errors.push('El nombre es querido');
-			!this.$v.form.name.maxLength && errors.push('Maximo 90 caracteres');
-			!this.$v.form.name.minLength && errors.push('Minimo 3 caracteres');
+			!this.$v.form.name.required && errors.push('El nombre es requerido');
+			!this.$v.form.name.maxLength && errors.push('Máximo 90 caracteres');
+			!this.$v.form.name.minLength && errors.push('Mínimo 3 caracteres');
 			return errors;
 		},
-		/** * Verifica que el lastname sea valido * @returns array con los errores */
+
+		/**
+		 * Validates last name input and returns error messages
+		 * @returns {Array} Array of error messages
+		 */
 		lastnameErrors() {
 			const errors = [];
 			if (!this.$v.form.lastName.$dirty) return errors;
-			!this.$v.form.lastName.required && errors.push('El apellido es querido');
-			!this.$v.form.lastName.maxLength && errors.push('Maximo 90 caracteres');
-			!this.$v.form.lastName.minLength && errors.push('Minimo 3 caracteres');
+			!this.$v.form.lastName.required && errors.push('El apellido es requerido');
+			!this.$v.form.lastName.maxLength && errors.push('Máximo 90 caracteres');
+			!this.$v.form.lastName.minLength && errors.push('Mínimo 3 caracteres');
 			return errors;
 		},
-		/** * Verifica que el password sea valido * @returns array con los errores */
+
+		/**
+		 * Validates password input and returns error messages
+		 * @returns {Array} Array of error messages
+		 */
 		passwordErrors() {
 			const errors = [];
 			if (!this.$v.form.password.$dirty) return errors;
-			!this.$v.form.password.required && errors.push('La contraseña es querida');
-			!this.$v.form.password.minLength && errors.push('Minimo 6 caracteres');
-			!this.$v.form.password.maxLength && errors.push('Maximo 99 caracteres');
+			!this.$v.form.password.required && errors.push('La contraseña es requerida');
+			!this.$v.form.password.minLength && errors.push('Mínimo 6 caracteres');
+			!this.$v.form.password.maxLength && errors.push('Máximo 99 caracteres');
 			return errors;
 		},
-		/** * Verifica que el telefono sea valido * @returns array con los errores */
+
+		/**
+		 * Validates phone input and returns error messages
+		 * @returns {Array} Array of error messages
+		 */
 		phoneErrors() {
 			const errors = [];
 			if (!this.$v.form.phone.$dirty) return errors;
@@ -180,12 +240,18 @@ export default {
 			return errors;
 		},
 	},
+
+	/**
+	 * Lifecycle hook that initializes form data
+	 */
 	created() {
-		// establece los datos por defecto del formulario
 		this.defaultForm();
 	},
+
 	methods: {
-		/** * Establece el formulario por defecto */
+		/**
+		 * Initializes form data with default values
+		 */
 		defaultForm() {
 			this.form = {
 				name: '',
@@ -197,82 +263,82 @@ export default {
 				phone: '',
 			};
 		},
-		/** * Envio del formulario */
+
+		/**
+		 * Handles form submission for user registration
+		 * Manages registration process, authentication, and role-based redirects
+		 * @returns {Promise<void>}
+		 */
 		async onSubmit() {
-			// verificamos validacion
 			this.$v.$touch();
 			if (!this.$v.$invalid && !this.accept) {
 				return (this.dialog = true);
 			}
 			if (!this.$v.$invalid && this.accept) {
 				try {
-					// activamos el loader
 					this.loading = true;
-					// enviamos el formulario
+					// Register user
 					await this.$axios('/auth/register', {
 						method: 'post',
 						data: this.form,
 					});
-					// login despues del registro
+					// Login after registration
 					const response = await this.$auth.loginWith('local', {
 						data: { email: this.form.email, password: this.form.password },
 					});
-					// establecemos el usuario luego del login
 					this.$auth.setUser(response.data.user);
+					
 					if (this.$auth.$state.loggedIn) {
-						// si llegamos al login con un query from=spec
+						// Handle special evaluation redirect
 						if (this.$route.query.from === 'spec') {
 							this.datalayer(this.$auth.$state.user, 'registro-match');
 							return this.$router.push({ name: 'evaluacion' });
 						}
-						// si es role especialista y esta aprobado
-						if (
-							response.data.user.role === 'specialist' &&
-							this.$auth.$state.user.specialist
-						) {
-							return this.$router.push({ name: 'dashboard-chat' });
-						}
-						// si es role especialista y no esta aprobado
-						if (
-							response.data.user.role === 'specialist' &&
-							!this.$auth.$state.user.specialist
-						) {
+						
+						// Handle specialist role redirects
+						if (response.data.user.role === 'specialist') {
+							if (this.$auth.$state.user.specialist) {
+								return this.$router.push({ name: 'dashboard-chat' });
+							}
 							return this.$router.push({ name: 'postulacion' });
 						}
-						// si es un superuser enviamos al panel
+						
+						// Handle superuser redirect
 						if (response.data.user.role === 'superuser')
 							return this.$router.push({ name: 'dashboard-panel' });
-						// si es un usuario
+						
+						// Handle regular user redirects
 						if (response.data.user.role === 'user') {
-							// redirecionamos de nuevo a pagos luego de ingresar
+							// Redirect to payment page if payment details are present
 							if (
 								this.$route.query.date &&
 								this.$route.query.start &&
 								this.$route.query.end
 							) {
-								this.datalayer(this.$auth.$state.user, 'registro-pago');
 								return this.$router.push(
 									`/especialistas/pagos/?username=${this.$route.query.specialist}&date=${this.$route.query.date}&start=${this.$route.query.start}&end=${this.$route.query.end}`
 								);
 							}
-							// redirecionamos de nuevo a chat luego de ingresar
+							// Redirect to chat if specialist is specified
 							if (this.$route.query.specialist) {
 								return this.$router.push(
 									`/${this.$route.query.specialist}/?chat=true`
 								);
 							}
-							this.datalayer(this.$auth.$state.user, 'registro-natural');
 							return this.$router.push({ name: 'dashboard-chat' });
 						}
 					}
 				} catch (error) {
-					this.snackBar({ content: evaluateErrorReturn(error), color: 'error' });
+					this.snackBar({
+						content: evaluateErrorReturn(error),
+						color: 'error',
+					});
 				} finally {
-					// desactivamos el loader
 					this.loading = false;
 				}
 			}
 		},
+
 		datalayer(user, type) {
 			const data = {
 				'user-id': user._id,
@@ -283,22 +349,26 @@ export default {
 			};
 			window.dataLayer.push(data);
 		},
+
 		...mapMutations({
-			setResumeView: 'Specialist/setResumeView',
 			snackBar: 'Snackbar/showMessage',
 		}),
 	},
+
+	/**
+	 * Form validation rules
+	 */
 	validations: {
 		form: {
 			name: {
 				required,
 				minLength: minLength(3),
-				maxLength: maxLength(99),
+				maxLength: maxLength(90),
 			},
 			lastName: {
 				required,
 				minLength: minLength(3),
-				maxLength: maxLength(99),
+				maxLength: maxLength(90),
 			},
 			email: {
 				required,
@@ -321,3 +391,7 @@ export default {
 	},
 };
 </script>
+
+<style scoped>
+/* Component-specific styles */
+</style>

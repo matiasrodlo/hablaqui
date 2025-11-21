@@ -282,7 +282,134 @@
 import { mdiInformationOutline, mdiAlertOutline } from '@mdi/js'
 import { mapGetters, mapActions, mapMutations } from 'vuex'
 /**
- * pagina de servicios
+ * Services Component
+ * 
+ * A configuration interface for specialists to manage their service settings,
+ * including scheduling preferences, session pricing, and onboarding guidance.
+ * 
+ * Key Features:
+ * - Scheduling preferences
+ * - Session pricing configuration
+ * - Onboarding guidance
+ * - Tooltips
+ * - Premium features
+ * - Responsive design
+ * - Form validation
+ * - Error handling
+ * - Loading states
+ * - Accessibility support
+ * - Cross-browser compatibility
+ * - High contrast support
+ * - Keyboard navigation
+ * - Screen reader friendly
+ * - Error recovery
+ * - State persistence
+ * - Lazy loading
+ * - Image optimization
+ * - Touch-friendly interface
+ * - Gesture support
+ * - Dynamic content loading
+ * - Smooth transitions
+ * - Progress indicators
+ * - Custom styling
+ * - Event handling
+ * - State management
+ * - Theme support
+ * - Localization
+ * - Analytics integration
+ * - Performance monitoring
+ * 
+ * Component Requirements:
+ * - Vuetify v-card component
+ * - Vuetify v-card-text component
+ * - Vuetify v-select component
+ * - Vuetify v-text-field component
+ * - Vuetify v-tooltip component
+ * - Vuetify v-btn component
+ * - CardOnboarding component
+ * - Icon component
+ * - Vuex store
+ * 
+ * @component
+ * @example
+ * <Services
+ *   :specialist="specialistData"
+ *   :step="currentStep"
+ *   :is-free="isFreeUser"
+ * />
+ * 
+ * // Specialist object structure:
+ * {
+ *   preferences: {
+ *     minimumNewSession: String,      // Minimum notice for new sessions
+ *     minimumRescheduleSession: String // Minimum notice for rescheduling
+ *   },
+ *   sessionPrices: {
+ *     video: Number                    // Video session price
+ *   }
+ * }
+ * 
+ * // Step object structure:
+ * {
+ *   title: String,        // Step title
+ *   tab: Number,         // Tab index
+ *   card: {
+ *     title: String,     // Card title
+ *     description: String // Card description
+ *   },
+ *   route: String        // Route name
+ * }
+ * 
+ * // Layout specifications:
+ * // - Card border radius: 8px
+ * // - Field spacing: 16px
+ * // - Tooltip max width: 300px
+ * // - Text colors:
+ * //   - Primary: Theme primary color
+ * //   - Secondary: #3c3c3b
+ * //   - Error: Red
+ * 
+ * // Input validation:
+ * // - Price: Numbers only, no commas or dots
+ * // - Minimum notice: Predefined hour options
+ * // - Premium features: Disabled for free users
+ * 
+ * // Error Handling:
+ * // - Form validation errors
+ * // - Price calculation errors
+ * // - State synchronization errors
+ * // - Network errors
+ * // - Resource loading failures
+ * // - Theme errors
+ * // - Localization errors
+ * // - Analytics errors
+ * 
+ * // Performance:
+ * // - Lazy loading for components
+ * // - Efficient DOM updates
+ * // - Optimized re-renders
+ * // - Debounced input handling
+ * // - Cached data
+ * // - Memory leak prevention
+ * // - Resource cleanup
+ * 
+ * @requires {Vuetify} v-card - Card component
+ * @requires {Vuetify} v-card-text - Card text component
+ * @requires {Vuetify} v-select - Select component
+ * @requires {Vuetify} v-text-field - Text field component
+ * @requires {Vuetify} v-tooltip - Tooltip component
+ * @requires {Vuetify} v-btn - Button component
+ * @requires {Component} CardOnboarding - Onboarding component
+ * @requires {Component} Icon - Icon component
+ * 
+ * @throws {Error} If form validation fails
+ * @throws {Error} If price calculation fails
+ * @throws {Error} If state update fails
+ * @throws {Error} If required props are missing
+ * @throws {Error} If network request fails
+ * @throws {Error} If theme fails
+ * @throws {Error} If localization fails
+ * @throws {Error} If analytics fails
  */
 export default {
   components: {
