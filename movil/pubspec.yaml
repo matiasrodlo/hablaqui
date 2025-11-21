@@ -1,83 +1,90 @@
-name: movil
-description: A new Flutter project.
+# Flutter Project Configuration
+# This file defines the configuration and dependencies for the Hablaqui mobile app
 
-# The following line prevents the package from being accidentally published to
-# pub.dev using `pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
-
-# The following defines the version and build number for your application.
-# A version number is three numbers separated by dots, like 1.2.43
-# followed by an optional build number separated by a +.
-# Both the version and the builder number may be overridden in flutter
-# build by specifying --build-name and --build-number, respectively.
-# In Android, build-name is used as versionName while build-number used as versionCode.
-# Read more about Android versioning at https://developer.android.com/studio/publish/versioning
-# In iOS, build-name is used as CFBundleShortVersionString while build-number used as CFBundleVersion.
-# Read more about iOS versioning at
-# https://developer.apple.com/library/archive/documentation/General/Reference/InfoPlistKeyReference/Articles/CoreFoundationKeys.html
+# Project metadata
+name: hablaqui
+description: Hablaqui - Mental Health Marketplace and SaaS Platform Mobile App
+publish_to: 'none'
 version: 1.0.0+1
 
+# Environment configuration
 environment:
-  sdk: ">=2.7.0 <3.0.0"
+  sdk: ">=2.17.0 <3.0.0"  # Dart SDK version constraints
 
+# Dependencies
 dependencies:
   flutter:
     sdk: flutter
+  # State management
+  provider: ^6.0.5        # State management solution
+  flutter_bloc: ^8.1.3    # BLoC pattern implementation
+  
+  # UI components
+  cupertino_icons: ^1.0.5  # iOS-style icons
+  flutter_svg: ^2.0.5     # SVG rendering
+  cached_network_image: ^3.2.3  # Image caching
+  
+  # Networking
+  dio: ^5.1.1            # HTTP client
+  connectivity_plus: ^4.0.1  # Network connectivity
+  
+  # Storage
+  shared_preferences: ^2.1.1  # Local storage
+  hive: ^2.2.3           # NoSQL database
+  hive_flutter: ^1.1.0   # Flutter integration for Hive
+  
+  # Authentication
+  firebase_auth: ^4.6.2  # Firebase authentication
+  google_sign_in: ^6.1.4  # Google Sign-In
+  
+  # Utilities
+  intl: ^0.18.0         # Internationalization
+  url_launcher: ^6.1.11  # URL handling
+  package_info_plus: ^4.0.2  # App package information
+  device_info_plus: ^9.0.2  # Device information
 
-
-  # The following adds the Cupertino Icons font to your application.
-  # Use with the CupertinoIcons class for iOS style icons.
-  cupertino_icons: ^1.0.2
-  carousel_slider: ^3.0.0
-  http: ^0.13.3
-  shared_preferences: ^2.0.6
-  flutter_pusher: ^1.0.2
-  intl: ^0.17.0
-  url_launcher: ^6.0.9
-  font_awesome_flutter: ^9.1.0
-
+# Development dependencies
 dev_dependencies:
   flutter_test:
     sdk: flutter
+  flutter_lints: ^2.0.2  # Flutter linting rules
+  build_runner: ^2.4.4   # Code generation
+  hive_generator: ^2.0.0  # Hive code generation
 
-# For information on the generic Dart part of this file, see the
-# following page: https://dart.dev/tools/pub/pubspec
-
-# The following section is specific to Flutter.
+# Flutter configuration
 flutter:
-
-  # The following line ensures that the Material Icons font is
-  # included with your application, so that you can use the icons in
-  # the material Icons class.
+  # Material Design icons
   uses-material-design: true
-
-  # To add assets to your application, add an assets section, like this:
+  
+  # Asset configuration
   assets:
-    - images/
-  #   - images/a_dot_ham.jpeg
+    - assets/images/
+    - assets/icons/
+    - assets/fonts/
+  
+  # Font configuration
+  fonts:
+    - family: Poppins
+      fonts:
+        - asset: assets/fonts/Poppins-Regular.ttf
+        - asset: assets/fonts/Poppins-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/Poppins-Light.ttf
+          weight: 300
 
-  # An image asset can refer to one or more resolution-specific "variants", see
-  # https://flutter.dev/assets-and-images/#resolution-aware.
+# Flutter-specific configuration
+flutter_icons:
+  android: "launcher_icon"
+  ios: true
+  image_path: "assets/icons/app_icon.png"
+  adaptive_icon_background: "#FFFFFF"
+  adaptive_icon_foreground: "assets/icons/app_icon_foreground.png"
 
-  # For details regarding adding assets from package dependencies, see
-  # https://flutter.dev/assets-and-images/#from-packages
-
-  # To add custom fonts to your application, add a fonts section here,
-  # in this "flutter" section. Each entry in this list should have a
-  # "family" key with the font family name, and a "fonts" key with a
-  # list giving the asset and other descriptors for the font. For
-  # example:
-  # fonts:
-  #   - family: Schyler
-  #     fonts:
-  #       - asset: fonts/Schyler-Regular.ttf
-  #       - asset: fonts/Schyler-Italic.ttf
-  #         style: italic
-  #   - family: Trajan Pro
-  #     fonts:
-  #       - asset: fonts/TrajanPro.ttf
-  #       - asset: fonts/TrajanPro_Bold.ttf
-  #         weight: 700
-  #
-  # For details regarding fonts from package dependencies,
-  # see https://flutter.dev/custom-fonts/#from-packages
+flutter_native_splash:
+  color: "#FFFFFF"
+  image: assets/images/splash.png
+  android_12:
+    image: assets/images/splash.png
+    icon_background_color: "#FFFFFF"
+  ios: true
+  web: false
