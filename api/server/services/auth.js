@@ -1,3 +1,32 @@
+/**
+ * Authentication Service
+ * 
+ * This module handles all authentication-related functionality for the Hablaquí system.
+ * It provides user registration, login, logout, password management, and session handling.
+ * 
+ * Features:
+ * - User registration with email verification
+ * - Login/logout with JWT authentication
+ * - Password recovery and reset
+ * - Session management
+ * - User verification status handling
+ * - Analytics tracking for user actions
+ * - Google OAuth integration
+ * - Email notification system
+ * 
+ * @module services/auth
+ * @requires ../config/config - Environment configuration
+ * @requires bcryptjs - Password hashing
+ * @requires ../models/user - User model
+ * @requires ../models/sessions - Session model
+ * @requires jsonwebtoken - JWT handling
+ * @requires ../config/pino - Logging
+ * @requires ../utils/logger/infoMessages - Logging utilities
+ * @requires ../utils/responses/functions - Response utilities
+ * @requires ../utils/functions/mails/accountsShares - Email service
+ * @requires analytics-node - Analytics tracking
+ */
+
 'use strict'
 
 import '../config/config.js' // confing.js establece las variables de entorno para el trabajo local
@@ -13,6 +42,17 @@ import Analytics from 'analytics-node'
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY)
 
+/**
+ * Generates a JWT token for user authentication
+ * 
+ * This function:
+ * 1. Creates payload with username and user ID
+ * 2. Signs token with JWT secret
+ * 3. Sets expiration time from environment variable
+ * 
+ * @param {Object} user - User object containing name and _id
+ * @returns {string} JWT token
+ */
 const generateJwt = user => {
   // Se crea el payload para el token, se genera con la clave secreta y el payload, se le asigna la expiración y se devuelve
   const payload = {
@@ -25,6 +65,20 @@ const generateJwt = user => {
   })
 }
 
+/**
+ * Handles user login and generates authentication token
+ * Tracks login event in analytics if enabled
+ * 
+ * This function:
+ * 1. Tracks login event in analytics (if enabled)
+ * 2. Generates JWT token
+ * 3. Formats user data for response
+ * 4. Returns token and user data
+ * 
+ * @async
+ * @param {Object} user - User object attempting to login
+ * @returns {Promise<Object>} Response with token and user data
+ */
 const login = async user => {
   // Hace el trackeo de la acción de login con segment
   if (
@@ -53,6 +107,18 @@ const login = async user => {
   })
 }
 
+/**
+ * Handles user logout
+ * Tracks logout event in analytics if enabled
+ * 
+ * This function:
+ * 1. Tracks logout event in analytics (if enabled)
+ * 2. Returns success response
+ * 
+ * @async
+ * @param {Object} user - User object attempting to logout
+ * @returns {Promise<Object>} Success response
+ */
 const logout = async user => {
   // Hace el trackeo de la acción de logout con segment
   if (
@@ -73,6 +139,18 @@ const logout = async user => {
   return okResponse('Sesión cerrada exitosamente')
 }
 
+/**
+ * Retrieves user sessions based on role
+ * 
+ * This function:
+ * 1. Checks user role (user or specialist)
+ * 2. Queries sessions based on role
+ * 3. Returns session list or null
+ * 
+ * @async
+ * @param {Object} user - User object
+ * @returns {Promise<Array|null>} Array of sessions or null
+ */
 const getSessions = async user => {
   // Verifica el rol del usuario y devuelve las sesiones correspondientes
   if (user.role === 'user') {
@@ -86,6 +164,19 @@ const getSessions = async user => {
   return null
 }
 
+/**
+ * Generates a standardized user object for responses
+ * 
+ * This function:
+ * 1. Formats user data for API responses
+ * 2. Includes user sessions
+ * 3. Handles sensitive data
+ * 4. Returns formatted user object
+ * 
+ * @async
+ * @param {Object} user - User object from database
+ * @returns {Promise<Object>} Formatted user object
+ */
 const generateUser = async user => {
   // Genera el objeto de usuario que se devuelve en las respuestas
   return {
@@ -116,6 +207,25 @@ const generateUser = async user => {
   }
 }
 
+/**
+ * Handles new user registration
+ * Creates user account and sends verification email
+ * Tracks registration in analytics if enabled
+ * 
+ * This function:
+ * 1. Validates email and RUT uniqueness
+ * 2. Hashes password
+ * 3. Creates user account
+ * 4. Generates verification token
+ * 5. Sends verification email
+ * 6. Tracks registration in analytics
+ * 7. Sends welcome email
+ * 
+ * @async
+ * @param {Object} payload - Registration data
+ * @returns {Promise<Object>} Response with user data and token
+ * @throws {Error} If email or RUT already exists
+ */
 const register = async payload => {
   // Verifica si el usuario ya existe, si no crea un nuevo usuario
   if (await User.exists({ email: payload.email })) {
@@ -180,9 +290,11 @@ const register = async payload => {
 }
 
 /**
- * token generator - password recovery
- * @param {Object} user
- * @returns string Token
+ * Generates a JWT token for password recovery
+ * Uses a different expiration time than regular authentication
+ * 
+ * @param {Object} user - User object
+ * @returns {string} JWT token
  */
 const generatePasswordRecoverJwt = user => {
   const payload = {
@@ -195,10 +307,25 @@ const generatePasswordRecoverJwt = user => {
   })
 }
 
+/**
+ * Retrieves a user by email address
+ * 
+ * @async
+ * @param {string} email - User's email address
+ * @returns {Promise<Object|null>} User object or null
+ */
 const getUserByEmail = async email => {
   return await User.findOne({ email })
 }
 
+/**
+ * Initiates password recovery process
+ * Sends recovery email with reset token
+ * 
+ * @async
+ * @param {string} email - User's email address
+ * @returns {Promise<Object>} Response indicating email sent
+ */
 const sendPasswordRecover = async email => {
   // Busca el usuario por email y verifica si existe, genera un token y lo envia por correo
   const user = await getUserByEmail(email)
@@ -219,6 +346,21 @@ const sendPasswordRecover = async email => {
   return okResponse('Sé le ha enviado un correo electronico')
 }
 
+/**
+ * Changes user password
+ * 
+ * This function:
+ * 1. Validates current password
+ * 2. Hashes new password
+ * 3. Updates user record
+ * 4. Returns success response
+ * 
+ * @async
+ * @param {Object} user - User object
+ * @param {string} newPassword - New password
+ * @param {Object} res - Response object
+ * @returns {Promise<Object>} Success response
+ */
 const changeUserPassword = async (user, newPassword, res) => {
   // Cambia la contraseña del usuario
   try {
@@ -234,6 +376,14 @@ const changeUserPassword = async (user, newPassword, res) => {
   }
 }
 
+/**
+ * Updates user's email verification status
+ * Sends welcome email if user is verified
+ * 
+ * @async
+ * @param {string} id - User ID
+ * @returns {Promise<Object>} Response indicating verification status
+ */
 const changeVerifiedStatus = async id => {
   // Busca el usuario, verifica que exista, cambia el estado de verificación y lo guarda
   const user = await User.findById(id)
@@ -258,6 +408,10 @@ const googleAuthCallback = (req, res) => {
 };
 */
 
+/**
+ * Authentication service object containing all auth-related business logic
+ * @type {Object}
+ */
 const authService = {
   login,
   logout,

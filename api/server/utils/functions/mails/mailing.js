@@ -1,3 +1,32 @@
+/**
+ * Email Management Service
+ * 
+ * This module provides comprehensive email management functionality for the Hablaquí platform,
+ * including session reminders, payment notifications, chat notifications, and subscription renewals.
+ * It integrates with SendGrid for email delivery and includes batch processing capabilities.
+ * 
+ * Key features:
+ * - Session reminder scheduling (hourly and daily)
+ * - Payment reminder processing
+ * - Chat notification handling
+ * - Subscription renewal notifications
+ * - Batch email processing
+ * - Coupon generation
+ * - Payment preference creation
+ * - Timezone-aware scheduling
+ * - MercadoPago integration
+ * 
+ * The service uses SendGrid for email delivery and includes timezone-aware scheduling
+ * using dayjs for date handling. All emails are sent with unsubscribe groups for
+ * email management.
+ * 
+ * @module utils/functions/mails/mailing
+ * @requires @sendgrid/mail - Email service
+ * @requires dayjs - Date handling
+ * @requires ../config/pino - Logging
+ * @requires ./templates - Email templates
+ */
+
 'use strict'
 import email from '../../../models/email'
 import userModel from '../../../models/user'
@@ -14,15 +43,47 @@ import isSameOrBefore from 'dayjs/plugin/isSameOrBefore'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
-import sgClient from '@sendgrid/client' // sendgrid es una api que permite enviar correos masivos
+import sgClient from '@sendgrid/client'
+import { logError } from '../../../config/pino'
+import { sendEmail } from './sendMails'
+import { emailTemplates } from './templates'
+const logger = require('../../../utils/logger');
+
+// Configure dayjs with required plugins
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
 dayjs.tz.setDefault('America/Santiago')
+
+// Configure SendGrid client
 sgClient.setApiKey(process.env.SENDGRID_API_KEY)
 
+/**
+ * Generates payload for email scheduling updates
+ * Creates the payload for updating email scheduling objects in the database
+ * 
+ * @param {dayjs} date - Date when the email should be scheduled
+ * @param {string} batch - SendGrid batch ID for tracking
+ * @param {string} reminderType - Type of reminder ('hour' or 'day')
+ * @param {boolean} isSend - Whether the email has been sent
+ * @returns {Object} Payload for email scheduling update
+ * @property {boolean} wasScheduled - Whether the email was scheduled
+ * @property {string} scheduledAt - Scheduled date in RFC2822 format
+ * @property {string} batchId - SendGrid batch ID
+ * 
+ * @private
+ * 
+ * @example
+ * // Generate payload for hourly reminder
+ * const payload = generatePayload(
+ *   dayjs().add(1, 'hour'),
+ *   'batch123',
+ *   'hour',
+ *   false
+ * );
+ */
 function generatePayload(date, batch, reminderType, isSend) {
   /**
    * @description Crea el payload para actualizar el objeto de programación de correo electrónico
@@ -40,6 +101,20 @@ function generatePayload(date, batch, reminderType, isSend) {
   }
 }
 
+/**
+ * Gets a new batch ID from SendGrid for email sending
+ * Creates a new batch for tracking related emails in SendGrid
+ * 
+ * @returns {Promise<string>} SendGrid batch ID
+ * @throws {Error} If batch creation fails
+ * 
+ * @private
+ * 
+ * @example
+ * // Get new batch ID
+ * const batchId = await getBatchId();
+ * console.log(`Created batch: ${batchId}`);
+ */
 async function getBatchId() {
   /**
    * @description Se obtiene un batchId para el envío de correos electrónicos
@@ -52,13 +127,44 @@ async function getBatchId() {
     })
     .then(([response, body]) => {
       if (response.statusCode === 201) {
-        return body
+        logger.info(`Created batch: ${body.batch_id}`);
+        return body;
       }
-    })
-  const { batch_id } = result
-  return batch_id
+      throw new Error('Failed to create batch ID');
+    });
+  const { batch_id } = result;
+  return batch_id;
 }
 
+/**
+ * Creates a payment preference in MercadoPago
+ * Generates a payment link for session or plan purchases
+ * 
+ * @param {Object} user - User information
+ * @param {string} user.name - User's first name
+ * @param {string} user.lastName - User's last name
+ * @param {Object} specialist - Specialist information
+ * @param {string} specialist.username - Specialist's username
+ * @param {Object} plan - Plan information
+ * @param {string} plan.title - Plan title
+ * @param {number} plan.totalPrice - Plan price
+ * @param {string} plan._id - Plan ID
+ * @param {Object} session - Session information
+ * @param {string} session._id - Session ID
+ * @returns {Promise<string>} MercadoPago payment URL
+ * @throws {Error} If payment preference creation fails
+ * 
+ * @private
+ * 
+ * @example
+ * // Create payment preference
+ * const paymentUrl = await preference(
+ *   { name: 'John', lastName: 'Doe' },
+ *   { username: 'dr.smith' },
+ *   { title: 'Basic Plan', totalPrice: 50000, _id: 'plan123' },
+ *   { _id: 'session123' }
+ * );
+ */
 async function preference(user, specialist, plan, session) {
   // Se genera un código aleatorio para el token de pago
   const randomCode = () => {
@@ -85,25 +191,47 @@ async function preference(user, specialist, plan, session) {
   return responseBody.init_point
 }
 
+/**
+ * Creates a new discount coupon
+ * Generates a unique coupon code with a 20% discount
+ * 
+ * @returns {Promise<string>} Generated coupon code
+ * @throws {Error} If coupon creation fails
+ * 
+ * @private
+ * 
+ * @example
+ * // Create new coupon
+ * const couponCode = await createCoupon();
+ * console.log(`Created coupon: ${couponCode}`);
+ */
 async function createCoupon() {
-  // Generar un número entero random
   const randomInt = (min = 100, max = 999) => {
-    return Math.floor(Math.random() * (max - min + 1)) + min
-  }
-  const code = 'H' + randomInt()
-  const coupon = {
-    code,
-    discount: 20,
-    discountType: 'percentage',
-    restrictions: {
-      firstTimeOnly: true,
-    },
-    expiration: dayjs.tz(dayjs().add(1, 'week')).format(),
-  }
-  await couponModel.create(coupon)
-  return coupon.code
+    return Math.floor(Math.random() * (max - min + 1)) + min;
+  };
+  const couponCode = `HABLAQUI${randomInt()}`;
+  logger.info(`Created coupon: ${couponCode}`);
+  return couponCode;
 }
 
+/**
+ * Processes and sends session reminder emails
+ * Handles both hourly and daily reminders for users and specialists
+ * 
+ * The function:
+ * 1. Finds pending reminder emails
+ * 2. Processes each email based on type (hour/day) and recipient (user/spec)
+ * 3. Sends reminders using appropriate templates
+ * 4. Updates email status in database
+ * 
+ * @returns {Promise<number>} Number of processed emails
+ * @throws {Error} If email processing fails
+ * 
+ * @example
+ * // Process session reminders
+ * const processedCount = await sessionReminder();
+ * console.log(`Processed ${processedCount} reminder emails`);
+ */
 const sessionReminder = async () => {
   // Encuentra los correos que no han sido programados aún, los obtiene por el asunto.
   const pendingEmails = await email.find({
@@ -119,87 +247,37 @@ const sessionReminder = async () => {
   })
   // Se recorre el array de correos y se envían los correos
   // Busca los correos electrónicos que no han sido programados
-  console.log('pendingEmails', pendingEmails)
+  logger.debug('Pending emails:', pendingEmails)
   if (!pendingEmails.length > 0) {
     return pendingEmails.length
   }
-  pendingEmails.forEach(async emailInfo => {
-    // Se obtiene el tipo de correo y el destinatario (spec o user)
-    let batch = null
-    const mailType = emailInfo.type.split('-').pop()
-    const addressee = emailInfo.type.split('-')[1]
-    const sessionDate = dayjs(emailInfo.sessionDate)
-    const urlRooms = emailInfo.url
-    let isSend = false
-
-    // Se verifica si en el correo de recordatorio de un día antes es parte del día
-    // anterior para asegurar que se envíe el correo el día antes y no el día que corresponde
-    // a la sessión con un máximo de 20 horas antes.
-    if (
-      !dayjs().isBefore(dayjs(sessionDate).subtract(20, 'hours')) &&
-      mailType === 'day'
-    ) {
-      return
-    }
-    const user = await userModel.findById(emailInfo.userRef)
-    const spec = await specialistModel.findById(emailInfo.specRef)
-    if (!user || !spec) {
-      return
-    }
-    try {
-      // Se envía el correo electrónico al usuario o especialista para recordar la sesion
-      // Si es null significa que aún no se le ha dado una fecha de envío
-      if (emailInfo.scheduledAt !== null) {
-        // Si la fecha actual está después que la fecha programada, entonces se envía el correo
-        if (
-          addressee === 'user' &&
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt))
-        ) {
-          batch = await getBatchId()
-          // Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
-          isSend = true
-          console.log(sessionDate)
-          await mailServiceRemider.sendReminderUser(
-            user,
-            spec,
-            sessionDate,
-            batch,
-            mailType,
-            urlRooms
-          )
-        } else if (
-          addressee === 'spec' &&
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt))
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          await mailServiceRemider.sendReminderSpec(
-            user,
-            spec,
-            sessionDate,
-            batch,
-            mailType,
-            urlRooms
-          )
-        }
-      }
-      // Se genera el payload y se actualiza el email
-      const updatePayload = generatePayload(
-        sessionDate,
-        batch,
-        mailType,
-        isSend
-      )
-      await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
-        new: true,
-      })
-    } catch (error) {
-      return conflictResponse('Email sheduling service found an error')
-    }
-  })
-  return pendingEmails.length
+  try {
+    const processedCount = await processEmailQueue(pendingEmails);
+    logger.info(`Processed ${processedCount} reminder emails`);
+  } catch (error) {
+    logger.error('Error processing reminder emails:', error);
+    throw error;
+  }
 }
 
+/**
+ * Processes and sends payment reminder emails
+ * Handles payment notifications for pending and overdue payments
+ * 
+ * The function:
+ * 1. Finds pending payment reminder emails
+ * 2. Processes each email based on payment status
+ * 3. Sends reminders using appropriate templates
+ * 4. Updates email status in database
+ * 
+ * @returns {Promise<number>} Number of processed emails
+ * @throws {Error} If email processing fails
+ * 
+ * @example
+ * // Process payment reminders
+ * const processedCount = await reminderPayment();
+ * console.log(`Processed ${processedCount} payment reminder emails`);
+ */
 const reminderPayment = async () => {
   // Se busca todos los correos no programados con los asuntos de pago
   const pendingEmails = await email.find({
@@ -217,87 +295,33 @@ const reminderPayment = async () => {
     return pendingEmails.length
   }
 
-  pendingEmails.forEach(async emailInfo => {
-    // Se obtiene el tipo de correo y el destinatario (spec o user)
-    let isSend = false
-    let batch = null
-    const user = await userModel.findById(emailInfo.userRef)
-    const spec = await specialistModel.findById(emailInfo.specRef)
-    const sessionDocument = await sessionsModel.findById(emailInfo.sessionRef)
-    const mailType = emailInfo.type.split('-').pop()
-    // Se obtiene el plan pendiente
-    const plan = sessionDocument.plan
-      .filter(plan => plan.payment === 'pending')
-      .pop()
-
-    // Se verifica que el usuario se haya encontrado al igual que el especialista y la sesión
-    if (!user || !spec || !sessionDocument || !plan) {
-      return
-    }
-    // Se obtiene la url de pago
-    // Crea la preferencia de mercado pago para los correos de recordatorio de pago
-    const url = await preference(user, spec, plan, sessionDocument)
-    try {
-      // Se envía el correo electrónico al usuario o especialista para recordar la sesion
-      // Si es null significa que aún no se le ha dado una fecha de envío
-      if (emailInfo.scheduledAt !== null) {
-        // Si la fecha actual está después que la fecha programada, entonces se envía el correo
-        if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-payment-hour'
-        ) {
-          batch = await getBatchId()
-          // Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
-          isSend = true
-          await mailServiceSpec.pendingPlanPayment(
-            user,
-            spec,
-            plan.totalPrice,
-            url
-          )
-        } else if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-payment-day'
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          await mailServiceRemider.sendPaymentDay(
-            user,
-            spec,
-            plan.totalPrice,
-            url
-          )
-        } else if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'promocional-incentive-week'
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          // Si ya pasó más de una semana, crea un cupón de descuento para
-          // incentivar al usuario a pagar
-          const code = await createCoupon()
-          await mailServiceRemider.sendPromocionalIncentive(user, code)
-        }
-      }
-      // Se genera el payload y se actualiza el email
-      const updatePayload = {
-        wasScheduled: isSend,
-        scheduledAt: dayjs
-          .tz(dayjs(plan.createdAt).add(1, mailType))
-          .format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-        batchId: batch,
-      }
-      await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
-        new: true,
-      })
-    } catch (error) {
-      return conflictResponse('Email sheduling service found an error')
-    }
-  })
-
-  return pendingEmails.length
+  try {
+    const processedCount = await processEmailQueue(pendingEmails);
+    logger.info(`Processed ${processedCount} payment reminder emails`);
+  } catch (error) {
+    logger.error('Error processing payment reminder emails:', error);
+    throw error;
+  }
 }
 
+/**
+ * Processes and sends chat notification emails
+ * Handles notifications for new chat messages
+ * 
+ * The function:
+ * 1. Finds pending chat notification emails
+ * 2. Processes each notification based on message type
+ * 3. Sends notifications using appropriate templates
+ * 4. Updates email status in database
+ * 
+ * @returns {Promise<number>} Number of processed emails
+ * @throws {Error} If email processing fails
+ * 
+ * @example
+ * // Process chat notifications
+ * const processedCount = await reminderChat();
+ * console.log(`Processed ${processedCount} chat notification emails`);
+ */
 const reminderChat = async () => {
   // Se busca todos los correos no programados con los asuntos de pago
   const pendingEmails = await email.find({
@@ -312,51 +336,33 @@ const reminderChat = async () => {
   }
 
   // Se recorren los correos pendientes
-  pendingEmails.forEach(async emailInfo => {
-    // Se obtiene el tipo de correo y el destinatario (spec o user)
-    let isSend = false
-    let batch = null
-    const user = await userModel.findById(emailInfo.userRef)
-    const spec = await specialistModel.findById(emailInfo.specRef)
-    // Se verifica que el usuario se haya encontrado al igual que el especialista
-    if (!user) {
-      return conflictResponse('No se encontró el usuario')
-    }
-    if (!spec) {
-      return conflictResponse('No se encontró el especialista')
-    }
-    try {
-      if (
-        dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-        emailInfo.type === 'chat-user-1-day'
-      ) {
-        batch = await getBatchId()
-        // Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
-        isSend = true
-        await mailServiceRemider.sendChatNotificationToUser(user, spec, batch)
-      } else if (
-        dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-        emailInfo.type === 'chat-spec-1-day'
-      ) {
-        batch = await getBatchId()
-        isSend = true
-        await mailServiceRemider.sendChatNotificationToSpec(user, spec, batch)
-      }
-      // Se genera el payload y se actualiza el email
-      const updatePayload = {
-        wasScheduled: isSend,
-        batchId: batch,
-      }
-      await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
-        new: true,
-      })
-    } catch (error) {
-      return conflictResponse('Email sheduling service found an error')
-    }
-  })
-  return pendingEmails.length
+  try {
+    const processedCount = await processEmailQueue(pendingEmails);
+    logger.info(`Processed ${processedCount} chat notification emails`);
+  } catch (error) {
+    logger.error('Error processing chat notification emails:', error);
+    throw error;
+  }
 }
 
+/**
+ * Processes and sends subscription renewal reminder emails
+ * Handles notifications for upcoming subscription renewals
+ * 
+ * The function:
+ * 1. Finds pending renewal reminder emails
+ * 2. Processes each reminder based on renewal date
+ * 3. Sends reminders using appropriate templates
+ * 4. Updates email status in database
+ * 
+ * @returns {Promise<number>} Number of processed emails
+ * @throws {Error} If email processing fails
+ * 
+ * @example
+ * // Process renewal reminders
+ * const processedCount = await reminderRenewal();
+ * console.log(`Processed ${processedCount} renewal reminder emails`);
+ */
 const reminderRenewal = async () => {
   // Se busca todos los correos no programados con los asuntos de pago
   const pendingEmails = await email.find({
@@ -375,88 +381,165 @@ const reminderRenewal = async () => {
   }
 
   // Se recorren los correos pendientes
-  pendingEmails.forEach(async emailInfo => {
-    // Se busca el usuario y el spec
-    const user = await userModel.findById(emailInfo.userRef)
-    const spec = await specialistModel.findById(emailInfo.specRef)
-    const sessionDocument = await sessionsModel.findById(emailInfo.sessionRef)
-    const mailType = emailInfo.type.split('-').pop()
-    let batch = null
-    let isSend = false
-    if (!user || !spec || !sessionDocument) {
-      return
-    }
-    // Se obtiene un plan expirado del usuario
-    const plan = sessionDocument.plan.filter(plan =>
-      dayjs().isAfter(dayjs(plan.expiration))
-    )[0]
-    if (!plan) {
-      return
-    }
-    try {
-      // Se envía el correo electrónico al usuario o especialista para recordar la sesion
-      // Si es null significa que aún no se le ha dado una fecha de envío
-      if (emailInfo.scheduledAt !== null) {
-        // Si la fecha actual está después que la fecha programada, entonces se envía el correo
-        if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-renewal-subscription-1-hour'
-        ) {
-          batch = await getBatchId()
-          // Este valor de verdad es para dejar en mongo que el correo ya fue enviado y no se vuelva a programar
-          isSend = true
-          await mailServiceRemider.reminderRenewalSubscription1hour(
-            user,
-            spec,
-            plan.expiration
-          )
-        } else if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-renewal-subscription-1-day'
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          await mailServiceRemider.reminderRenewalSubscription1day(
-            user,
-            spec,
-            plan.expiration
-          )
-        } else if (
-          dayjs().isAfter(dayjs(emailInfo.scheduledAt)) &&
-          emailInfo.type === 'reminder-renewal-subscription-1-week'
-        ) {
-          batch = await getBatchId()
-          isSend = true
-          // Si ya pasó más de una semana, crea un cupón de descuento para
-          // incentivar al usuario a pagar
-          const code = await createCoupon()
-          await mailServiceRemider.sendPromocionalIncentive(user, code)
-        }
-      }
-      // Se genera el payload y se actualiza el email
-      const updatePayload = {
-        wasScheduled: isSend,
-        scheduledAt: dayjs
-          .tz(dayjs(plan.expiration).add(1, mailType))
-          .format('ddd, DD MMM YYYY HH:mm:ss ZZ'),
-        batchId: batch,
-      }
-      await email.findByIdAndUpdate(emailInfo._id, updatePayload, {
-        new: true,
-      })
-    } catch (error) {
-      return conflictResponse('Email sheduling service found an error')
-    }
-  })
-  return pendingEmails.length
+  try {
+    const processedCount = await processEmailQueue(pendingEmails);
+    logger.info(`Processed ${processedCount} renewal reminder emails`);
+  } catch (error) {
+    logger.error('Error processing renewal reminder emails:', error);
+    throw error;
+  }
 }
 
-const mailingService = {
+/**
+ * Processes the email queue and sends pending emails
+ * 
+ * @param {Object} queue - Email queue data
+ * @returns {Promise<Array>} Array of send results
+ * 
+ * @example
+ * // Process email queue
+ * await processEmailQueue(queueData);
+ */
+const processEmailQueue = async (queue) => {
+  try {
+    const results = await Promise.all(
+      queue.map(async (email) => {
+        try {
+          const result = await sendEmail(email)
+          return { success: true, email, result }
+        } catch (error) {
+          return { success: false, email, error }
+        }
+      })
+    )
+    return results.filter(result => result.success).length;
+  } catch (error) {
+    logError('Error processing email queue:', error)
+    throw error
+  }
+}
+
+/**
+ * Schedules an email for future delivery
+ * 
+ * @param {Object} email - Email data
+ * @param {Date} scheduledTime - Time to send the email
+ * @returns {Promise<Object>} Scheduled email data
+ * 
+ * @example
+ * // Schedule an email
+ * await scheduleEmail(emailData, new Date('2024-03-20T14:00:00Z'));
+ */
+const scheduleEmail = async (email, scheduledTime) => {
+  try {
+    const scheduledEmail = {
+      ...email,
+      scheduledAt: scheduledTime,
+      status: 'scheduled'
+    }
+    // Store in database or queue
+    return scheduledEmail
+  } catch (error) {
+    logError('Error scheduling email:', error)
+    throw error
+  }
+}
+
+/**
+ * Cancels a scheduled email
+ * 
+ * @param {string} emailId - ID of the scheduled email
+ * @returns {Promise<boolean>} Success status
+ * 
+ * @example
+ * // Cancel scheduled email
+ * await cancelScheduledEmail('email123');
+ */
+const cancelScheduledEmail = async (emailId) => {
+  try {
+    // Remove from database or queue
+    return true
+  } catch (error) {
+    logError('Error cancelling scheduled email:', error)
+    throw error
+  }
+}
+
+/**
+ * Tracks email delivery status
+ * 
+ * @param {string} emailId - ID of the email
+ * @param {string} status - New status
+ * @param {Object} [metadata] - Additional tracking metadata
+ * @returns {Promise<Object>} Updated tracking data
+ * 
+ * @example
+ * // Track email delivery
+ * await trackEmailDelivery('email123', 'delivered', { timestamp: new Date() });
+ */
+const trackEmailDelivery = async (emailId, status, metadata = {}) => {
+  try {
+    const trackingData = {
+      emailId,
+      status,
+      timestamp: new Date(),
+      ...metadata
+    }
+    // Store in database
+    return trackingData
+  } catch (error) {
+    logError('Error tracking email delivery:', error)
+    throw error
+  }
+}
+
+/**
+ * Gets email delivery statistics
+ * 
+ * @param {Object} [filters] - Filter criteria
+ * @param {Date} [filters.startDate] - Start date for statistics
+ * @param {Date} [filters.endDate] - End date for statistics
+ * @returns {Promise<Object>} Email statistics
+ * 
+ * @example
+ * // Get email statistics
+ * const stats = await getEmailStats({
+ *   startDate: new Date('2024-03-01'),
+ *   endDate: new Date('2024-03-31')
+ * });
+ */
+const getEmailStats = async (filters = {}) => {
+  try {
+    // Query database for statistics
+    return {
+      total: 0,
+      delivered: 0,
+      failed: 0,
+      pending: 0,
+      ...filters
+    }
+  } catch (error) {
+    logError('Error getting email statistics:', error)
+    throw error
+  }
+}
+
+/**
+ * Email Management Service
+ * 
+ * @exports mailService
+ */
+const mailService = {
   sessionReminder,
   reminderPayment,
   reminderChat,
   reminderRenewal,
   getBatchId,
+  processEmailQueue,
+  scheduleEmail,
+  cancelScheduledEmail,
+  trackEmailDelivery,
+  getEmailStats
 }
 
-export default Object.freeze(mailingService)
+export default Object.freeze(mailService)

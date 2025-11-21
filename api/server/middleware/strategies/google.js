@@ -1,12 +1,47 @@
+/**
+ * Google OAuth2 Authentication Strategy
+ * 
+ * This module implements the Google OAuth2 authentication strategy using Passport.js.
+ * It handles user authentication through Google accounts, creating or updating user records
+ * based on Google profile information.
+ * 
+ * @module middleware/strategies/google
+ */
+
 import { logError } from '../../config/pino'
 import User from '../../models/user'
 import googlePassport from 'passport-google-oauth'
 const GoogleStrategy = googlePassport.OAuth2Strategy
 
-// Use the GoogleStrategy within Passport.
-//   Strategies in Passport require a `verify` function, which accept
-//   credentials (in this case, an accessToken, refreshToken, and Google
-//   profile), and invoke a callback with a user object.
+/**
+ * Google Strategy Implementation
+ * Handles Google OAuth2 authentication and user management
+ * 
+ * @param {string} accessToken - Google OAuth2 access token
+ * @param {string} refreshToken - Google OAuth2 refresh token
+ * @param {Object} profile - Google user profile
+ * @param {Function} done - Passport callback function
+ * 
+ * @example
+ * // Use in passport configuration
+ * passport.use(googleStrategy);
+ * 
+ * // Authenticate with Google
+ * router.get('/auth/google',
+ *   passport.authenticate('google', { 
+ *     scope: ['profile', 'email']
+ *   })
+ * );
+ * 
+ * // Google callback route
+ * router.get('/auth/google/callback',
+ *   passport.authenticate('google', { 
+ *     failureRedirect: '/login' 
+ *   }),
+ *   authController.handleGoogleCallback
+ * );
+ */
+
 const strategy = new GoogleStrategy(
   {
     clientID: process.env.GOOGLE_CLIENT_ID,
@@ -14,7 +49,11 @@ const strategy = new GoogleStrategy(
     callbackURL: process.env.GOOGLE_STRATEGY_CALLBACK,
   },
   async function(accessToken, refreshToken, profile, done) {
-    /* Si algun error ocurre con mongoose, necesitamos retornar un done y ademas hacer log del error */
+    /**
+     * Handles strategy errors by logging and returning false
+     * @param {Error} err - Error object
+     * @param {Function} done - Passport callback
+     */
     const onStrategyError = (err, done) => {
       logError(err)
       return done(null, false)
@@ -22,6 +61,11 @@ const strategy = new GoogleStrategy(
 
     const googleEmail = profile.emails[0].value
 
+    /**
+     * Creates a new user from Google profile data
+     * @param {Object} profile - Google user profile
+     * @returns {Promise<User>} New user document
+     */
     const createOneUser = async profile => {
       const newUser = new User({
         name: profile.name.givenName,
@@ -34,21 +78,37 @@ const strategy = new GoogleStrategy(
       return await newUser.save()
     }
 
+    /**
+     * Updates existing user with Google profile data
+     * @param {User} user - Existing user document
+     * @param {Object} profile - Google user profile
+     * @returns {Promise<User>} Updated user document
+     */
     const updateOneUser = async (user, profile) => {
       user.img = profile.photos[0].value
       user.googleId = profile.id
       return await user.save()
     }
 
+    /**
+     * Finds user by Google email
+     * @param {string} email - User's Google email
+     * @returns {Promise<User>} User document if found
+     */
     const findOneWIthGoogleEmail = async email => {
       return User.findOne({ email })
     }
 
+    /**
+     * Finds user by Google ID
+     * @param {string} googleId - User's Google ID
+     * @returns {Promise<User>} User document if found
+     */
     const findOneWithGoogleId = async googleId => {
       return User.findOne({ googleId })
     }
-    // Importante. Es posible que el correo exista en la db entonces nosotros buscamos si existe
-    // en caso de encontrar un usuario, actualizamos sus datos y añadimos la id de google profile
+
+    // Check if user exists with Google email
     const userFromEmail = await findOneWIthGoogleEmail(googleEmail).catch(err =>
       onStrategyError(err, done)
     )
@@ -62,11 +122,13 @@ const strategy = new GoogleStrategy(
       }
     } else {
       try {
+        // Check if user exists with Google ID
         const userFromId = await findOneWithGoogleId(profile.id)
         if (userFromId) {
           const updatedUser = await updateOneUser(userFromId, profile)
           return done(null, updatedUser)
         } else {
+          // Create new user if not found
           const newUser = await createOneUser(profile)
           return done(null, newUser)
         }

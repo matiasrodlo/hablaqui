@@ -1,5 +1,6 @@
 import s3 from '../../config/bucket'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
+const logger = require('../../utils/logger');
 
 /**
  * middlerware for save in google storage cloud
@@ -35,17 +36,17 @@ const storage = async (req, res, next) => {
   try {
     const putObjectCommand = new PutObjectCommand(s3Params[0])
     const putObjectResponse = await s3.s3Client.send(putObjectCommand)
-    console.log(`Object uploaded successfully at ${putObjectResponse.ETag}`)
+    logger.info(`Object uploaded successfully at ${putObjectResponse.ETag}`)
     req.file.cloudStorageObject = req.file.originalname
     req.file.avatar = s3.getPublicUrlAvatar(awsname)
     const putObjectCommandThumb = new PutObjectCommand(s3Params[1])
     const putObjectResponseThumb = await s3.s3Client.send(putObjectCommandThumb)
-    console.log(`Object uploaded successfully at ${putObjectResponseThumb.ETag}`)
+    logger.info(`Object uploaded successfully at ${putObjectResponseThumb.ETag}`)
     req.file.avatarThumbnail = s3.getPublicUrlAvatarThumb(awsname)
     next()
   } catch (error) {
+    logger.error('Error uploading avatar:', error);
     req.file.cloudStorageError = error
-    console.log(error)
     next(error)
   }
 }

@@ -1,3 +1,34 @@
+/**
+ * Scripts Service
+ * 
+ * This module handles various database migration and maintenance scripts for the Hablaquí system.
+ * It provides functionality for role changes, document migrations, and data cleanup.
+ * 
+ * Features:
+ * - Role management scripts
+ * - Document migration utilities
+ * - Data cleanup operations
+ * - Field renaming utilities
+ * - Cloud storage migration
+ * - Database schema updates
+ * - Bulk data operations
+ * 
+ * @module services/scripts
+ * @requires ../utils/responses/functions - Response utilities
+ * @requires ../models/user - User model
+ * @requires ../models/specialist - Specialist model
+ * @requires ../models/recruitment - Recruitment model
+ * @requires ../models/sessions - Session model
+ * @requires ../models/chat - Chat model
+ * @requires ../models/email - Email model
+ * @requires ../models/evaluation - Evaluation model
+ * @requires ../models/psychologist - Psychologist model
+ * @requires ../models/transaction - Transaction model
+ * @requires ../config/bucket - AWS S3 configuration
+ * @requires @aws-sdk/client-s3 - AWS SDK
+ * @requires @google-cloud/storage - Google Cloud Storage
+ */
+
 'use strict'
 
 import { okResponse, conflictResponse } from '../utils/responses/functions'
@@ -14,6 +45,17 @@ import s3 from '../config/bucket'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 const { Storage } = require('@google-cloud/storage')
 
+/**
+ * Changes user role from psychologist to specialist
+ * 
+ * This function:
+ * 1. Finds all users with psychologist role
+ * 2. Updates their role to specialist
+ * 3. Returns updated user list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated users
+ */
 const changeRole = async () => {
   // Se buca a todos los usuarios con el rol de especialista
   const user = await userModel.find({ role: 'psychologist' })
@@ -23,6 +65,17 @@ const changeRole = async () => {
   return okResponse('Rol cambiado', { user })
 }
 
+/**
+ * Adds profession field to users, specialists, and recruitments
+ * 
+ * This function:
+ * 1. Finds all relevant documents without profession field
+ * 2. Updates them with psychologist profession
+ * 3. Returns updated document list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated documents
+ */
 const addProfesion = async () => {
   // Se busca a todos los usuarios con el rol de especialista que no tengan el atributo profesion
   const users = await userModel.find({
@@ -62,6 +115,17 @@ const addProfesion = async () => {
   return okResponse('Profesion agregada', { user })
 }
 
+/**
+ * Migrates chat documents from psychologist to specialist reference
+ * 
+ * This function:
+ * 1. Finds all chats with psychologist field
+ * 2. Renames field to specialist
+ * 3. Returns updated chat list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated chats
+ */
 const migrateDocumentChat = async () => {
   const psychologist = await Chat.find({
     psychologist: { $exists: true },
@@ -75,6 +139,18 @@ const migrateDocumentChat = async () => {
   return okResponse('Chats actualizados', { psychologist })
 }
 
+/**
+ * Migrates email documents from psychologist to specialist reference
+ * 
+ * This function:
+ * 1. Finds all emails with psyRef field
+ * 2. Renames field to specRef
+ * 3. Updates lastMessageSendBy field
+ * 4. Returns updated email list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated emails
+ */
 const migrateDocumentEmail = async () => {
   const psychologist = await Email.find({
     psyRef: { $exists: true },
@@ -91,6 +167,17 @@ const migrateDocumentEmail = async () => {
   return okResponse('Correos actualizados', { psychologist })
 }
 
+/**
+ * Migrates evaluation documents from psychologist to specialist reference
+ * 
+ * This function:
+ * 1. Finds all evaluations with psychologist field
+ * 2. Renames field to specialist
+ * 3. Returns updated evaluation list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated evaluations
+ */
 const migrateDocumentEvaluation = async () => {
   const psychologist = await Evaluation.find({
     psychologist: { $exists: true },
@@ -104,6 +191,18 @@ const migrateDocumentEvaluation = async () => {
   return okResponse('Evaluaciones actualizadas', { psychologist })
 }
 
+/**
+ * Migrates psychologist documents to specialist model
+ * 
+ * This function:
+ * 1. Finds all psychologist documents
+ * 2. Creates corresponding specialist documents
+ * 3. Deletes original psychologist documents
+ * 4. Returns migration status
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with migration status
+ */
 const migrateDocumentPsychologist = async () => {
   const psychologist = await Psychologist.find()
   if (!psychologist) return okResponse('No hay especialistas por actualizar')
@@ -115,6 +214,17 @@ const migrateDocumentPsychologist = async () => {
   return okResponse('Especialistas actualizados', { psychologist })
 }
 
+/**
+ * Migrates session documents from psychologist to specialist reference
+ * 
+ * This function:
+ * 1. Finds all sessions with psychologist field
+ * 2. Renames field to specialist
+ * 3. Returns updated session list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated sessions
+ */
 const migrateDocumentSessions = async () => {
   const psychologist = await sessionModel.find({
     psychologist: { $exists: true },
@@ -128,6 +238,17 @@ const migrateDocumentSessions = async () => {
   return okResponse('Sesiones actualizadas', { psychologist })
 }
 
+/**
+ * Migrates transaction documents from psychologist to specialist reference
+ * 
+ * This function:
+ * 1. Finds all transactions with psychologist field
+ * 2. Renames field to specialist
+ * 3. Returns updated transaction list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated transactions
+ */
 const migrateDocumentTransactions = async () => {
   const psychologist = await transactionModel.find({
     psychologist: { $exists: true },
@@ -141,6 +262,17 @@ const migrateDocumentTransactions = async () => {
   return okResponse('Transacciones actualizadas', { psychologist })
 }
 
+/**
+ * Migrates user documents from psychologist to specialist reference
+ * 
+ * This function:
+ * 1. Finds all users with psychologist field
+ * 2. Renames field to specialist
+ * 3. Returns updated user list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated users
+ */
 const migrateDocumentUsers = async () => {
   const psychologist = await userModel.find({
     specialist: { $exists: false },
@@ -155,6 +287,17 @@ const migrateDocumentUsers = async () => {
   return okResponse('Usuarios actualizados', { psychologist })
 }
 
+/**
+ * Renames plan fields from psyPlans to specPlans
+ * 
+ * This function:
+ * 1. Finds all documents with psyPlans field
+ * 2. Renames field to specPlans
+ * 3. Returns updated document list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated documents
+ */
 const renamePsyPlans = async () => {
   const psychologist = await Psychologist.find({
     specPlans: { $exists: false },
@@ -180,6 +323,17 @@ const renamePsyPlans = async () => {
   return okResponse('Especialistas actualizados', { psychologist })
 }
 
+/**
+ * Executes all migration scripts in sequence
+ * 
+ * This function:
+ * 1. Renames plan fields
+ * 2. Migrates all document types
+ * 3. Returns overall migration status
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with migration status
+ */
 const migrateAll = async () => {
   await renamePsyPlans()
   await migrateDocumentChat()
@@ -192,6 +346,17 @@ const migrateAll = async () => {
   return okResponse('Migracion completada')
 }
 
+/**
+ * Removes profession field from users, specialists, and recruitments
+ * 
+ * This function:
+ * 1. Finds all documents with profession field
+ * 2. Removes the field
+ * 3. Returns updated document list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated documents
+ */
 const removeProfesion = async () => {
   // Se busca a todos los usuarios con el rol de especialista que no tengan el atributo profesion
   const users = await userModel.find({
@@ -231,6 +396,17 @@ const removeProfesion = async () => {
   return okResponse('Profesion eliminada', { user })
 }
 
+/**
+ * Changes user role from specialist to psychologist
+ * 
+ * This function:
+ * 1. Finds all users with specialist role
+ * 2. Updates their role to psychologist
+ * 3. Returns updated user list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated users
+ */
 const removeRole = async () => {
   // Se buca a todos los usuarios con el rol de especialista
   const user = await userModel.find({ role: 'specialist' })
@@ -240,6 +416,17 @@ const removeRole = async () => {
   return okResponse('Rol cambiado', { user })
 }
 
+/**
+ * Reverts chat documents from specialist to psychologist reference
+ * 
+ * This function:
+ * 1. Finds all chats with specialist field
+ * 2. Renames field to psychologist
+ * 3. Returns updated chat list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated chats
+ */
 const returnDocumentChat = async () => {
   const psychologist = await Chat.find({
     psychologist: { $exists: false },
@@ -256,6 +443,18 @@ const returnDocumentChat = async () => {
   return okResponse('Chats actualizados', { psychologist })
 }
 
+/**
+ * Reverts email documents from specialist to psychologist reference
+ * 
+ * This function:
+ * 1. Finds all emails with specRef field
+ * 2. Renames field to psyRef
+ * 3. Updates lastMessageSendBy field
+ * 4. Returns updated email list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated emails
+ */
 const returnDocumentEmail = async () => {
   const psychologist = await Email.find({
     psyRef: { $exists: false },
@@ -269,6 +468,17 @@ const returnDocumentEmail = async () => {
   return okResponse('Correos actualizados', { psychologist })
 }
 
+/**
+ * Reverts evaluation documents from specialist to psychologist reference
+ * 
+ * This function:
+ * 1. Finds all evaluations with specialist field
+ * 2. Renames field to psychologist
+ * 3. Returns updated evaluation list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated evaluations
+ */
 const returnDocumentEvaluation = async () => {
   const psychologist = await Evaluation.find({
     psychologist: { $exists: false },
@@ -282,6 +492,18 @@ const returnDocumentEvaluation = async () => {
   return okResponse('Evaluaciones actualizadas', { psychologist })
 }
 
+/**
+ * Reverts specialist documents to psychologist model
+ * 
+ * This function:
+ * 1. Finds all specialist documents
+ * 2. Creates corresponding psychologist documents
+ * 3. Deletes original specialist documents
+ * 4. Returns migration status
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with migration status
+ */
 const returnDocumentPsychologist = async () => {
   const psychologist = await specModel.find()
   if (!psychologist) return okResponse('No hay especialistas por actualizar')
@@ -293,6 +515,17 @@ const returnDocumentPsychologist = async () => {
   return okResponse('Especialistas actualizados', { psychologist })
 }
 
+/**
+ * Reverts session documents from specialist to psychologist reference
+ * 
+ * This function:
+ * 1. Finds all sessions with specialist field
+ * 2. Renames field to psychologist
+ * 3. Returns updated session list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated sessions
+ */
 const returnDocumentSessions = async () => {
   const psychologist = await sessionModel.find({
     psychologist: { $exists: false },
@@ -306,6 +539,17 @@ const returnDocumentSessions = async () => {
   return okResponse('Sesiones actualizadas', { psychologist })
 }
 
+/**
+ * Reverts transaction documents from specialist to psychologist reference
+ * 
+ * This function:
+ * 1. Finds all transactions with specialist field
+ * 2. Renames field to psychologist
+ * 3. Returns updated transaction list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated transactions
+ */
 const returnDocumentTransactions = async () => {
   const psychologist = await transactionModel.find({
     psychologist: { $exists: false },
@@ -319,6 +563,17 @@ const returnDocumentTransactions = async () => {
   return okResponse('Transacciones actualizadas', { psychologist })
 }
 
+/**
+ * Reverts user documents from specialist to psychologist reference
+ * 
+ * This function:
+ * 1. Finds all users with specialist field
+ * 2. Renames field to psychologist
+ * 3. Returns updated user list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated users
+ */
 const returnDocumentUsers = async () => {
   const psychologist = await userModel.find({
     specialist: { $exists: true },
@@ -333,6 +588,17 @@ const returnDocumentUsers = async () => {
   return okResponse('Usuarios actualizados', { psychologist })
 }
 
+/**
+ * Reverts plan fields from specPlans to psyPlans
+ * 
+ * This function:
+ * 1. Finds all documents with specPlans field
+ * 2. Renames field to psyPlans
+ * 3. Returns updated document list
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with updated documents
+ */
 const returnPsyPlans = async () => {
   const psychologist = await Psychologist.find({
     specPlans: { $exists: true },
@@ -358,6 +624,17 @@ const returnPsyPlans = async () => {
   return okResponse('Especialistas actualizados', { psychologist })
 }
 
+/**
+ * Executes all reversion scripts in sequence
+ * 
+ * This function:
+ * 1. Reverts all document types
+ * 2. Renames plan fields
+ * 3. Returns overall reversion status
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with reversion status
+ */
 const stepBack = async () => {
   await returnDocumentChat()
   await returnDocumentEmail()
@@ -370,6 +647,19 @@ const stepBack = async () => {
   return okResponse('Todo actualizado')
 }
 
+/**
+ * Migrates files from Google Cloud Storage to AWS S3
+ * 
+ * This function:
+ * 1. Initializes cloud storage clients
+ * 2. Lists files in GCP bucket
+ * 3. Downloads files from GCP
+ * 4. Uploads files to AWS
+ * 5. Returns migration status
+ * 
+ * @async
+ * @returns {Promise<Object>} Response with migration status
+ */
 const migrationGcpBucketToAws = async () => {
   const gcs = new Storage()
   const gcsBucket = ['hablaqui-email', 'hablaqui-content', 'hablaqui-blog']
@@ -413,11 +703,27 @@ const migrationGcpBucketToAws = async () => {
 const scriptsService = {
   changeRole,
   addProfesion,
+  migrateDocumentChat,
+  migrateDocumentEmail,
+  migrateDocumentEvaluation,
+  migrateDocumentPsychologist,
+  migrateDocumentSessions,
+  migrateDocumentTransactions,
+  migrateDocumentUsers,
+  renamePsyPlans,
+  migrateAll,
   removeProfesion,
   removeRole,
-  migrateAll,
+  returnDocumentChat,
+  returnDocumentEmail,
+  returnDocumentEvaluation,
+  returnDocumentPsychologist,
+  returnDocumentSessions,
+  returnDocumentTransactions,
+  returnDocumentUsers,
+  returnPsyPlans,
   stepBack,
-  migrationGcpBucketToAws,
+  migrationGcpBucketToAws
 }
 
 export default Object.freeze(scriptsService)
