@@ -1,0 +1,17 @@
+{
+  // Prettier configuration file
+  // This file defines the code formatting rules for the project
+
+  // Line length configuration
+  "printWidth": 100,  // Maximum line length before wrapping
+  "tabWidth": 2,      // Number of spaces per indentation level
+  "useTabs": false,   // Use spaces instead of tabs
+
+  // Code style configuration
+  "semi": true,       // Add semicolons at the end of statements
+  "singleQuote": true,  // Use single quotes instead of double quotes
+  "trailingComma": "es5",  // Add trailing commas where valid in ES5
+  "bracketSpacing": true,  // Add spaces between brackets in object literals
+  "arrowParens": "avoid",   // Omit parentheses around single arrow function parameters
+  "endOfLine": "crlf"
+}
