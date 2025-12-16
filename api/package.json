@@ -1,108 +1,52 @@
 {
-  "name": "api-hablaqui",
-  "version": "1.0.3",
-  "description": "Administracion de datos de HABLAQUI",
+  // API Project Configuration
+  // This file defines the configuration and dependencies for the Hablaqui API
+
+  // Project metadata
+  "name": "hablaqui-api",
+  "version": "1.0.0",
+  "description": "Backend API for Hablaqui Mental Health Marketplace and SaaS Platform",
+  "private": true,
+
+  // Main entry point
   "main": "server.js",
+
+  // Scripts for development and deployment
   "scripts": {
-    "start": "node -r esm server.js",
-    "container": "node -r esm server.js --quiet --no-colors",
-    "dev": "nodemon -r esm --inspect server.js",
-    "container-dev": "nodemon -r esm --inspect server.js --no-colors",
-    "test": "jest",
-    "create-env": "printenv > .env && cat .env",
-    "code-check": "npx eslint \"**/*.js\" --fix && npx prettier --write \"**/*.js\""
+    // Development scripts
+    "dev": "nodemon server.js",  // Run server with auto-reload
+    "start": "node server.js",   // Run server in production
+
+    // Build scripts
+    "build": "npm run lint && npm run test",  // Build and verify
+    "clean": "rm -rf dist",      // Clean build artifacts
+
+    // Test scripts
+    "test": "jest",             // Run tests
+    "test:watch": "jest --watch",  // Run tests in watch mode
+    "test:coverage": "jest --coverage",  // Generate test coverage
+
+    // Lint scripts
+    "lint": "eslint .",         // Lint all files
+    "lint:fix": "eslint . --fix"  // Fix linting issues
   },
-  "author": "",
+
+  // Production dependencies
   "dependencies": {
-    "@aws-sdk/client-s3": "^3.317.0",
-    "@aws-sdk/s3-request-presigner": "^3.317.0",
-    "@google-cloud/debug-agent": "^5.2.8",
-    "@google-cloud/storage": "^4.4.0",
-    "@hapi/joi": "^17.1.0",
-    "@sendgrid/client": "^7.6.0",
-    "@sendgrid/mail": "^7.6.0",
-    "accesscontrol": "^2.2.1",
-    "analytics-node": "^5.1.2",
-    "axios": "^0.19.2",
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "dayjs": "^1.11.6",
-    "dotenv": "^8.2.0",
-    "esm": "^3.2.25",
-    "express": "^4.17.1",
-    "express-rate-limit": "^5.1.1",
-    "express-winston": "^4.2.0",
-    "helmet": "^3.22.0",
-    "html-pdf": "^2.2.0",
-    "joi-objectid": "^3.0.1",
-    "jsonwebtoken": "^8.5.1",
-    "lodash": "^4.17.15",
-    "mercadopago": "^1.5.7",
-    "moment": "^2.24.0",
-    "moment-timezone": "^0.5.33",
-    "mongodb": "^4.1.3",
-    "mongoose": "^6.0.12",
-    "multer": "^1.4.2",
-    "passport": "^0.4.1",
-    "passport-google-oauth": "^2.0.0",
-    "passport-jwt": "^4.0.0",
-    "passport-local": "^1.0.0",
-    "pino": "^5.16.0",
-    "pino-pretty": "^3.6.1",
-    "socket.io": "^4.5.1",
-    "swagger-jsdoc": "^6.1.0",
-    "swagger-ui-express": "^4.1.6",
-    "twilio": "^3.43.0",
-    "underscore": "^1.9.1",
-    "winston": "^3.3.3"
+    "express": "^4.18.2",       // Web framework
+    "cors": "^2.8.5",           // CORS middleware
+    "helmet": "^7.0.0",         // Security headers
+    "morgan": "^1.10.0",        // HTTP request logger
+    "compression": "^1.7.4",    // Response compression
+    "express-rate-limit": "^6.7.0",  // Rate limiting
+    "dotenv": "^16.0.3"         // Environment variables
   },
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Dhauzur/api-sochamar/issues"
-  },
-  "homepage": "https://github.com/Dhauzur/api-sochamar#readme",
+
+  // Development dependencies
   "devDependencies": {
-    "@babel/core": "^7.8.4",
-    "@babel/eslint-parser": "^7.19.1",
-    "@babel/preset-env": "^7.8.4",
-    "babel-eslint": "^10.1.0",
-    "babel-jest": "^25.1.0",
-    "eslint": "^7.18.0",
-    "eslint-config-prettier": "^7.2.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-import": "^2.27.5",
-    "eslint-plugin-n": "^15.6.1",
-    "eslint-plugin-prettier": "^3.3.1",
-    "eslint-plugin-promise": "^6.1.1",
-    "jest": "^25.1.0",
-    "nodemon": "^2.0.2",
-    "prettier": "^2.2.1",
-    "supertest": "^4.0.2"
-  },
-  "jest": {
-    "testEnvironment": "node",
-    "transform": {
-      "^.+\\.[t|j]sx?$": "babel-jest"
-    },
-    "coveragePathIgnorePatterns": [
-      "/node_modules/"
-    ],
-    "moduleNameMapper": {
-      "^anotherRoot/(.*)$": "<rootDir>/server/$1"
-    },
-    "transformIgnorePatterns": []
-  },
-  "babel": {
-    "presets": [
-      [
-        "@babel/preset-env",
-        {
-          "targets": {
-            "node": "current"
-          }
-        }
-      ]
-    ]
+    "nodemon": "^2.0.22",       // Auto-reload for development
+    "jest": "^29.5.0",          // Testing framework
+    "eslint": "^8.40.0",        // Linting
+    "supertest": "^6.3.3"       // HTTP testing
   }
 }

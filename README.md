@@ -1,41 +1,73 @@
-<!-- PROJECT LOGO -->
-<br />
-<p align="center">
-  <a href="https://github.com/othneildrew/Best-README-Template">
-    <img src="https://cdn.hablaqui.cl/static/logo_tiny.png" alt="Logo" width="120" height="120">
-  </a>
+![image](https://github.com/user-attachments/assets/aa68a627-647a-4ec2-b814-58ddb9c0f82b)
 
-  <h3 align="center">Hablaquí</h3>
+# Hablaquí
 
-  <p align="center">
-   Psicólogo y terapia online de calidad sin salir de casa | Hablaquí
-    <br />
-    <a href="https://hablaqui.cl"><strong>Ir al sitio »</strong></a>
-    <br />
-    <br />
-    <a href="https://github.com/hablaqui/hablaqui-repository/tree/staging/landing">Landing</a>
-    ·
-    <a href="https://github.com/hablaqui/hablaqui-repository/tree/staging/api">Backend</a>
-    ·
-    <a href="https://github.com/hablaqui/hablaqui-repository/tree/staging/movil">Movil</a>
-  </p>
-</p>
+A mental health marketplace and SaaS platform connecting users with a network of over 200 certified specialists. The platform facilitates scheduling, payments, and secure video consultations.
 
-<!-- ABOUT THE PROJECT -->
-## Acerca del proyecto hablaquí
+Hablaquí was born at the Startup School of Adolfo Ibáñez University and was later incubated by Digevo Ventures, accelerated through Start-Up Chile, and backed by Google for Startups.
 
-Hablaquí es un mercado de servicios de salud mental y bienestar. Una plataforma online en la que los clientes tienen acceso a especialistas seleccionados, pudiendo programar, pagar y recibir acompañamiento psicológico vía audio, chat y videollamada. Además, para el profesional tenemos la infraestructura completa de oficina y escritorio virtual, siendo así su plataforma de marketing online.
+[Watch Product Demo](https://www.youtube.com/watch?v=3OhoPxWkAcM)
 
-### Cultura Interna
+## Quick Start
 
-Ser colaborador de Hablaquí significa un compromiso con la salud mental y la facilitación de acceso a ella, en un ambiente laboral de respeto, amabilidad y contribución mutua.
+### Prerequisites
+- Node.js (v14+)
+- Flutter SDK
+- Docker & Docker Compose
 
-Si bien nuestro propósito como organización es complejo y desafiante, nos apasiona el contribuir al bienestar humano desde un trato amigable, profesional y justo, tanto para/con nuestros consultantes como colaboradores.
+### Installation
 
-### Metodología de trabajo
+```bash
+# Clone repository
+git clone https://github.com/yourusername/hablaqui.git
+cd hablaqui
 
-Todas las semanas hacemos reuniónes de avances en la que se revisan las actividades asignadas. Esto es facilitado gracias a la plataforma Trello y Github, que organiza y optimiza nuestro tiempo y trabajo como colaboradores de este proyecto.
+# Backend
+cd api && npm install && cd ..
 
-### Comunicación
+# Mobile
+cd movil && flutter pub get && cd ..
 
-Utilizamos Discord como nuestra principal plataforma de contacto, compartiendo directamente lo que hacemos o vamos pensando. Casi siempre en canales públicos, así nuestros colaboradores están siempre al tanto sobre qué está sucediendo con los equipos de cada área. Utilizamos la tecnología no solo para facilitar el acceso a la salud mental, sino que también como parte esencial del funcionamiento de nuestro equipo.
+# Frontend
+cd landing && npm install && cd ..
+```
+
+### Development
+
+```bash
+# Backend
+cd api && npm run dev
+
+# Frontend
+cd landing && npm run dev
+
+# Mobile
+cd movil && flutter run
+```
+
+## Structure
+
+```
+hablaqui/
+├── api/          # Backend API (Express.js)
+├── landing/      # Frontend (Nuxt.js)
+├── movil/        # Mobile app (Flutter)
+├── docs/         # Documentation
+├── docker/       # Docker configs
+└── scripts/      # Deployment scripts
+```
+
+## Documentation
+
+- [API Documentation](docs/API.md)
+- [Server Implementation](api/server/README.md)
+- [Mobile App](movil/README.md)
+- [Frontend](landing/README.md)
+
+## Environment
+
+Create `.env` files in `api/` and `landing/` with required environment variables. See each component's README for details.
+
+---
+
+Built with ❤️ Remotly

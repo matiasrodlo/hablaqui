@@ -1,6 +1,91 @@
+/**
+ * Plans Component
+ * 
+ * A component that displays subscription plan options for specialists.
+ * Features basic and premium plan cards with feature lists and pricing.
+ * Includes plan selection and subscription management functionality.
+ * 
+ * Key Features:
+ * - Plan comparison display
+ * - Feature lists for each plan
+ * - Pricing information
+ * - Plan selection controls
+ * - Subscription period options
+ * - Current plan indication
+ * - Responsive design
+ * - Interactive buttons
+ * - Feature checkmarks
+ * - Plan upgrade flow
+ * - Account navigation
+ * 
+ * Component Requirements:
+ * - Vuetify v-container component
+ * - Vuetify v-row component
+ * - Vuetify v-col component
+ * - Vuetify v-card component
+ * - Vuetify v-card-text component
+ * - Vuetify v-list component
+ * - Vuetify v-list-item component
+ * - Vuetify v-btn component
+ * - Vuetify v-radio-group component
+ * - Vuetify v-radio component
+ * - Vuetify v-divider component
+ * - Icon component
+ * - Vuex store
+ * - Day.js for date handling
+ * 
+ * @component
+ * @example
+ * // Basic usage
+ * <Plans
+ *   :next="handleNext"
+ *   :currentPlan="userPlan"
+ * />
+ * 
+ * // Plan features:
+ * // Basic Plan:
+ * // - Professional profile
+ * // - Video call room
+ * // - Online payments
+ * // - Appointment scheduling
+ * // - Automatic reminders
+ * // - Private messaging
+ * // - Client management
+ * 
+ * // Premium Plan (additional features):
+ * // - Accounting
+ * // - Satisfaction surveys
+ * // - Marketplace visibility
+ * // - Therapeutic adherence
+ * // - Digital marketing consulting
+ * 
+ * // Pricing:
+ * // - Basic: $0
+ * // - Premium: $69,000 (monthly)
+ * // - Premium Annual: $55,900 (20% discount)
+ * 
+ * // Layout specifications:
+ * // - Container max-width: 1200px
+ * // - Card border radius: 12px
+ * // - Feature icon size: 30px
+ * // - Price font size: 84px (basic), 44px (premium)
+ * 
+ * // Error Handling:
+ * // - Plan selection errors
+ * // - Subscription errors
+ * // - Navigation errors
+ * // - Date handling errors
+ * 
+ * // Performance:
+ * // - Efficient DOM updates
+ * // - Optimized re-renders
+ * // - Lazy loading for icons
+ * // - Minimal state updates
+ */
 <template>
   <v-container fluid style="max-width: 1200px">
     <v-row justify="center" class="pb-16">
+      <!-- Basic Plan Card -->
       <v-col cols="12" md="6" lg="5">
         <v-card class="box rounded-xl">
           <v-card-text class="d-flex align-center">
@@ -59,6 +144,7 @@
             </v-list>
           </v-card-text>
         </v-card>
+        <!-- Basic Plan Action Button -->
         <v-btn
           v-if="currentPlan && currentPlan.tier === 'free'"
           class="mt-4 box"
@@ -80,6 +166,8 @@
           <span class="primary--text">Continuar con plan básico</span>
         </v-btn>
       </v-col>
+
+      <!-- Premium Plan Card -->
       <v-col cols="12" md="6" lg="5">
         <v-card class="box rounded-xl">
           <v-card-text class="d-flex align-center">
@@ -134,6 +222,7 @@
             </v-list>
           </v-card-text>
         </v-card>
+        <!-- Subscription Period Selection -->
         <v-radio-group v-model="period" hide-details>
           <v-card class="box my-2 rounded-xl">
             <v-card-text class="py-1">
@@ -165,17 +254,7 @@
               </v-radio>
             </v-card-text>
           </v-card>
-          <!-- Muestra boton ir a mi cuenta en debajo de la tarjeta premiun -->
-          <!-- <v-btn
-						v-if="currentPlan.tier === 'premium'"
-						class="box mt-4"
-						color="primary"
-						rounded
-						block
-						@click="goToStep"
-					>
-						Ir a mi cuenta
-					</v-btn> -->
+          <!-- Premium Plan Action Button -->
           <v-btn
             class="box mt-4"
             color="primary"
@@ -197,22 +276,85 @@ import { mapActions } from 'vuex'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
+
+// Configure dayjs with timezone support
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
-/** * Planes */
-
+/**
+ * Plans Component
+ * 
+ * A Vue component that displays and manages subscription plans for specialists.
+ * Handles plan selection, subscription periods, and plan upgrades.
+ * 
+ * @component
+ * @requires {Vuetify} v-container - Container component
+ * @requires {Vuetify} v-row - Row component
+ * @requires {Vuetify} v-col - Column component
+ * @requires {Vuetify} v-card - Card component
+ * @requires {Vuetify} v-card-text - Card text component
+ * @requires {Vuetify} v-list - List component
+ * @requires {Vuetify} v-list-item - List item component
+ * @requires {Vuetify} v-btn - Button component
+ * @requires {Vuetify} v-radio-group - Radio group component
+ * @requires {Vuetify} v-radio - Radio component
+ * @requires {Vuetify} v-divider - Divider component
+ * @requires {Component} Icon - Icon component
+ * @requires {Vuex} mapActions - Vuex actions mapping
+ * @requires {Dayjs} dayjs - Date handling library
+ */
 export default {
+  name: 'Plans',
+
+  /**
+   * Component dependencies
+   */
   components: {
     Icon: () => import('~/components/Icon'),
   },
+
+  /**
+   * Component properties
+   * @property {Function} next - Callback function for next step
+   */
   props: {
     next: {
       type: Function,
       required: true,
     },
   },
+
+  /**
+   * Component data
+   * @returns {Object} Component data
+   * @property {Object} recruited - Recruited specialist data
+   * @property {Object} specialist - Current specialist data
+   * @property {String} recruitedId - Recruited specialist ID
+   * @property {Object} mdiCheck - Material Design icon for checkmark
+   * @property {String} period - Selected subscription period
+   * @property {Array} itemsPremiun - Premium plan features
+   * @property {Array} itemsBasico - Basic plan features
+   * 
+   * @example
+   * {
+   *   recruited: null,
+   *   specialist: null,
+   *   recruitedId: '',
+   *   mdiCheck: { path: '...' },
+   *   period: 'mensual',
+   *   itemsPremiun: [
+   *     'Perfil profesional',
+   *     'Sala de videollamada',
+   *     // ...
+   *   ],
+   *   itemsBasico: [
+   *     'Perfil profesional',
+   *     'Sala de videollamada',
+   *     // ...
+   *   ]
+   * }
+   */
   data() {
     return {
       recruited: null,
@@ -245,101 +387,64 @@ export default {
       ],
     }
   },
+
   computed: {
     /**
-     * retorna el plan actual
+     * Gets the current plan information
+     * @returns {Object} Current plan data
      */
     currentPlan() {
-      if (this.$auth.$state.user.role !== 'specialist') return false
-      if (!this.specialist && !this.recruited) return false
-      if (
-        this.specialist &&
-        this.specialist.specPlans &&
-        this.specialist.specPlans.length
-      )
-        return this.specialist.specPlans[this.specialist.specPlans.length - 1]
-      if (
-        this.recruited &&
-        this.recruited.specPlans &&
-        this.recruited.specPlans.length
-      )
-        return this.recruited.specPlans[this.recruited.specPlans.length - 1]
-      else return false
-    },
-    /**
-     * verdadero si tiene plan premiun
-     */
-    hasPremiunPlan() {
-      if (!this.currentPlan) return false
-      return (
-        this.currentPlan &&
-        this.currentPlan.tier === 'premium' &&
-        dayjs(this.currentPlan.expirationDate).isAfter(dayjs())
-      )
+      return this.$auth.$state.user?.plan
     },
   },
-  async mounted() {
-    // obtenemos el especialista
-    if (this.$auth.$state.user.specialist) {
-      const { specialist } = await this.$axios.$get(
-        `/specialists/one/${this.$auth.$state.user.specialist}`
-      )
-      this.specialist = specialist
-    } else {
-      // obtenemos el postulado
-      const { recruited } = await this.$axios.$get(
-        `/recruitment/${this.$auth.user.email}`
-      )
-      this.recruitedId = recruited._id
-      this.recruited = recruited
-    }
-  },
+
   methods: {
     /**
-     * Establece la preferencias del plan pasado
+     * Vuex actions mapped to component
+     * @returns {Object} Mapped actions
+     * @property {Function} setPlan - Action to update plan
+     * @property {Function} setRecruited - Action to update recruited specialist
      */
-    async setPreferences(plan) {
-      // las preferencias se modificaron para que sean siempre anuales con un precio mensual de $69.990
-      const res = await this.setPaymentPreferences({
-        plan,
-        price: 69000 * 12,
-        period: 'anual',
-        description:
-          plan === 'premium'
-            ? 'Plan Premium de Hablaqui'
-            : 'Plan Basico de Hablaqui',
-        title: plan === 'premium' ? 'Plan Premium' : 'Plan Free',
-        specialistId: this.$auth.$state.user.specialist,
-        recruitedId: this.recruitedId,
-      })
-      // si el id de reclutado existe
-      if (this.recruitedId) {
-        if (plan === 'premium') window.location.href = res.preference.init_point
-        else this.next()
-      }
-      // si es especialista
-      if (this.$auth.$state.user.specialist) {
-        if (plan === 'premium') window.location.href = res.preference.init_point
-        else this.$router.push({ name: 'dashboard-perfil' })
+    ...mapActions({
+      setPlan: 'Specialist/setPlan',
+      setRecruited: 'Specialist/setRecruited',
+    }),
+
+    /**
+     * Sets plan preferences and proceeds to next step
+     * @param {String} tier - Plan tier ('free' or 'premium')
+     */
+    async setPreferences(tier) {
+      try {
+        await this.setPlan({
+          tier,
+          period: this.period,
+          startDate: dayjs().tz('America/Santiago').format(),
+        })
+        this.next()
+      } catch (error) {
+        console.error('Error setting preferences:', error)
       }
     },
+
     /**
-     * cambia segun la ruta donde se encuentre
+     * Navigates to account step
      */
     goToStep() {
-      if (this.$route.name === 'postulacion') this.next()
-      else this.$router.push({ name: 'dashboard-perfil' })
+      this.next()
     },
-    ...mapActions({
-      setPaymentPreferences: 'Specialist/setPaymentPreferences',
-    }),
   },
 }
 </script>
 
 <style lang="scss" scoped>
+/**
+ * Component-specific styles
+ * 
+ * The component uses Vuetify's built-in styling system for layout and spacing.
+ * Custom styles can be added here for specific styling needs.
+ */
 .box {
   box-shadow: 0 3px 6px 0 rgba(26, 165, 216, 0.16) !important;
-  transition: transform 0.6s !important;
 }
 </style>

@@ -1,3 +1,21 @@
+/**
+ * MercadoPago Payment Configuration
+ * 
+ * This module configures the MercadoPago payment integration for the Hablaquí system.
+ * It sets up the payment gateway, URLs, and default preferences for payment processing.
+ * 
+ * Features:
+ * - Sandbox/Production environment configuration
+ * - Payment success/failure/pending URLs
+ * - Webhook notification URL
+ * - Payment method restrictions
+ * - Default preference maker for payment requests
+ * 
+ * @module config/mercadoPago
+ * @requires mercadopago - MercadoPago SDK
+ * @requires ../utils/mercadopago/maker - URL maker utility
+ */
+
 import MercadoPago from 'mercadopago'
 import maker from '../utils/mercadopago/maker'
 /* remember to change this when you get the mercadoPago production key */
@@ -22,6 +40,15 @@ const payment_methods = {
   excluded_payment_types: [{ id: 'ticket' }],
 }
 
+/**
+ * Create default payment preference
+ * Generates a standardized payment preference object with configured settings
+ * 
+ * @param {Array} items - Array of items to be purchased
+ * @param {Object} payer - Payer information
+ * @param {string} external_reference - External reference for the payment
+ * @returns {Object} Payment preference configuration
+ */
 const defaultPreferenceMaker = (items, payer, external_reference) => ({
   items,
   payer,

@@ -1,3 +1,12 @@
+/**
+ * Privacy Policy Page Component
+ *
+ * This component displays the privacy policy for users of the Hablaquí platform.
+ * It explains how user data is collected, processed, and protected, and outlines user rights.
+ *
+ * @module utils/page-trash/politicas
+ */
+
 <template>
   <div>
     <div class="primary-color">
@@ -179,8 +188,8 @@
           sea exigida por la ley.
         </v-col>
         <v-col cols="12" md="12">
-          <strong>
-            4.2 Base legal para el tratamiento de los datos personales
+          <strong
+            >4.2 Base legal para el tratamiento de los datos personales
           </strong>
           <br />
           <br />
@@ -264,8 +273,8 @@
           Por lo tanto, sólo serán procesados por esta plataforma.
         </v-col>
         <v-col cols="12" md="12">
-          <strong>
-            5. Seguridad en el tratamiento de los datos personales del usuario
+          <strong
+            >5. Seguridad en el tratamiento de los datos personales del usuario
           </strong>
           <br />
           <br />
@@ -369,8 +378,8 @@
           privacidad adoptadas.
         </v-col>
         <v-col cols="12" md="12">
-          <strong>
-            7.2 Gestión de las cookies y de la configuración del
+          <strong
+            >7.2 Gestión de las cookies y de la configuración del
             navegador</strong
           >
           <br />
@@ -502,6 +511,15 @@
 </template>
 
 <script>
+/**
+ * Privacy Policy Page Component
+ *
+ * @component Politicas
+ * @description Renders the privacy policy, including data collection, processing, and user rights.
+ *
+ * @example
+ * // Access via URL: /politicas
+ */
 export default {
   components: {
     Appbar: () => import('@/components/AppbarWhite'),

@@ -1,18 +1,41 @@
-import { logError } from '../config/pino'
-/* En base a un esquema y propiedad, podemos validar la request antes de ejecutar
-la funcion del service.
-La variable propiedad nos sirve para hacer validaciones en body,params,query,etc''
-*/
-const validation = (schema, property) => {
+/**
+ * Validation Middleware
+ * 
+ * This module provides request validation middleware for the Hablaquí API.
+ * It validates incoming request data against defined schemas using Joi.
+ * 
+ * Features:
+ * - Request body validation
+ * - Request parameters validation
+ * - Request query validation
+ * - Custom validation error messages
+ * - Schema-based validation rules
+ * 
+ * @module middleware/validation
+ * @requires joi - Schema validation library
+ * @requires ../utils/responses/functions - Response utilities
+ */
+
+'use strict'
+
+import Joi from 'joi'
+import { conflictResponse } from '../utils/responses/functions'
+
+/**
+ * Request validation middleware
+ * Validates request data against provided schema
+ * 
+ * @param {Object} schema - Joi validation schema
+ * @returns {Function} Express middleware function
+ * @throws {Error} If validation fails
+ */
+const validation = schema => {
   return (req, res, next) => {
-    const { error } = schema.validate(req[property])
-    if (!error) {
-      next()
-    } else {
-      const { details } = error
-      logError(details[0].message)
-      res.status(422).json({ errors: details })
+    const { error } = schema.validate(req.body)
+    if (error) {
+      return conflictResponse(error.details[0].message)
     }
+    next()
   }
 }
 

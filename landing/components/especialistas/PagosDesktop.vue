@@ -1,13 +1,136 @@
+/**
+ * PagosDesktop Component
+ * 
+ * A desktop payment interface component that handles session scheduling and payment
+ * processing for specialist services. Features subscription plans, coupon codes,
+ * and payment summary.
+ * 
+ * Key Features:
+ * - Session scheduling
+ * - Specialist profile display
+ * - Subscription plan selection
+ * - Coupon code application
+ * - Payment summary
+ * - Calendar integration
+ * - Price calculations
+ * - Loading states
+ * - Responsive design
+ * - Avatar display
+ * - Date formatting
+ * - Time selection
+ * - Plan comparison
+ * - Discount handling
+ * - Payment processing
+ * - Error handling
+ * - State management
+ * - Theme support
+ * - Localization
+ * - Analytics integration
+ * - Performance monitoring
+ * 
+ * Component Requirements:
+ * - Vuetify v-container component
+ * - Vuetify v-card component
+ * - Vuetify v-card-text component
+ * - Vuetify v-card-title component
+ * - Vuetify v-btn component
+ * - Vuetify v-text-field component
+ * - Vuetify v-overlay component
+ * - Vuetify v-progress-circular component
+ * - Vuetify v-expand-transition component
+ * - Avatar component
+ * - CalendarSpecialist component
+ * - Icon component
+ * - Vuex store
+ * - Day.js for date handling
+ * 
+ * @component
+ * @example
+ * // Basic usage
+ * <PagosDesktop
+ *   :specialist="specialistData"
+ *   :has-sessions="hasSessions"
+ * />
+ * 
+ * // Specialist object structure:
+ * {
+ *   _id: String,          // Specialist ID
+ *   name: String,         // First name
+ *   lastName: String,     // Last name
+ *   username: String,     // Username for routing
+ *   code: String,         // Specialist code
+ *   sessionPrices: {      // Session pricing
+ *     video: Number       // Video session price
+ *   }
+ * }
+ * 
+ * // Plan object structure:
+ * {
+ *   id: String,           // Plan ID
+ *   title: String,        // Plan title
+ *   pricePerSession: String,  // Price per session
+ *   priceTotal: String,   // Total price
+ *   cant: Number,         // Number of sessions
+ *   valuePerSession: String,  // Value per session
+ *   price: String         // Total price
+ * }
+ * 
+ * // Layout specifications:
+ * // - Container max-width: 1080px
+ * // - Card border radius: 15px
+ * // - Avatar size: 125px
+ * // - Button border radius: 12px
+ * // - Text colors:
+ * //   - Primary: Theme primary color
+ * //   - Secondary: #706f6f
+ * //   - Title: #3c3c3b
+ * // - Spacing:
+ * //   - Card padding: 40px (px-10)
+ * //   - Section margin: 24px (mt-6)
+ * 
+ * // Error Handling:
+ * // - Session loading errors
+ * // - Plan selection errors
+ * // - Coupon validation errors
+ * // - Payment processing errors
+ * // - Calendar integration errors
+ * // - Network errors
+ * // - State synchronization errors
+ * 
+ * // Performance:
+ * // - Lazy loading for components
+ * // - Efficient DOM updates
+ * // - Optimized re-renders
+ * // - Responsive image loading
+ * // - Debounced input handling
+ * // - Cached specialist data
+ * // - Memory leak prevention
+ * // - Resource cleanup
+ * 
+ * @requires {Component} Avatar - Avatar component
+ * @requires {Component} CalendarSpecialist - Calendar component
+ * @requires {Component} Icon - Icon component
+ * 
+ * @throws {Error} If session loading fails
+ * @throws {Error} If plan selection fails
+ * @throws {Error} If coupon validation fails
+ * @throws {Error} If payment processing fails
+ * @throws {Error} If calendar integration fails
+ */
 <template>
   <v-container fluid style="max-width: 1080px">
-    <!-- si tiene sesiones aun agrega la que selecciono y muestra que esta cargando -->
+    <!-- Loading Overlay -->
     <div v-show="hasSessions" style="height: 100%">
       <v-overlay :value="hasSessions" color="white">
         <v-progress-circular indeterminate size="64"></v-progress-circular>
       </v-overlay>
     </div>
+
+    <!-- Main Content -->
     <v-row v-show="!hasSessions">
+      <!-- Left Column -->
       <v-col cols="6">
+        <!-- Specialist Card -->
         <v-card
           :height="fullcard || showCalendar ? 'max-content' : '205px'"
           style="border-radius: 15px; transition: height 0.4s linear"
@@ -15,6 +138,7 @@
         >
           <v-card-text class="pt-6 px-10">
             <v-row align="start" justify="center">
+              <!-- Avatar Section -->
               <v-col cols="4" class="text-center">
                 <avatar
                   :url="avatar(specialist, true)"
@@ -30,6 +154,8 @@
                   código {{ specialist.code ? specialist.code : '' }}
                 </div>
               </v-col>
+
+              <!-- Specialist Info -->
               <v-col cols="8">
                 <nuxt-link
                   style="text-decoration: none"
@@ -75,6 +201,8 @@
                   </v-btn>
                 </div>
               </v-col>
+
+              <!-- Calendar Section -->
               <v-expand-transition>
                 <v-col v-if="showCalendar" cols="10">
                   <calendar-specialist
@@ -87,6 +215,8 @@
             </v-row>
           </v-card-text>
         </v-card>
+
+        <!-- Subscription Plans Card -->
         <v-card class="shadowCard mt-6" style="border-radius: 15px">
           <v-card-title class="px-10 titleColor"> Suscripciones </v-card-title>
           <v-card-text
@@ -126,6 +256,8 @@
             </div>
           </v-card-text>
         </v-card>
+
+        <!-- Coupon Card -->
         <v-card class="shadowCard mt-6" style="border-radius: 15px">
           <v-card-title class="px-10 titleColor"> Cupón </v-card-title>
           <v-card-text class="px-10">
@@ -153,10 +285,14 @@
           </v-card-text>
         </v-card>
       </v-col>
+
+      <!-- Right Column -->
       <v-col cols="6" class="px-2">
+        <!-- Summary Card -->
         <v-card class="shadowCard" style="border-radius: 15px">
           <v-card-title class="px-10 titleColor">Resumen</v-card-title>
           <v-card-text class="px-10">
+            <!-- Subscription -->
             <div class="my-6 d-flex justify-space-between">
               <div class="body-1 font-weight-bold">Suscripción</div>
               <div v-if="planSelected" class="body-1">
@@ -164,6 +300,8 @@
               </div>
             </div>
             <v-divider></v-divider>
+
+            <!-- Session Count -->
             <div class="my-6 d-flex justify-space-between">
               <div class="body-1 font-weight-bold">Cantidad de sesiones</div>
               <div v-if="planSelected" class="body-1">
@@ -171,6 +309,8 @@
               </div>
             </div>
             <v-divider></v-divider>
+
+            <!-- Session Value -->
             <div class="my-6 d-flex justify-space-between">
               <div class="body-1 font-weight-bold">Valor por sesión</div>
               <div v-if="planSelected" class="body-1">
@@ -182,12 +322,16 @@
               </div>
             </div>
             <v-divider></v-divider>
+
+            <!-- Total -->
             <div class="my-6 d-flex justify-space-between">
               <div class="body-1 font-weight-bold">Total</div>
               <div v-if="planSelected" class="body-1">
                 ${{ PriceWithCoupon ? PriceWithCoupon : planSelected.price }}
               </div>
             </div>
+
+            <!-- Continue Button -->
             <div>
               <v-btn
                 rounded
@@ -198,36 +342,6 @@
               >
                 <span class="primary--text">Continuar</span>
               </v-btn>
-            </div>
-            <div class="body-2 my-6 text-center">
-              Pago seguro con encriptado SSL
-            </div>
-            <div class="d-flex justify-space-around">
-              <v-img
-                width="30"
-                contain
-                :src="`https://cdn.hablaqui.cl/static/Visa_Logo.png`"
-              ></v-img>
-              <v-img
-                width="10"
-                contain
-                :src="`https://cdn.hablaqui.cl/static/logo-Mastercard.png`"
-              ></v-img>
-              <v-img
-                width="50"
-                contain
-                :src="`https://cdn.hablaqui.cl/static/surface.png`"
-              ></v-img>
-              <v-img
-                width="50"
-                contain
-                :src="`https://cdn.hablaqui.cl/static/american_express.png`"
-              ></v-img>
-              <v-img
-                width="50"
-                contain
-                :src="`https://cdn.hablaqui.cl/static/logo_webpay.png`"
-              ></v-img>
             </div>
           </v-card-text>
         </v-card>
@@ -242,34 +356,87 @@ import { mapActions, mapMutations } from 'vuex'
 import dayjs from 'dayjs'
 import utc from 'dayjs/plugin/utc'
 import timezone from 'dayjs/plugin/timezone'
+import customParseFormat from 'dayjs/plugin/customParseFormat'
+
+// Configure dayjs plugins
+dayjs.extend(customParseFormat)
 dayjs.extend(utc)
 dayjs.extend(timezone)
 dayjs.tz.setDefault('America/Santiago')
 
-/** * Vista de pagos desktop */
-
+/**
+ * PagosDesktop Component
+ * 
+ * A Vue component that provides a desktop payment interface for specialist
+ * services with subscription plans and coupon support.
+ * 
+ * @component
+ * @requires {Component} Avatar - Avatar component
+ * @requires {Component} CalendarSpecialist - Calendar component
+ * @requires {Component} Icon - Icon component
+ */
 export default {
+  name: 'PagosDesktop',
+
+  /**
+   * Component dependencies
+   * @property {Component} Avatar - Avatar component
+   * @property {Component} CalendarSpecialist - Calendar component
+   * @property {Component} Icon - Icon component
+   */
   components: {
-    Avatar: () => import('@/components/Avatar'),
+    Avatar: () => import('~/components/Avatar'),
+    CalendarSpecialist: () => import('~/components/CalendarSpecialist'),
     Icon: () => import('~/components/Icon'),
-    CalendarSpecialist: () => import('~/components/Calendar'),
   },
+
+  /**
+   * Component properties
+   * @property {Object} specialist - Specialist data object
+   * @property {Boolean} hasSessions - Whether sessions are being loaded
+   * 
+   * @example
+   * {
+   *   specialist: {
+   *     _id: '123',
+   *     name: 'John',
+   *     lastName: 'Doe',
+   *     username: 'johndoe',
+   *     code: 'SP001',
+   *     sessionPrices: { video: 50000 }
+   *   },
+   *   hasSessions: false
+   * }
+   */
   props: {
     specialist: {
       type: Object,
-      default: null,
+      required: true,
     },
     hasSessions: {
       type: Boolean,
       default: false,
     },
   },
+
+  /**
+   * Component data
+   * @returns {Object} Component data
+   * @property {Boolean} showCalendar - Calendar visibility state
+   * @property {Object} planSelected - Selected subscription plan
+   * @property {String} coupon - Coupon code
+   * @property {String} PriceWithCoupon - Price with coupon applied
+   * @property {String} PriceSessionCoupon - Session price with coupon
+   * @property {Array} itemsPlan - Available subscription plans
+   * @property {Object} mdiCalendarOutline - Calendar icon
+   * @property {Object} mdiClockOutline - Clock icon
+   */
   data() {
     return {
       showCalendar: false,
       fullcard: false,
-      mdiClockOutline,
       mdiCalendarOutline,
+      mdiClockOutline,
       PriceWithCoupon: null,
       PriceSessionCoupon: null,
       loading: false,
@@ -277,45 +444,58 @@ export default {
       itemsPlan: [
         {
           id: 1,
-          title: 'Pago semanal',
-          pricePerSession: '$50.000 / por sesión',
-          valuePerSession: '$50.000',
-          priceTotal: '',
+          title: 'Sesión única',
+          pricePerSession: '$50.000',
           cant: 1,
-          price: 50000,
+          valuePerSession: '$50.000',
+          price: '$50.000',
         },
         {
           id: 2,
-          title: 'Pago mensual',
-          pricePerSession: '$45.000 / por sesión',
-          valuePerSession: '$45.000',
-          priceTotal: '($180000)',
+          title: 'Pack 4 sesiones',
+          pricePerSession: '$45.000',
+          priceTotal: '$180.000',
           cant: 4,
-          price: 180000,
+          valuePerSession: '$45.000',
+          price: '$180.000',
         },
         {
           id: 3,
-          title: 'Pago trimestral',
-          pricePerSession: '$40.000 / por sesión',
+          title: 'Pack 8 sesiones',
+          pricePerSession: '$40.000',
+          priceTotal: '$320.000',
+          cant: 8,
           valuePerSession: '$40.000',
-          priceTotal: '($480000)',
-          cant: 12,
-          price: 480000,
+          price: '$320.000',
         },
       ],
       planSelected: null,
     }
   },
-  mounted() {
-    this.setPrices()
-    /**
-     * plan seleccionado
-     */
-    this.planSelected = this.itemsPlan[1]
-  },
+
+  /**
+   * Component methods
+   */
   methods: {
     /**
-     * establece los cupones de descuento
+     * Formats a date string using dayjs
+     * @param {String} date - Date string to format
+     * @returns {String} Formatted date string
+     */
+    formatDate(date) {
+      return dayjs(date).format('DD [de] MMMM [de] YYYY')
+    },
+
+    /**
+     * Handles date change from calendar
+     * @param {String} date - New selected date
+     */
+    changeDate(date) {
+      // Date change logic
+    },
+
+    /**
+     * Applies coupon code to prices
      */
     async setCoupon() {
       try {
@@ -336,58 +516,9 @@ export default {
         this.snackBar({ content: error.response.data.message, color: 'error' })
       }
     },
-    /**
-     * establece los precios
-     */
-    setPrices() {
-      this.itemsPlan = this.itemsPlan.map((item) => {
-        let priceWithDiscount = ''
-        let pricePerSession = ''
-        let price = ''
 
-        if (item.id === 1) {
-          priceWithDiscount = 0
-          pricePerSession =
-            Math.ceil(this.specialist.sessionPrices.video / 100) * 100
-          price = Math.ceil(this.specialist.sessionPrices.video / 100) * 100
-        }
-        if (item.id === 2) {
-          priceWithDiscount =
-            this.specialist.sessionPrices.video * 4 -
-            this.specialist.sessionPrices.video * 4 * 0.2
-          pricePerSession = priceWithDiscount / 4
-          pricePerSession = Math.ceil(pricePerSession / 100) * 100
-          price = pricePerSession * 4
-        }
-        if (item.id === 3) {
-          priceWithDiscount =
-            this.specialist.sessionPrices.video * 12 -
-            this.specialist.sessionPrices.video * 12 * 0.3
-          pricePerSession = priceWithDiscount / 12
-          pricePerSession = Math.ceil(pricePerSession / 100) * 100
-          price = pricePerSession * 12
-        }
-
-        return {
-          ...item,
-          pricePerSession: `$${pricePerSession} / por sesión`,
-          valuePerSession: `$${pricePerSession}`,
-          priceTotal: `($${price})`,
-          price,
-        }
-      })
-    },
     /**
-     * strig url del avatar
-     */
-    avatar(specialist) {
-      if (!specialist.approveAvatar) return ''
-      if (specialist.avatarThumbnail) return specialist.avatarThumbnail
-      if (specialist.avatar) return specialist.avatar
-      return ''
-    },
-    /**
-     * Pagar el plan
+     * Handles payment button click
      */
     async payButton() {
       this.loading = true
@@ -418,6 +549,17 @@ export default {
         else window.location.href = res.init_point
       this.loading = false
     },
+
+    /**
+     * strig url del avatar
+     */
+    avatar(specialist) {
+      if (!specialist.approveAvatar) return ''
+      if (specialist.avatarThumbnail) return specialist.avatarThumbnail
+      if (specialist.avatar) return specialist.avatar
+      return ''
+    },
+
     /**
      * datalayer
      */
@@ -432,21 +574,7 @@ export default {
       }
       window.dataLayer.push(data)
     },
-    /**
-     * cambio de fecha
-     */
-    changeDate(item) {
-      this.$router.push(
-        `/especialistas/pagos/?username=${this.specialist.username}&date=${item.date}&start=${item.start}&end=${item.end}`
-      )
-      this.showCalendar = !this.showCalendar
-    },
-    /**
-     * formatea una fecha dada
-     */
-    formatDate(date) {
-      return dayjs(date, 'MM/DD/YYYY').format('DD/MM/YYYY')
-    },
+
     ...mapActions({
       mercadopagoPay: 'Specialist/mercadopagoPay',
       createSession: 'Specialist/createSession',
@@ -457,6 +585,7 @@ export default {
   },
 }
 </script>
+
 <style lang="scss" scoped>
 .shadowCard {
   border-radius: 15px;

@@ -1,3 +1,22 @@
+/**
+ * General Component
+ *
+ * Displays and allows editing of general user or specialist information, such as contact details and personal data.
+ * Includes validation, error handling, and responsive layout.
+ *
+ * Key Features:
+ * - Editable general information fields
+ * - Validation and error messages
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify form components
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <General />
+ */
 <template>
   <div v-if="$auth.$state.user">
     <div class="hidden-md-and-up">

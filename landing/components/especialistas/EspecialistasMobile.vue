@@ -1,3 +1,22 @@
+/**
+ * EspecialistasMobile Component
+ *
+ * Displays a mobile-optimized list and profile view of specialists, allowing users to browse, search, and select specialists.
+ *
+ * Key Features:
+ * - Mobile-friendly specialist list
+ * - Search and filter specialists
+ * - Profile view and selection
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify list and card components
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <EspecialistasMobile />
+ */
 <template>
   <div>
     <!-- filter name -->
@@ -155,40 +174,6 @@
                     </v-card>
                   </v-menu>
                 </v-card-text>
-                <!-- ocultado por peticion de daniel -->
-                <!-- <v-card-text class="pa-1">
-									<h4 class="titleColor font-weight-bold body-1 ml-1">Estado</h4>
-									<div
-										class="pointer"
-										@click="
-											() => {
-												status = !status;
-												changeInput();
-											}
-										"
-									>
-										<v-text-field
-											disabled
-											outlined
-											readonly
-											style="border-color: #04c396"
-											hide-details
-											dense
-											class="white"
-											value="Online"
-										>
-											<template #prepend-inner>
-												<div>
-													<icon
-														size="25px"
-														:color="status ? '#04c396' : '#54565a'"
-														:icon="mdiAccount"
-													/>
-												</div>
-											</template>
-										</v-text-field>
-									</div>
-								</v-card-text> -->
                 <v-card-text class="pa-1">
                   <h4 class="titleColor font-weight-bold body-1 ml-1">
                     Género
@@ -240,19 +225,6 @@
                         >
                           <template #label>
                             <span class="caption">Mujer</span>
-                          </template>
-                        </v-checkbox>
-                        <v-checkbox
-                          v-model="gender"
-                          value="transgender"
-                          label="Transgénero"
-                          :disabled="loadingSpecialist"
-                          class="py-2"
-                          hide-details
-                          @change="changeInput"
-                        >
-                          <template #label>
-                            <span class="caption">Transgénero </span>
                           </template>
                         </v-checkbox>
                       </v-card-text>
@@ -429,21 +401,21 @@
                   style="width: 290px"
                   class="mx-auto my-3 text-center title primary--text font-weight-bold"
                 >
-                  Te ayudamos a encontrar a tu especialista ideal
+                  Evaluación psicológica con Inteligencia Artificial
                 </div>
                 <div
                   style="max-width: 320px"
                   class="mx-auto text-center my-3 body-1 primary--text font-weight-regular"
                 >
-                  Encuentra al especialista que necesitas, solo responde las
-                  siguientes preguntas.
+                  Obtén un documento detallado con tus síntomas y metas de tratamiento.
                 </div>
                 <div class="text-center my-4">
                   <v-btn
                     rounded
                     color="primary"
                     class="px-8 py-2"
-                    @click="start"
+                    target="_blank"
+                    href="https://wa.me/message/UEPODIF6XTSYK1"
                   >
                     Comenzar
                   </v-btn>
@@ -658,23 +630,63 @@
 import { mdiChevronDown, mdiCloseCircle, mdiAccount, mdiChat } from '@mdi/js'
 import { mapGetters, mapMutations } from 'vuex'
 /**
- * Componente: Listado de especialistas en vista de mobile
+ * EspecialistasMobile Component
+ * 
+ * A Vue component that provides a mobile-optimized view for browsing and filtering
+ * specialists with touch-friendly interface.
+ * 
+ * @component
+ * @requires {Component} Icon - Icon component
+ * @requires {Vuex} mapGetters - Vuex getters mapping
+ * @requires {Vuex} mapActions - Vuex actions mapping
  */
 export default {
   name: 'EspecialistasMobile',
+
+  /**
+   * Component dependencies
+   * @property {Component} Icon - Icon component
+   * @property {Component} Avatar - Avatar component
+   * @property {Component} MiniCalendar - Mini calendar component
+   */
   components: {
-    MiniCalendar: () => import('~/components/especialistas/MiniCalendar'),
     Icon: () => import('~/components/Icon'),
+    Avatar: () => import('~/components/Avatar'),
+    MiniCalendar: () => import('~/components/especialistas/MiniCalendar'),
   },
+
+  /**
+   * Component properties
+   * @property {Boolean} loadingSpecialist - Loading state for specialists
+   * @property {Function} getSessionsLimit - Function to get sessions with limit
+   */
   props: {
     loadingSpecialist: {
       type: Boolean,
+      default: false,
     },
     getSessionsLimit: {
       type: Function,
-      required: true,
+      default: () => {},
     },
   },
+
+  /**
+   * Component data
+   * @returns {Object} Component data
+   * @property {String} searchInput - Search input value
+   * @property {Array} specialties - Selected specialties
+   * @property {Array} gender - Selected genders
+   * @property {Boolean} status - Online status filter
+   * @property {Boolean} menuSpecialties - Specialties menu visibility
+   * @property {Boolean} menuGender - Gender menu visibility
+   * @property {Boolean} showFilters - Filters dialog visibility
+   * @property {Number} scrollHeight - Scroll position
+   * @property {Number} page - Current page number
+   * @property {Array} visibles - Visible specialist IDs
+   * @property {Object} mdiChevronDown - Chevron down icon
+   * @property {Object} mdiCloseCircle - Close circle icon
+   */
   data() {
     return {
       mdiChat,
@@ -682,7 +694,7 @@ export default {
       mdiCloseCircle,
       mdiChevronDown,
       mdiAccount,
-      status: false,
+      status: true,
       menuGender: false,
       menuSpecialties: false,
       menuOthers: false,
@@ -696,9 +708,13 @@ export default {
       scrollHeight: 0,
       visibles: [],
       fullcard: [],
-      page: null,
+      page: 1,
     }
   },
+
+  /**
+   * Component computed properties
+   */
   computed: {
     /**
      * Filter search box

@@ -1,6 +1,27 @@
+/**
+ * AWS S3 Bucket Configuration and Operations
+ * 
+ * This module provides functionality for managing files in an AWS S3 bucket,
+ * specifically for handling profile pictures and their thumbnails in the Hablaquí system.
+ * 
+ * Features:
+ * - S3 client configuration with AWS credentials
+ * - Profile picture upload with automatic thumbnail generation
+ * - Public URL generation for profile pictures and thumbnails
+ * - File deletion from the bucket
+ * 
+ * @module config/bucket
+ * @requires @aws-sdk/client-s3 - AWS SDK for S3 operations
+ */
+
 'use strict'
 import { S3Client, PutObjectCommand, DeleteObjectCommand } from '@aws-sdk/client-s3' // Se importa para poder usar el servicio de S3
+const logger = require('../utils/logger');
 
+/**
+ * Initialize S3 client with AWS credentials
+ * Creates a new S3 client instance with region and access credentials
+ */
 const s3Client = new S3Client({
   region: process.env.AWS_REGION,
   credentials: {
@@ -10,9 +31,10 @@ const s3Client = new S3Client({
 })// Asignar objeto del S3
 
 /**
- * @description Función para obtener la url de un avatar
- * @param {*} fileName - Nombre del archivo
- * @returns
+ * Generate public URL for a profile picture
+ * 
+ * @param {string} filename - Name of the profile picture file
+ * @returns {string} Public URL for the profile picture
  */
 const getPublicUrlAvatar = filename => {
   // Más especifico para las imágenes de perfil.
@@ -20,9 +42,11 @@ const getPublicUrlAvatar = filename => {
 }
 
 /**
- * @description Función para obtener la url de un avatar thumbnails
- * @param {*} filename - Nombre del archivo
- * @returns 
+ * Generate public URL for a profile picture thumbnail
+ * Creates a URL for the 128x128 thumbnail version of the profile picture
+ * 
+ * @param {string} filename - Name of the profile picture file
+ * @returns {string} Public URL for the thumbnail
  */
 // public URL for thumnail avatars (in thumbnail resolution)
 const getPublicUrlAvatarThumb = filename => {
@@ -31,9 +55,12 @@ const getPublicUrlAvatarThumb = filename => {
 }
 
 /**
- * @description Función para subir un archivo al bucket
- * @param {*} key - Nombre del archivo
- * @param {*} data - Archivo
+ * Upload a file to the S3 bucket
+ * Uploads both the original file and a thumbnail version
+ * 
+ * @param {string} key - Name of the file to upload
+ * @param {Buffer|Stream} data - File data to upload
+ * @returns {Promise<void>}
  */
 const uploadFile = async (key, data) => {
   // Se utiliza para subir el archivo al bucket
@@ -50,17 +77,21 @@ const uploadFile = async (key, data) => {
   // Se sube el archivo
   try {
     const response = await s3Client.send(command)
-    console.log(`Object uploaded successfully at ${response.ETag}`)
+    logger.info(`Object uploaded successfully at ${response.ETag}`)
     const response2 = await s3Client.send(command2)
-    console.log(`Object uploaded successfully at ${response2.ETag}`)
+    logger.info(`Object uploaded successfully at ${response2.ETag}`)
+    return response;
   } catch (error) {
-    console.log(error)
+    logger.error('Error uploading file:', error)
+    throw error;
   }
 }
 
 /**
- * @description Función para eliminar un archivo del bucket
- * @param {*} key - Nombre del archivo
+ * Delete a file from the S3 bucket
+ * 
+ * @param {string} key - Name of the file to delete
+ * @returns {Promise<void>}
  */
 const deleteFile = async (key) => {
   const command = new DeleteObjectCommand({
@@ -70,11 +101,9 @@ const deleteFile = async (key) => {
 
   try {
     const response = await s3Client.send(command)
-    console.log(
-      `Object deleted successfully with status code ${response.$metadata.httpStatusCode}`
-    )
+    logger.info(`Object deleted successfully with status code ${response.$metadata.httpStatusCode}`)
   } catch (error) {
-    console.log(error)
+    logger.error('Error deleting file:', error)
   }
 }
 

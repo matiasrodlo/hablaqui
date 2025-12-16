@@ -1,32 +1,25 @@
+// Recruitment Controller
+// This controller handles HTTP requests related to recruitment operations, such as registering, updating, retrieving, approving, and flagging onboarding for recruitment profiles.
+
 'use strict'
 
 import recruitmentService from '../services/recruitment'
 import { restResponse } from '../utils/responses/functions'
 import { errorCallback } from '../utils/functions/errorCallback'
 
+// Controller object containing recruitment-related operations
 const recruitmentController = {
-  /**
-   * @description - This function is used to register the recruitment details and profile
-   * @param {object} req - The request object (Recruitment details)
-   * @param {object} res - The response object (Response code and message)
-   * @returns {object} - The response object
-   */
+  // Register a new recruitment profile
   async register(req, res) {
     try {
       const { body, user } = req
       const { data, code } = await recruitmentService.register(user, body)
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error registrando el postulado')
+      errorCallback(e, res, 'Error registering the applicant')
     }
   },
-  /**
-   * @description - This function is used to update the recruitment details of a specialist
-   * @param {object} req - The request object (Recruitment details to update)
-   * @param {object} res - The response object (Response code and message)
-   * @returns {object} - The response object
-   */
-
+  // Update an existing recruitment profile
   async update(req, res) {
     try {
       const { body } = req
@@ -34,44 +27,29 @@ const recruitmentController = {
       const { data, code } = await recruitmentService.update(body, step)
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error actualizando el especialista')
+      errorCallback(e, res, 'Error updating the specialist')
     }
   },
-  /**
-   * @description - This function is used to get the recruitment details of a specialist by mail from params
-   * @param {object} req - The request object (Recruitment email of the profile)
-   * @param res - The response object (Response code and profile)
-   * @returns {object} - The response object
-   */
+  // Get recruitment details by email
   async get(req, res) {
     try {
       const { email } = req.params
       const { data, code } = await recruitmentService.get(email)
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error obteniendo el postulante')
+      errorCallback(e, res, 'Error retrieving the applicant')
     }
   },
-  /**
-   * @description - This function is used to get all recruitment
-   * @param {object} req - The request object (Recruitment email of the profile)
-   * @param res - The response object (Response code and profile)
-   * @returns {object} - The response object
-   */
+  // Get all recruitment profiles
   async getAll(req, res) {
     try {
       const { data, code } = await recruitmentService.getAll()
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error obteniendo el postulante')
+      errorCallback(e, res, 'Error retrieving the applicants')
     }
   },
-  /**
-   * @description - This function is used to approve a specific Recruitment profile by mail
-   * @param {object} req - The request object (Recruitment email of the profile)
-   * @param res - The response object (Response code and the new Specialist profile)
-   * @returns {object} - The response object
-   */
+  // Approve a recruitment profile
   async approve(req, res) {
     try {
       const { user } = req
@@ -79,15 +57,10 @@ const recruitmentController = {
       const { data, code } = await recruitmentService.approve(user, email)
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error aprobando el postulante')
+      errorCallback(e, res, 'Error approving the applicant')
     }
   },
-  /**
-   * @description - This function is used to update oonboarding flag from recruitment
-   * @param {object} req - The request object (Recruitment id of the profile and new flags to update)
-   * @param res - The response object (Response code and the new recruitment profile)
-   * @returns {object} - The response object
-   */
+  // Update onboarding flag for a recruitment profile
   async flagOnboarding(req, res) {
     try {
       const { recruitedId } = req.params
@@ -97,7 +70,7 @@ const recruitmentController = {
       )
       restResponse(data, code, res)
     } catch (e) {
-      errorCallback(e, res, 'Error aprobando el postulante')
+      errorCallback(e, res, 'Error updating onboarding flag for the applicant')
     }
   },
 }

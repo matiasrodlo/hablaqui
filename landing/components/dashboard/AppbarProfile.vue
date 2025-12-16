@@ -1,3 +1,23 @@
+/**
+ * AppbarProfile Component
+ *
+ * A top navigation bar for the dashboard/profile area, providing navigation, support links, and logout functionality.
+ *
+ * Key Features:
+ * - Back navigation button
+ * - Support and FAQ links
+ * - Premium plan link (for specialists)
+ * - Logout button
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-app-bar, v-btn, v-img
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <AppbarProfile title="Perfil" />
+ */
 <template>
   <v-app-bar style="border-radius: 50px" color="white" light height="110" flat>
     <v-btn v-if="goBack" icon @click="() => $router.go(-1)">

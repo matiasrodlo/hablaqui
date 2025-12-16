@@ -1,5 +1,25 @@
+# Google Cloud Ignore Configuration
+# This file specifies which files and directories should be excluded when deploying to Google Cloud
+
+# Version control
 .git
 .gitignore
 
-# Node.js dependencies:
+# Dependencies
 node_modules/
+
+# Environment files
+.env
+.env.*
+
+# Build output
+dist/
+build/
+coverage/
+
+# Development files
+*.log
+*.test.js
+*.spec.js
+*.test.ts
+*.spec.ts

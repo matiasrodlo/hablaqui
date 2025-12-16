@@ -1,0 +1,64 @@
+# Cloud Development Docker Compose Configuration
+# This file defines the services and their configurations for cloud-based development environment.
+# It includes network isolation, fixed IPs, and cloud-specific settings.
+
+version: '3.8'  # Using Docker Compose version 3.8 for latest features
+
+services:
+  # Frontend service configuration for cloud environment
+  landing-ui:
+    build:
+      context: ../..  # Build context is the root directory
+      dockerfile: docker/prod/Dockerfile.dev  # Using development Dockerfile
+    container_name: hablaqui-landing-ui-cloud  # Fixed container name for cloud environment
+    ports:
+      - "9000:9000"  # Frontend development server port
+      - "8080:8080"  # Nuxt.js development server port
+    volumes:
+      - ../../landing:/app  # Mount source code for hot-reloading
+      - /app/node_modules  # Preserve container node_modules
+    environment:
+      - API_ABSOLUTE=http://192.168.81.20:3000  # Backend API URL with fixed IP
+      - NODE_ENV=development  # Development environment
+      - VUE_APP_URL=http://192.168.81.20:3000/api/v1  # API endpoint with fixed IP
+      - HOST=0.0.0.0  # Host binding for Nuxt
+      - PORT=8080  # Port for Nuxt server
+    networks:
+      hablaqui-network:
+        ipv4_address: 192.168.81.10  # Fixed IP for frontend service
+    depends_on:
+      - api-restful  # Ensure backend is started first
+
+  # Backend service configuration for cloud environment
+  api-restful:
+    build:
+      context: ../..  # Build context is the root directory
+      dockerfile: docker/prod/Dockerfile.dev  # Using development Dockerfile
+    container_name: hablaqui-api-cloud  # Fixed container name for cloud environment
+    ports:
+      - "3000:3000"  # Backend API port
+    volumes:
+      - ../../api:/app  # Mount source code for hot-reloading
+      - /app/node_modules  # Preserve container node_modules
+    environment:
+      # Environment variables loaded from external sources
+      - API_URL=${API_URL}  # API base URL from environment
+      - MERCADOPAGO_KEY=${MERCADOPAGO_KEY}  # MercadoPago key from environment
+      - PORT=${PORT}  # Port from environment
+      - SEGMENT_API_KEY=${SEGMENT_API_KEY}  # Segment key from environment
+      - SENDGRID_API_KEY=${SENDGRID_API_KEY}  # SendGrid key from environment
+      - URLDB=${URLDB}  # Database URL from environment
+      - VUE_APP_LANDING=${VUE_APP_LANDING}  # Frontend URL from environment
+    networks:
+      hablaqui-network:
+        ipv4_address: 192.168.81.20  # Fixed IP for backend service
+
+# Custom network configuration for cloud environment
+networks:
+  hablaqui-network:
+    driver: bridge  # Use bridge network driver
+    ipam:
+      driver: default
+      config:
+        - subnet: 192.168.81.0/24  # Custom subnet for cloud development
+          gateway: 192.168.81.1  # Network gateway

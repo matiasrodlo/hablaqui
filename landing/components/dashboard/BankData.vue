@@ -1,3 +1,25 @@
+/**
+ * BankData Component
+ *
+ * A form for specialists to enter or update their bank account information for payments.
+ * Includes validation for all fields and error handling for invalid entries.
+ *
+ * Key Features:
+ * - Bank selection
+ * - Account type selection
+ * - Input fields for RUT, name, account number, email
+ * - Validation and error messages
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-autocomplete, v-text-field, v-select, v-btn
+ * - Vuelidate for validation
+ * - Vuex for actions
+ *
+ * @component
+ * @example
+ * <BankData :specialist="specialist" />
+ */
 <template>
   <v-row class="mb-16">
     <v-col cols="12" class="d-flex justify-space-between align-center">

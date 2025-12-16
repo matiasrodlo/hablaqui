@@ -1,3 +1,23 @@
+/**
+ * ExperienciaFormacion Component
+ *
+ * Allows specialists to manage their therapeutic models, specialties, languages, and academic formation.
+ * Supports adding, editing, and removing formation entries with validation and error handling.
+ *
+ * Key Features:
+ * - Select therapeutic models, specialties, and languages
+ * - Manage academic formation entries
+ * - Add, edit, and remove formation
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-select, v-list, v-list-item, v-btn, v-dialog
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <ExperienciaFormacion :specialist="specialist" />
+ */
 <template>
   <v-row class="mb-16 mt-10">
     <v-col cols="12" md="8">

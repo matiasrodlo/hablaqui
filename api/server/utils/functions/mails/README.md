@@ -1,23 +1,21 @@
-# Servicio de envío de correos
+# Email Sending Service
 
 ## Table of Contents
 
-1. [Lógica de envío de correos](#logic)
-1. [Envío de Recordatorio de Sesión](#session)
-2. [Envío de Recordatorio de Pago](#payment)
-3. [Envío de Mensaje en el Chat](#chat)
-4. [Envío de Recordatorio de Renovación de Plan](#renewal)
-5. [Procemiento de QA](#QA)
+1. [Email Sending Logic](#logic)
+2. [Session Reminder Emails](#session)
+3. [Payment Reminder Emails](#payment)
+4. [Chat Message Emails](#chat)
+5. [Plan Renewal Reminder Emails](#renewal)
+6. [QA Procedure](#qa)
 
 ### LOGIC
 
 ---
 
-La lógica que se está llevando a cabo es bastante simple. Utiliza algo similar (no igual pero es para que se entienda)
-a lo que sería una estructura de dato lineal "cola", ya que a través del cron y el archivo 'mailing.js' (en esta misma carpeta)
-se van programando el envío de correos, y si el correo (que queda guardado en la base de datos) no se ha enviado sobrepasando
-la fecha de envío es enviado.
-Esta fecha de envío depende del tipo de correo que se vaya a enviar, ya que cada uno tiene su propio tiempo de envío. 
+The logic implemented here is quite simple. It uses a structure similar to a linear data structure "queue" (not exactly, but for understanding purposes), where, through a cron job and the 'mailing.js' file (in this same folder), emails are scheduled for sending. If an email (which is stored in the database) has not been sent after its scheduled date, it is sent.
+
+The scheduled date depends on the type of email to be sent, as each has its own sending time.
 
 ---
 
@@ -25,8 +23,7 @@ Esta fecha de envío depende del tipo de correo que se vaya a enviar, ya que cad
 
 ---
 
-El correo de recordatorio de sesión se envía 1 hora antes de que la sesión se inicie y 1 día antes de que la sesión se inicie.
-Esto se hace para que el usuario tenga tiempo de prepararse para la sesión, entre otras cosas.
+The session reminder email is sent 1 hour before the session starts and 1 day before the session starts. This is done so the user has time to prepare for the session, among other reasons.
 
 ---
 
@@ -34,11 +31,7 @@ Esto se hace para que el usuario tenga tiempo de prepararse para la sesión, ent
 
 ---
 
-El correo de recordatorio de pago se envía cuando el usuario le da al botón de pagar y llega a la página de mercadopago para
-realizar la compra del plan, no obstante, el usuario no termina de concretar la compra. Este correo se envía para que el usuario
-sepa que no se ha realizado el pago y que puede volver a intentarlo. El correo se envía 1 hora después de que el usuario
-haya llegado a la página de mercadopago, así también un día después. Después de una semana al usuario le llega un cupón de
-descuento para incentivar el pago que es de un 20% de descuento. Estos correos son eliminados una vez que el usuario paga el plan.
+The payment reminder email is sent when the user clicks the pay button and reaches the MercadoPago page to make the plan purchase, but does not complete the purchase. This email is sent to let the user know that the payment was not completed and that they can try again. The email is sent 1 hour after the user reached the MercadoPago page, and again 1 day later. After a week, the user receives a discount coupon to encourage payment, offering a 20% discount. These emails are deleted once the user completes the payment.
 
 ---
 
@@ -46,10 +39,7 @@ descuento para incentivar el pago que es de un 20% de descuento. Estos correos s
 
 ---
 
-El correo de mensaje en el chat se envía cuando el usuario recibe un mensaje en el chat y no ha sido leido. Este correo se envía
-15 minutos después de haya llegado el mensaje y no ha sido leido a través del endpoint scheduleChatEmails que se encuentra
-en 'cron.js', este endpoint es importante por que también crea el correo que será programado para enviarse un día después de
-que el mensaje no haya sido leido.
+The chat message email is sent when the user receives a message in the chat that has not been read. This email is sent 15 minutes after the message arrives and remains unread, via the scheduleChatEmails endpoint found in 'cron.js'. This endpoint is important because it also creates the email that will be scheduled to be sent one day after the message remains unread.
 
 ---
 
@@ -57,10 +47,7 @@ que el mensaje no haya sido leido.
 
 ---
 
-El correo de recordatorio de renovación de plan se envía cuando el usuario tiene un plan ya vencido y no ha renovado su plan.
-Este correo se envía en tres ocasiones, el primero una hora después de que el plan haya vencido, así también 1 día después.
-Finalmente al igual que el correo de recordatorio de pago, se envía un cupón de descuento de un 20% de descuento para incentivar
-el pago. Estos correos son eliminados una vez que el usuario paga el plan.
+The plan renewal reminder email is sent when the user has an expired plan and has not renewed. This email is sent three times: the first one hour after the plan expires, again one day later, and finally, like the payment reminder, a 20% discount coupon is sent to encourage renewal. These emails are deleted once the user renews the plan.
 
 ---
 
@@ -68,16 +55,10 @@ el pago. Estos correos son eliminados una vez que el usuario paga el plan.
 
 ---
 
-Para realizar QA de una o varios correos ya mencionados en este README, lo primero que deberá hacer es ir a la nube 
-(GCP o AWS dependiendo si ya se hizo la migración o todavía no). En caso de GCP debes ir a 
-https://console.cloud.google.com/cloudscheduler?project=hablaqui-staging-306619 y aquí deberás identificar el trabajo 
-llamado "email-scheduiling", le das a los 3 puntitos en la columna de acciones y le das a "Forzar ejecución de trabajo". Esto
-lo que hará será programar el envío de los correos que están en la colección de mongodb "emails".
-Luego, una vez ya hayas programado los correos debes ir a mongodb, buscar el correo de interés según el asunto del correo
-que está determinado por el parametro "type" del documento de email, y una vez encontrado debes modificar la fecha de
-envío que está determinado por el parámetro scheduledAt. Se debe modificar por la fecha en la que estés haciendo el qa a alguna
-fecha actual para que se envíe el correo.
-Una vez hayas modificado la fecha, vuelves a ejecutar nuevamente el mismo cron y después de unos segundos te debería haber
-llegado el correo que deseas probar.
+To perform QA on one or more of the emails mentioned in this README, you must first go to the cloud (GCP or AWS, depending on whether the migration has been completed). For GCP, go to https://console.cloud.google.com/cloudscheduler?project=hablaqui-staging-306619 and identify the job called "email-scheduiling". Click the three dots in the actions column and select "Force job execution". This will schedule the sending of emails that are in the MongoDB "emails" collection.
+
+Next, go to MongoDB, find the email of interest by its subject (determined by the "type" parameter in the email document), and once found, modify the scheduled sending date (determined by the "scheduledAt" parameter). Set it to the current date/time so the email will be sent when you run the cron job again.
+
+After modifying the date, run the same cron job again, and after a few seconds, you should receive the email you want to test.
 
 ---

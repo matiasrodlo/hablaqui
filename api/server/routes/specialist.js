@@ -1,3 +1,12 @@
+/**
+ * Specialist Router
+ * 
+ * This module defines the routes for specialist management in the Hablaquí API.
+ * It handles specialist profiles, scheduling, payments, and session management.
+ * 
+ * @module routes/specialist
+ */
+
 'use strict'
 
 import { Router } from 'express'
@@ -5,57 +14,54 @@ import passport from 'passport'
 import specialistsController from '../controllers/specialist'
 import multer from '../middleware/multer'
 
+// Initialize Express router
 const specialistsRouter = Router()
 
 /**
- * @swagger
- * /api/v1/specialists/all:
- *   get:
- *     summary: Devuelve todos los especialistas de la base de datos con plan premium
- *     tags: [Specialists]
- *     responses:
- *       200:
- *         description: Todos los especialistas
- *
- */
-/**
- * @description Devuelve todos los especialistas de la base de datos con plan premium
- * @method GET
- * @route /api/v1/specialists/all
+ * Get All Specialists
+ * Retrieves all specialists with premium plans from the database
+ * 
+ * @route GET /api/v1/specialists/all
+ * @returns {Object[]} Array of specialist objects
  */
 specialistsRouter.get('/specialists/all', specialistsController.getAll)
 
 /**
- * @description Obtiene al especialista a través del username o su Id
- * @method GET
- * @route /api/v1/specialists/one/:info
- * @param {String} params.info - Parámetro por el cual se realiza la búsqueda del especialista
- * @returns Objeto con el especialista
+ * Get Specialist by Username or ID
+ * Retrieves a specific specialist's information
+ * 
+ * @route GET /api/v1/specialists/one/:info
+ * @param {string} req.params.info - Username or ID of the specialist
+ * @returns {Object} Specialist object
+ * @throws {404} If specialist not found
  */
 specialistsRouter.get('/specialists/one/:info', specialistsController.getByData)
 
 /**
- * @description Realiza una búsqueda asociada a parámetros definidos por el usuario en la vista MatchMaking
- * @method POST
- * @route /api/v1/specialists/match
- * @param {String} body.payload.gender - Implica el género del especialista de preferencia
- * @param {String} body.payload.model -
- * @param {String} body.payload.themes -
- * @returns Objeto con las coincidencias sobre los especialistas
- * @access authenticated
+ * Match Specialists
+ * Searches for specialists based on user-defined criteria
+ * 
+ * @route POST /api/v1/specialists/match
+ * @param {Object} req.body.payload - Search criteria
+ * @param {string} req.body.payload.gender - Preferred specialist gender
+ * @param {string} req.body.payload.model - Preferred therapy model
+ * @param {string} req.body.payload.themes - Preferred therapy themes
+ * @returns {Object[]} Array of matching specialists
+ * @throws {401} If not authenticated
  */
 specialistsRouter.post('/specialists/match', specialistsController.match)
 
 /**
- *
- * @description Cambia la hora de una session específica
- * @method POST
- * @route /api/v1/specialists/reschedule/
- * @param {String} body.newDate - Nueva fecha de la sesión
- * @param {String} params.sessionsId - Id del objeto/esquema de sessions
- * @param {String} params.id - Id de la sesión especifica
- * @returns Objeto con las sesiones actualizadas
- * @access authenticated
+ * Reschedule Session
+ * Changes the time of a specific session
+ * 
+ * @route POST /api/v1/specialists/reschedule/
+ * @param {string} req.body.newDate - New session date
+ * @param {string} req.params.sessionsId - Session object ID
+ * @param {string} req.params.id - Specific session ID
+ * @returns {Object} Updated sessions object
+ * @throws {401} If not authenticated
+ * @throws {404} If session not found
  */
 specialistsRouter.post(
   '/dashboard/session/reschedule/',
@@ -63,21 +69,21 @@ specialistsRouter.post(
 )
 
 /**
- * change schedule specialist
- * req.body.payload = {
- * 	monday: [inicio, termino],
- * 	tuesday: [inicio, termino],
- * 	...
- * }
- * Para poner un dia libre es ['busy', 'busy']
- */
-/**
- * @description Permite configurar el calendario de atención de los especialistas
- * @method PATCH
- * @route /api/v1/specialist/set-schedule
- * @param {Array} body.payload.monday...sunday - Arreglo que cotiene los horarios diarios para cada día de la semana
- * @returns Objeto con la información del especialista actualizada
- * @access authenticated
+ * Set Specialist Schedule
+ * Configures the specialist's weekly availability schedule
+ * 
+ * @route PATCH /api/v1/specialist/set-schedule
+ * @param {Object} req.body.payload - Schedule configuration
+ * @param {Array} req.body.payload.monday - Monday schedule [start, end]
+ * @param {Array} req.body.payload.tuesday - Tuesday schedule [start, end]
+ * @param {Array} req.body.payload.wednesday - Wednesday schedule [start, end]
+ * @param {Array} req.body.payload.thursday - Thursday schedule [start, end]
+ * @param {Array} req.body.payload.friday - Friday schedule [start, end]
+ * @param {Array} req.body.payload.saturday - Saturday schedule [start, end]
+ * @param {Array} req.body.payload.sunday - Sunday schedule [start, end]
+ * @returns {Object} Updated specialist object
+ * @throws {401} If not authenticated
+ * @throws {400} If schedule format is invalid
  */
 specialistsRouter.patch(
   '/specialist/set-schedule',
@@ -86,17 +92,20 @@ specialistsRouter.patch(
 )
 
 /**
- * @description Actualiza el método de pago con el que se les paga a los especialistas
- * @method PACTH
- * @route /api/v1/specialist/update-payment-method
- * @param {String} body.payload.bank - Nombre del banco
- * @param {String} body.payload.accountType - Tipo de cuenta
- * @param {String} body.payload.accountNumber - Número de cuenta
- * @param {String} body.payload.rut - RUT del especialista
- * @param {String} body.payload.name - Nombre del especialista
- * @param {String} body.payload.email - Correo del especialista
- * @returns {Object} especialista con los datos actualizados
- * @access authenticated
+ * Update Payment Method
+ * Updates the specialist's payment information
+ * 
+ * @route PATCH /api/v1/specialist/update-payment-method
+ * @param {Object} req.body.payload - Payment information
+ * @param {string} req.body.payload.bank - Bank name
+ * @param {string} req.body.payload.accountType - Account type
+ * @param {string} req.body.payload.accountNumber - Account number
+ * @param {string} req.body.payload.rut - Specialist's RUT
+ * @param {string} req.body.payload.name - Specialist's name
+ * @param {string} req.body.payload.email - Specialist's email
+ * @returns {Object} Updated specialist object
+ * @throws {401} If not authenticated
+ * @throws {400} If payment information is invalid
  */
 specialistsRouter.patch(
   '/specialist/update-payment-method',
@@ -105,62 +114,26 @@ specialistsRouter.patch(
 )
 
 /**
- * @swagger
- * /api/v1/specialists/update-profile:
- *  post:
- *    summary: Actualiza el perfil del especialista
- *    tags: [Specialists]
- *    consumes:
- *      - application/x-www-form-urlencoded
- *    parameters:
- *      - in: formData
- *        name: profile
- *        type: object
- *        properties:
- *          email:
- *            type: string
- *          username:
- *            type: string
- *          languages:
- *            type: array
- *          experience:
- *            type: array
- *          specialties:
- *            type: array
- *          formation:
- *            type: array
- *          personalDescription:
- *            type: string
- *          professionalDescription:
- *            type: string
- *          models:
- *            type: array
- *          country:
- *            type: string
- *          region:
- *            type: string
- *          preferences:
- *            type: object
- *            properties:
- *              marketplaceVisibility:
- *                type: boolean
- *              minimumNewSession:
- *                type: integer
- *              minimumRescheduleSession:
- *                type: integer
- *              corporativeSessions:
- *                type: boolean
- *        description: Objeto con la information a actualizar (funciona igual que el user)
- *    responses:
- *      200: Actualizado correctamente
- */
-/**
- * @description Actualiza el perfil del especialista
- * @method PUT
- * @route /api/v1/specialist/update-profile
- * @param {} -
- * @returns {Object} especialista con los datos actualizados
- * @access authenticated
+ * Update Specialist Profile
+ * Updates the specialist's profile information
+ * 
+ * @route PUT /api/v1/specialist/update-profile
+ * @param {Object} req.body - Profile information
+ * @param {string} req.body.email - Email address
+ * @param {string} req.body.username - Username
+ * @param {string[]} req.body.languages - Languages spoken
+ * @param {Object[]} req.body.experience - Work experience
+ * @param {string[]} req.body.specialties - Specialties
+ * @param {Object[]} req.body.formation - Education
+ * @param {string} req.body.personalDescription - Personal description
+ * @param {string} req.body.professionalDescription - Professional description
+ * @param {string[]} req.body.models - Therapy models
+ * @param {string} req.body.country - Country
+ * @param {string} req.body.region - Region
+ * @param {Object} req.body.preferences - Work preferences
+ * @returns {Object} Updated specialist object
+ * @throws {401} If not authenticated
+ * @throws {400} If profile information is invalid
  */
 specialistsRouter.put(
   '/specialist/update-profile',
@@ -169,12 +142,14 @@ specialistsRouter.put(
 )
 
 /**
- * @description Elimina un especialista de la BD
- * @method DELETE
- * @route /api/v1/specialist/:id
- * @param {ObjectId} params.id - Id del especialista a eliminar
- * @returns {Array} especialistas actualizados
- * @access authenticated
+ * Delete Specialist
+ * Removes a specialist from the database
+ * 
+ * @route DELETE /api/v1/specialist/:id
+ * @param {string} req.params.id - Specialist ID
+ * @returns {Object[]} Updated list of specialists
+ * @throws {401} If not authenticated
+ * @throws {404} If specialist not found
  */
 specialistsRouter.delete(
   '/specialist/:id',

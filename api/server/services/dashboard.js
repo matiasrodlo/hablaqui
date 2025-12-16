@@ -1,3 +1,27 @@
+/**
+ * Dashboard Service
+ * 
+ * This module provides dashboard-related functionality for the Hablaquí system.
+ * It handles data aggregation, statistics, and reporting for the admin dashboard.
+ * 
+ * Features:
+ * - User statistics and metrics
+ * - Session analytics
+ * - Revenue tracking
+ * - Specialist performance metrics
+ * - System health monitoring
+ * - Data visualization support
+ * 
+ * @module services/dashboard
+ * @requires ../models/user - User model
+ * @requires ../models/sessions - Session model
+ * @requires ../models/specialist - Specialist model
+ * @requires ../utils/responses/functions - Response utilities
+ * @requires dayjs - Date handling
+ */
+
+'use strict'
+
 import Specialist from '../models/specialist'
 import User from '../models/user'
 import Appointments from '../models/appointments'
@@ -19,6 +43,18 @@ dayjs.extend(isSameOrAfter)
 dayjs.extend(isSameOrBefore)
 dayjs.tz.setDefault('America/Santiago')
 
+/**
+ * Retrieves upcoming sessions for all specialists
+ * 
+ * This function:
+ * 1. Retrieves all sessions with populated specialist and user data
+ * 2. Filters out sessions without valid specialist or user
+ * 3. Gets the latest active plan for each session
+ * 4. Filters for active plans with pending sessions
+ * 5. Sorts sessions by date
+ * 
+ * @returns {Object} Response containing upcoming sessions with user and specialist details
+ */
 const getNextSessions = async () => {
   /*
 	Retorna las proximas sesiones de los especialistas.
@@ -80,6 +116,19 @@ const getNextSessions = async () => {
   return okResponse('especialistas obtenidos', { nextSessions })
 }
 
+/**
+ * Retrieves payment information for sessions within a date range
+ * 
+ * This function:
+ * 1. Retrieves all sessions with populated specialist and user data
+ * 2. Flattens session data to include specialist and payment details
+ * 3. Filters sessions within the specified date range
+ * 4. Groups and aggregates payments by specialist
+ * 
+ * @param {string} startDate - Start date for payment period
+ * @param {string} endDate - End date for payment period
+ * @returns {Object} Response containing specialist payment summaries
+ */
 const getSessionsPayment = async (startDate, endDate) => {
   /*
 	Retorna las sesiones pagadas entre las fechas indicadas.
@@ -126,6 +175,19 @@ const getSessionsPayment = async (startDate, endDate) => {
   })
 }
 
+/**
+ * Fixes and validates specialist specialties against available appointments
+ * 
+ * This function:
+ * 1. Retrieves all specialists and appointments
+ * 2. Creates a list of valid appointment types
+ * 3. For each specialist:
+ *    - Validates their specialties against available appointments
+ *    - Updates their specialties list to only include valid ones
+ * 4. Saves updated specialist data
+ * 
+ * @returns {Object} Response containing updated specialist data
+ */
 const fixSpecialities = async () => {
   const specialists = await Specialist.find()
   let appointments = await Appointments.find()
@@ -151,6 +213,21 @@ const fixSpecialities = async () => {
   return okResponse('app', { specialists })
 }
 
+/**
+ * Calculates pending payments for specialists (admin only)
+ * 
+ * This function:
+ * 1. Validates user role (must be superuser)
+ * 2. Retrieves all specialists and their sessions
+ * 3. For each specialist:
+ *    - Filters successful paid plans
+ *    - Calculates session prices with coupon adjustments
+ *    - Aggregates total pending payments
+ * 4. Returns detailed payment information
+ * 
+ * @param {Object} user - User object (must be superuser)
+ * @returns {Object} Response containing specialist payment details
+ */
 const getMountToPay = async user => {
   if (user.role !== 'superuser') {
     return conflictResponse('No puedes emplear esta acción')
@@ -232,6 +309,18 @@ const getMountToPay = async user => {
   return okResponse('Planes', { amounts })
 }
 
+/**
+ * Updates specialist visibility status
+ * 
+ * This function:
+ * 1. Finds specialist by ID
+ * 2. Updates their visibility status
+ * 3. Saves changes
+ * 
+ * @param {string} specId - Specialist ID
+ * @param {boolean} visibility - New visibility status
+ * @returns {Object} Response indicating update status
+ */
 const specialistVisibility = async (specId, visibility) => {
   try {
     const isVisible = visibility === 'true'
@@ -245,6 +334,16 @@ const specialistVisibility = async (specId, visibility) => {
   }
 }
 
+/**
+ * Retrieves all users with their details
+ * 
+ * This function:
+ * 1. Retrieves all users from database
+ * 2. Formats user data for display
+ * 3. Returns user list
+ * 
+ * @returns {Object} Response containing user list
+ */
 const getUsers = async () => {
   // Se busca en la base de datos los usuarios y las sessiones
   const users = await User.find({ role: 'user' })
@@ -285,7 +384,7 @@ const getUsers = async () => {
   return okResponse('Usuarios', { users: usersFormatted })
 }
 
-const retoolService = {
+const dashboardService = {
   getNextSessions,
   getSessionsPayment,
   fixSpecialities,
@@ -294,4 +393,4 @@ const retoolService = {
   getUsers,
 }
 
-export default Object.freeze(retoolService)
+export default Object.freeze(dashboardService)

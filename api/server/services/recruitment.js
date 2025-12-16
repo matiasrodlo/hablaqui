@@ -1,3 +1,29 @@
+/**
+ * Recruitment Service
+ * 
+ * This module handles all recruitment-related functionality for the Hablaquí system.
+ * It provides specialist application processing, profile management, and onboarding features.
+ * 
+ * Features:
+ * - Specialist application registration
+ * - Profile updates and verification
+ * - Application approval workflow
+ * - Onboarding status tracking
+ * - Analytics tracking for applications
+ * - Email notifications
+ * 
+ * @module services/recruitment
+ * @requires ../models/recruitment - Recruitment model
+ * @requires ../models/user - User model
+ * @requires ../config/winston - Logging
+ * @requires ../utils/responses/functions - Response utilities
+ * @requires ../utils/logger/infoMessages - Logging utilities
+ * @requires ../models/specialist - Specialist model
+ * @requires ../utils/functions/mails/accountsShares - Email service
+ * @requires ../utils/functions/mails/specialistStatus - Email service
+ * @requires analytics-node - Analytics tracking
+ */
+
 'use strict'
 
 import Recruitment from '../models/recruitment' // Contiene la definición del modelo de recruitment para mongodb
@@ -12,12 +38,20 @@ import Analytics from 'analytics-node'
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY)
 
+/**
+ * Recruitment service object containing all recruitment-related business logic
+ * @type {Object}
+ */
 const recruitmentService = {
   /**
-   * @description - Este controlador se utiliza para crear un nuevo perfil de contratación
-   * @param {Object} user - El objeto usuario con todos los detalles del perfil
-   * @param {Object} body - El cuerpo bruto de la solicitud
-   * @returns Código de respuesta, mensaje y perfil de contratación creado
+   * Registers a new specialist application
+   * Creates recruitment profile and sends confirmation emails
+   * Tracks application in analytics
+   * 
+   * @async
+   * @param {Object} user - User object
+   * @param {Object} body - Application data
+   * @returns {Promise<Object>} Response with created profile
    */
   async register(user, body) {
     // Se crea un objeto que contiene los datos del perfil de recruitment
@@ -88,9 +122,13 @@ const recruitmentService = {
     return okResponse('Registrado exitosamente', { recruited })
   },
   /**
-   * @description - Este servicio se utiliza para actualizar un perfil de contratación
-   * @param {Object} body - El cuerpo de la solicitud con los nuevos valores
-   * @returns El código de respuesta, el mensaje y el perfil de contratación actualizado (si lo hay)
+   * Updates a recruitment profile
+   * Tracks profile updates in analytics
+   * 
+   * @async
+   * @param {Object} body - Updated profile data
+   * @param {number} step - Application step number
+   * @returns {Promise<Object>} Response with updated profile
    */
   async update(body, step) {
     if (!(await Recruitment.exists({ email: body.email }))) {
@@ -122,26 +160,36 @@ const recruitmentService = {
     return okResponse('Actualizado exitosamente', { recruited })
   },
   /**
-   * @description - Este servicio se utiliza para obtener un perfil de contratación por correo
-   * @param {Object} mail - El correo del perfil de contratación
-   * @returns El código de respuesta, el mensaje y el perfil de contratación obtenido (si existe)
+   * Retrieves a recruitment profile by email
+   * 
+   * @async
+   * @param {string} email - Profile email
+   * @returns {Promise<Object>} Response with profile data
    */
   async get(email) {
     const recruited = await Recruitment.findOne({ email })
     return okResponse('Postulante obtenido', { recruited })
   },
   /**
-   * @description - Este servicio se utiliza para obtener toda la contratación
-   * @returns El código de respuesta, el mensaje y el perfil de contratación obtenidos
+   * Retrieves all unverified recruitment profiles
+   * 
+   * @async
+   * @returns {Promise<Object>} Response with all profiles
    */
   async getAll() {
     const recruitment = await Recruitment.find({ isVerified: false })
     return okResponse('Postulantes obtenidos', { recruitment })
   },
   /**
-   * @description - Este controlador comprueba si existe un perfil de contratación y no ha sido verificado.
-   * @returns El código de respuesta, el mensaje y el nuevo perfil de especialista creado con éxito
-   **/
+   * Approves a recruitment profile and creates specialist account
+   * Sends welcome email and updates user role
+   * Tracks approval in analytics
+   * 
+   * @async
+   * @param {Object} user - Admin user object
+   * @param {string} email - Profile email
+   * @returns {Promise<Object>} Response with new specialist profile
+   */
   async approve(user, email) {
     if (user.role !== 'superuser') {
       return conflictResponse('No tienes los permisos suficientes')
@@ -208,31 +256,53 @@ const recruitmentService = {
     logInfo(actionInfo(payload.email, 'fue aprobado y tiene un nuevo perfil'))
     return okResponse('Aprobado exitosamente', { newProfile })
   },
+  /**
+   * Updates a specialist's plan
+   * 
+   * This function:
+   * 1. Validates if specialist exists
+   * 2. Updates plan information
+   * 3. Returns updated profile
+   * 
+   * @async
+   * @param {string} recruitedId - Specialist ID
+   * @param {Object} newPlan - New plan details
+   * @returns {Promise<Object>} Response with updated profile
+   */
   async updatePlan(recruitedId, newPlan) {
-    // Actualizar el plan de un perfil de recruitment
-    const recruitedToUpdate = await Recruitment.findOneAndUpdate(
+    if (!(await Recruitment.exists({ _id: recruitedId }))) {
+      return conflictResponse('Este especialista no existe')
+    }
+    const recruited = await Recruitment.findOneAndUpdate(
       { _id: recruitedId },
-      {
-        $push: {
-          specPlans: { paymentStatus: 'success', ...newPlan },
-        },
-      },
+      { plan: newPlan },
       { new: true }
     )
-    return okResponse('Plan actualizado/creado', { recruitedToUpdate })
+    return okResponse('Plan actualizado exitosamente', { recruited })
   },
+  /**
+   * Updates onboarding flags for a specialist
+   * 
+   * This function:
+   * 1. Validates if specialist exists
+   * 2. Updates onboarding flags
+   * 3. Returns updated profile
+   * 
+   * @async
+   * @param {string} recruitedId - Specialist ID
+   * @param {Object} flags - Onboarding flag updates
+   * @returns {Promise<Object>} Response with updated profile
+   */
   async flagOnboarding(recruitedId, flags) {
-    // Actualiza los flags de onboarding de un perfil de recruitment
-    const recruitedOnboarding = await Recruitment.findOneAndUpdate(
+    if (!(await Recruitment.exists({ _id: recruitedId }))) {
+      return conflictResponse('Este especialista no existe')
+    }
+    const recruited = await Recruitment.findOneAndUpdate(
       { _id: recruitedId },
-      {
-        $set: {
-          flagOnboarding: flags,
-        },
-      },
+      { onboardingFlags: flags },
       { new: true }
     )
-    return okResponse('Onboarding actualizado', { recruitedOnboarding }) // Se retorna el perfil de recruitment
+    return okResponse('Flags de onboarding actualizados exitosamente', { recruited })
   },
 }
 

@@ -1,3 +1,36 @@
+/**
+ * MercadoPago Service
+ * 
+ * This module handles all payment-related functionality for the Hablaquí system.
+ * It provides payment processing, subscription management, and plan handling features.
+ * 
+ * Features:
+ * - Payment preference creation
+ * - Plan subscription management
+ * - Payment status tracking
+ * - Email notifications
+ * - Analytics tracking
+ * - Session reminders
+ * - Plan renewal handling
+ * - Specialist plan management
+ * 
+ * @module services/mercadopago
+ * @requires mercadopago - Payment processing SDK
+ * @requires ../utils/responses/functions - Response utilities
+ * @requires ../models/specialist - Specialist model
+ * @requires ../models/recruitment - Recruitment model
+ * @requires ../config/pino - Logging
+ * @requires ../config/dotenv - Environment configuration
+ * @requires ../utils/functions/emailFunction - Email utilities
+ * @requires ./recruitment - Recruitment service
+ * @requires ../models/user - User model
+ * @requires ../utils/functions/mails/payments - Payment email service
+ * @requires ../utils/functions/mails/schedule - Schedule email service
+ * @requires ../models/sessions - Session model
+ * @requires dayjs - Date handling
+ * @requires analytics-node - Analytics tracking
+ */
+
 'use strict'
 
 import mercadopago from 'mercadopago' // Se importa el SDK de Mercado Pago
@@ -32,7 +65,19 @@ mercadopago.configure({
   access_token: mercadopago_key,
 })
 
-// Esta función se utiliza en sessions.js (en algun futuro no muy lejano, se puede dejar mejor en utils)
+/**
+ * Creates a payment preference for a session
+ * 
+ * This function:
+ * 1. Creates preference object with session details
+ * 2. Sets up success/failure URLs
+ * 3. Configures payment options
+ * 4. Returns payment preference
+ * 
+ * @async
+ * @param {Object} body - Session payment details
+ * @returns {Promise<Object>} Payment preference data
+ */
 const createPreference = async body => {
   // la preferencia dentro de mercadopago se refiere un objeto que contiene todos los datos necesarios para realizar el pago
   const newPreference = {
@@ -61,11 +106,16 @@ const createPreference = async body => {
 }
 
 /**
- * Casos:
- * 1- postulante o especialista
- * 2- plan free o premium
- * @param {Object} body
- * @returns {Obeject} payment
+ * Creates a payment preference for specialist plan subscription
+ * 
+ * This function:
+ * 1. Determines plan type (free/premium)
+ * 2. Creates appropriate payment preference
+ * 3. Returns payment preference data
+ * 
+ * @async
+ * @param {Object} body - Plan subscription details
+ * @returns {Promise<Object>} Response with payment preference
  */
 const createSpecialistPreference = async body => {
   // Se crea preferencia para que el especialista pueda pagar su plan
@@ -80,6 +130,20 @@ const createSpecialistPreference = async body => {
   return okResponse('Preferecia creada', { preference })
 }
 
+/**
+ * Sets up premium plan payment preference
+ * 
+ * This function:
+ * 1. Creates preference object for premium plan
+ * 2. Configures payment URLs
+ * 3. Returns payment initiation URL
+ * 
+ * @async
+ * @param {Object} body - Premium plan details
+ * @param {boolean} isSpecialist - Whether user is specialist
+ * @param {string} id - User ID
+ * @returns {Promise<string>} Payment initiation URL
+ */
 const setPlanPremium = async (body, isSpecialist, id) => {
   // Se crea preferencia para el plan premium
   // Se crea un objeto de preferencia que contiene la información necesaria para crear el pago
@@ -110,6 +174,20 @@ const setPlanPremium = async (body, isSpecialist, id) => {
   return init_point
 }
 
+/**
+ * Sets up free plan for specialist/recruit
+ * 
+ * This function:
+ * 1. Validates user existence
+ * 2. Checks current plan status
+ * 3. Creates free plan record
+ * 4. Tracks plan creation in analytics
+ * 
+ * @async
+ * @param {string} id - User ID
+ * @param {boolean} isSpecialist - Whether user is specialist
+ * @returns {Promise<Object>} Response with plan status
+ */
 const setPlanFree = async (id, isSpecialist) => {
   let response
   if (isSpecialist) response = await Specialist.findById(id)
@@ -185,6 +263,19 @@ const setPlanFree = async (id, isSpecialist) => {
   return await response.save()
 }
 
+/**
+ * Handles successful payment for session
+ * 
+ * This function:
+ * 1. Updates session payment status
+ * 2. Creates session reminders
+ * 3. Sets up renewal notifications
+ * 4. Sends confirmation emails
+ * 
+ * @async
+ * @param {Object} params - Payment parameters
+ * @returns {Promise<Object>} Response with updated session
+ */
 const successPay = async params => {
   // Busca y actualiza el pago de la sesion
   const { sessionsId, planId } = params
@@ -261,6 +352,22 @@ const successPay = async params => {
   return okResponse('Pago aprobado')
 }
 
+/**
+ * Processes payment for specialist plan subscription
+ * 
+ * This function:
+ * 1. Validates specialist existence
+ * 2. Updates specialist plan details
+ * 3. Sends confirmation emails
+ * 4. Tracks analytics
+ * 5. Handles plan expiration and renewal
+ * 
+ * @async
+ * @param {Object} params - Route parameters containing specialist ID
+ * @param {Object} query - Query parameters containing subscription period
+ * @returns {Promise<Object>} Response with updated specialist data
+ * @throws {Error} If specialist not found or payment processing fails
+ */
 const specialistPay = async (params, query) => {
   const { specialistId } = params
   const { period } = query
@@ -322,6 +429,21 @@ const specialistPay = async (params, query) => {
   )
   return okResponse('plan actualizado', { foundSpecialist })
 }
+
+/**
+ * Processes payment for a custom session
+ * 
+ * This function:
+ * 1. Validates session existence
+ * 2. Updates session payment status
+ * 3. Sends confirmation emails
+ * 4. Updates session schedule
+ * 
+ * @async
+ * @param {Object} params - Route parameters containing session ID
+ * @returns {Promise<Object>} Response with updated session data
+ * @throws {Error} If session not found or payment processing fails
+ */
 const customSessionPay = async params => {
   // Busca la sesion y actualiza el pago
   const { userId, specId, planId } = params
@@ -393,6 +515,22 @@ const createCustomSessionPreference = async params => {
   return okResponse('preference created', { init_point })
 }
 
+/**
+ * Processes payment for recruited specialist plan subscription
+ * 
+ * This function:
+ * 1. Validates recruited specialist existence
+ * 2. Updates recruitment plan details
+ * 3. Sends confirmation emails
+ * 4. Tracks analytics
+ * 5. Handles plan expiration and renewal
+ * 
+ * @async
+ * @param {Object} params - Route parameters containing recruited specialist ID
+ * @param {Object} query - Query parameters containing subscription period
+ * @returns {Promise<Object>} Response with updated recruitment data
+ * @throws {Error} If recruited specialist not found or payment processing fails
+ */
 const recruitedPay = async (params, query) => {
   // Se encarga de actualizar el plan del especialista
   const { recruitedId } = params

@@ -1,7 +1,32 @@
+# Docker Ignore Configuration
+# This file specifies which files and directories should be excluded from the Docker build context
+
+# Version control
+.git
+.gitignore
+
+# Dependencies
 node_modules
 npm-debug.log
+yarn-debug.log
+yarn-error.log
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Build output
+dist
+build
+coverage
+
+# IDE and editor files
+.idea
+.vscode
+*.swp
+*.swo
+
 Dockerfile-dev
 Dockerfile-cloud
 .dockerignore
-.gitignore
-.env

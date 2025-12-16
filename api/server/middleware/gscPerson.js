@@ -1,6 +1,7 @@
 import { s3Client, getPublicUrl } from '../config/bucket'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
 import { isArray, isEmpty } from 'underscore'
+const logger = require('../utils/logger');
 
 /**
  * middlerware for save in google storage cloud
@@ -29,11 +30,11 @@ const uploadDocuments = async (req, res, next) => {
         // Se sube el archivo
         try {
           const response = await s3Client.send(command)
-          console.log(`Object uploaded successfully at ${response.Location}`)
+          logger.info(`Object uploaded successfully at ${response.Location}`)
           next()
         } catch (error) {
-          console.log(err)
-          req.files.documents[i].cloudStorageError = err
+          logger.error('Error uploading GSC person:', error)
+          req.files.documents[i].cloudStorageError = error
           next(error)
         }
       })
@@ -62,7 +63,7 @@ const uploadAvatar = async (req, res, next) => {
   // Se sube el archivo
   try {
     const response = await s3Client.send(command)
-    console.log(`Object uploaded successfully at ${response.Location}`)
+    logger.info(`Object uploaded successfully at ${response.Location}`)
     req.body.avatar = getPublicUrl(gcsname)
     req.body.thumbnail = getPublicUrl(gcsname)
     next()

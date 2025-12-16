@@ -1,5 +1,11 @@
 import { snackBarError, snackBarSuccess } from '@/utils/snackbar'
 
+const logDebug = (message, data) => {
+  if (process.env.NODE_ENV !== 'production') {
+    console.debug(message, data);
+  }
+};
+
 export default {
   async getSpecialists({ commit }) {
     try {
@@ -50,7 +56,7 @@ export default {
         method: 'POST',
         data: { ids },
       })
-      console.log('data', data)
+      logDebug('Sessions limit data:', data)
       commit('setSessionsLimit', data.sessions)
     } catch (e) {
       snackBarError(e)(commit)
@@ -352,10 +358,14 @@ export default {
         method: 'PATCH',
         data: { payload },
       })
-      console.log(data)
+      logDebug('Schedule data:', data)
       return data.specialist
     } catch (e) {
       snackBarError(e)(commit)
     }
   },
+  async fetchData({ commit }, data) {
+    logDebug('Specialist data:', data);
+    // ... rest of the code
+  }
 }

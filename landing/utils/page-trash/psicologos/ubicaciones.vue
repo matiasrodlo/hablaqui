@@ -1,3 +1,12 @@
+/**
+ * Locations Directory Page Component
+ * 
+ * This component displays a directory of all locations (comunas) where specialists are available.
+ * It organizes locations alphabetically and provides navigation links to specialist listings for each location.
+ * 
+ * @module utils/page-trash/psicologos/ubicaciones
+ */
+
 <template>
   <div style="background-color: #f0f8ff">
     <!-- appbar -->
@@ -157,44 +166,42 @@
 </template>
 
 <script>
+/**
+ * Locations Directory Page Component
+ * 
+ * @component Ubicaciones
+ * @description Displays an alphabetical directory of locations with specialist listings
+ * 
+ * @property {Array} comunas - List of all available locations
+ * @property {Array} alphabet - Array of letters for alphabetical organization
+ * 
+ * @example
+ * // Access via URL: /especialistas/ubicaciones
+ */
 export default {
   components: {
     Footer: () => import('~/components/Footer'),
     Appbar: () => import('~/components/AppbarWhite'),
   },
+  /**
+   * Component data
+   * 
+   * @returns {Object} Component data
+   */
   data() {
     return {
       comunas: [],
       alphabet: [
-        'a',
-        'b',
-        'c',
-        'd',
-        'e',
-        'f',
-        'g',
-        'h',
-        'i',
-        'j',
-        'k',
-        'l',
-        'm',
-        'n',
-        'o',
-        'p',
-        'q',
-        'r',
-        's',
-        't',
-        'u',
-        'v',
-        'w',
-        'x',
-        'y',
-        'z',
+        'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
+        'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
       ],
     }
   },
+  /**
+   * Generates meta information for SEO
+   * 
+   * @returns {Object} Meta information for the page
+   */
   head() {
     return {
       title: `Ubicaciones de nuestros especialistas | Hablaquí`,
@@ -245,6 +252,11 @@ export default {
       ],
     }
   },
+  /**
+   * Computed property that organizes locations alphabetically
+   * 
+   * @returns {Array} Alphabetically organized locations
+   */
   computed: {
     glossary() {
       if (this.comunas.length)

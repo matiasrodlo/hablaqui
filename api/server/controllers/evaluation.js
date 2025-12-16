@@ -1,10 +1,15 @@
+// Evaluation Controller
+// This controller handles HTTP requests related to evaluation operations, such as adding ratings, retrieving evaluations, and approving or refusing evaluations.
+
 'use strict'
 
 import evaluationService from '../services/evaluation'
 import { restResponse } from '../utils/responses/functions'
 import { errorCallback } from '../utils/functions/errorCallback'
 
+// Controller object containing evaluation-related operations
 const evaluationController = {
+  // Add a new rating for a specialist
   async addRating(req, res) {
     try {
       const { user } = req
@@ -21,6 +26,7 @@ const evaluationController = {
       return errorCallback(e, res, 'error actualizando el rating')
     }
   },
+  // Get the rating for a specialist
   async getRating(req, res) {
     try {
       const { specialist } = req.params
@@ -30,6 +36,7 @@ const evaluationController = {
       return errorCallback(e, res, 'error consiguiendo el rating')
     }
   },
+  // Get evaluations for a specialist
   async getEvaluationsSpec(req, res) {
     try {
       const { user } = req
@@ -39,6 +46,7 @@ const evaluationController = {
       return errorCallback(e, res, 'Error devolviendo las evaluaciones')
     }
   },
+  // Get all evaluations for a user
   async getAllEvaluations(req, res) {
     try {
       const { user } = req
@@ -48,6 +56,7 @@ const evaluationController = {
       return errorCallback(e, res, 'Error devolviendo todas las evaluaciones')
     }
   },
+  // Approve an evaluation
   async approveEvaluation(req, res) {
     try {
       const { user } = req
@@ -62,6 +71,7 @@ const evaluationController = {
       return errorCallback(e, res, 'Error aprobando la evaluación')
     }
   },
+  // Refuse an evaluation
   async refuseEvaluation(req, res) {
     try {
       const { user } = req
@@ -76,6 +86,7 @@ const evaluationController = {
       return errorCallback(e, res, 'Error rechazando la evaluación')
     }
   },
+  // Add a new evaluation for a specialist
   async addEvaluation(req, res) {
     try {
       const { specId } = req.params
@@ -90,6 +101,7 @@ const evaluationController = {
       errorCallback(e, res, 'Error añadiendo la evaluación')
     }
   },
+  // Get evaluations by user ID
   async getEvaluationsById(req, res) {
     try {
       const { userId } = req.params

@@ -1,3 +1,12 @@
+/**
+ * Location-based Specialist Page Component
+ * 
+ * This component displays specialists based on their location (comuna).
+ * It fetches location data and renders the Ubicacion component with the appropriate data.
+ * 
+ * @module utils/page-trash/psicologos/_slug
+ */
+
 <template>
   <div>
     <Ubicacion :location="comuna" />
@@ -5,11 +14,34 @@
 </template>
 
 <script>
+/**
+ * Location-based Specialist Page Component
+ * 
+ * @component UbicacionSlug
+ * @description Displays specialists for a specific location (comuna)
+ * 
+ * @property {Object} comuna - Location data for the current page
+ * 
+ * @example
+ * // Access via URL: /psicologos/[comuna-slug]
+ * // Example: /psicologos/santiago
+ */
 export default {
   name: 'UbicacionSlug',
   components: {
     Ubicacion: () => import('~/components/especialistas/Ubicacion'),
   },
+  /**
+   * Fetches location data and specialist information
+   * 
+   * @param {Object} context - Nuxt context object
+   * @param {Object} context.params - Route parameters
+   * @param {Object} context.store - Vuex store
+   * @param {Object} context.$config - Nuxt config
+   * @param {Function} context.error - Error handler
+   * @param {Object} context.payload - Server-side payload
+   * @returns {Promise<Object>} Component data
+   */
   async asyncData({ params, store, $config, error, payload }) {
     try {
       await store.dispatch('Specialist/getSpecialists')
@@ -26,6 +58,11 @@ export default {
       error({ statusCode: 404, message: 'Page not found' })
     }
   },
+  /**
+   * Generates meta information for SEO
+   * 
+   * @returns {Object} Meta information for the page
+   */
   head() {
     return {
       title: `Especialistas en ${this.$route.params.slug} | Desde $15.500`,

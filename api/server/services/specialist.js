@@ -1,3 +1,12 @@
+/**
+ * Specialist Service
+ * 
+ * This module provides specialist management services for the Hablaquí API.
+ * It handles specialist profile management, matching, scheduling, and related operations.
+ * 
+ * @module services/specialist
+ */
+
 'use strict'
 
 import { logInfo } from '../config/pino'
@@ -16,6 +25,8 @@ import timezone from 'dayjs/plugin/timezone'
 import customParseFormat from 'dayjs/plugin/customParseFormat'
 import isBetween from 'dayjs/plugin/isBetween'
 import Analytics from 'analytics-node'
+
+// Configure dayjs plugins
 dayjs.extend(isBetween)
 dayjs.extend(customParseFormat)
 dayjs.extend(utc)
@@ -23,35 +34,37 @@ dayjs.extend(timezone)
 dayjs.extend(isSameOrBefore)
 dayjs.tz.setDefault('America/Santiago')
 
+// Initialize analytics
 const analytics = new Analytics(process.env.SEGMENT_API_KEY)
 
+/**
+ * Retrieves all specialists
+ * @returns {Promise<Object>} Response object containing list of specialists
+ */
 const getAll = async () => {
-  // Funcion para obtener todos los especialistas
   const specialists = await Specialist.find()
   logInfo('obtuvo todos los especialistas')
   return okResponse('especialistas obtenidos', { specialists })
 }
 
 /**
- * @description Normaliza dentro de un rango de 0 a 1 un puntaje
- * @param {Number} valor - Puntaje a normalizar
- * @param {Number} min - Valor minimo del rango
- * @param {Number} max - Valor maximo del rango
- * @returns - Puntaje normalizado
+ * Normalizes a score within a range of 0 to 1
+ * @param {number} value - Score to normalize
+ * @param {number} min - Minimum value of the range
+ * @param {number} max - Maximum value of the range
+ * @returns {number} Normalized score
  */
-
 const normalize = (value, min, max) => {
   return (value - min) / (max - min)
 }
 
 /**
- * @description Asigna puntaje por el precio de la sesión
- * @param {Object} spec - Especialista
- * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
- * @returns - Puntaje
+ * Assigns score based on session price
+ * @param {Object} spec - Specialist object
+ * @param {Object} payload - Patient preferences
+ * @param {number} pointsPerCriterion - Points per match
+ * @returns {number} Normalized score
  */
-
 const priceCriterion = (spec, payload, pointsPerCriterion) => {
   let points = 0
   if (payload.price >= spec.sessionPrices.video) {
@@ -62,13 +75,12 @@ const priceCriterion = (spec, payload, pointsPerCriterion) => {
 }
 
 /**
- * @description Asigna puntaje por cantidad de coincidencias de especialidades
- * @param {Object} spec - Especialista
- * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
- * @returns - Puntaje normalizado
+ * Assigns score based on number of specialty matches
+ * @param {Object} spec - Specialist object
+ * @param {Object} payload - Patient preferences
+ * @param {number} pointsPerCriterion - Points per match
+ * @returns {number} Normalized score
  */
-
 const criteriaNumberSpecialties = (spec, payload, pointsPerCriterion) => {
   const numberOfSpecialities = 3
   let points = 0
@@ -84,12 +96,11 @@ const criteriaNumberSpecialties = (spec, payload, pointsPerCriterion) => {
 }
 
 /**
- * @description Saca el puntaje maximo de disponibilidad de un especialista
- * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
- * @returns - Puntaje maximum
+ * Calculates maximum availability score
+ * @param {Object} payload - Patient preferences
+ * @param {number} pointsPerCriterion - Points per match
+ * @returns {number} Maximum possible score
  */
-
 const maximumAvailability = (payload, pointsPerCriterion) => {
   let maximum = 0
   if (payload.schedule == 'morning') maximum = (12 - 6) * pointsPerCriterion
@@ -101,17 +112,16 @@ const maximumAvailability = (payload, pointsPerCriterion) => {
 }
 
 /**
- * @description Asigna puntaje por cantidad de coincidencias de disponibilidad
- * @param {Object} days - Días de disponibilidad del especialista
- * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
- * @returns - Puntaje
+ * Assigns score based on availability matches
+ * @param {Object} days - Specialist's available days
+ * @param {Object} payload - Patient preferences
+ * @param {number} pointsPerCriterion - Points per match
+ * @param {number} nextDays - Number of days to check
+ * @returns {number} Total points
  */
-
 const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
   let points = 0
   for (let i = 0; i < nextDays; i++) {
-    // Verifica si la hora es en la mañana, tarde o noche y ve su disponibilidad
     days[i].available.forEach((hora) => {
       if (
         dayjs(hora, 'HH:mm').isBetween(
@@ -160,13 +170,12 @@ const pointsDisponibilidad = (days, payload, pointsPerCriterion, nextDays) => {
 }
 
 /**
- * @description Asigna puntaje por la cantidad de sesiones disponibles en un horario
- * @param {Object} spec - Especialista
- * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
- * @returns - Puntaje normalizado
+ * Assigns score based on session availability
+ * @param {Object} payload - Patient preferences
+ * @param {number} pointsPerCriterion - Points per match
+ * @param {Object} days - Specialist's available days
+ * @returns {number} Normalized score
  */
-
 const criterioDisponibilidad = (payload, pointsPerCriterion, days) => {
   let points = 0
   const nextDays = 3
@@ -177,18 +186,16 @@ const criterioDisponibilidad = (payload, pointsPerCriterion, days) => {
 }
 
 /**
- * @description Asigna puntaje por la cantidad de coincidencias de modelo terapeutico
- * @param {Object} spec - Especialista
- * @param {Object} payload - Contiene las preferencias del paciente
- * @param {Number} pointsPerCriterion - Puntos por cada coincidencia
- * @returns - Puntaje normalizado
+ * Assigns score based on therapeutic model matches
+ * @param {Object} spec - Specialist object
+ * @param {Object} payload - Patient preferences
+ * @param {number} pointsPerCriterion - Points per match
+ * @returns {number} Normalized score
  */
-
 const criterioModeloTeraupetico = (spec, payload, pointsPerCriterion) => {
   const modelQuantity = 3
   let points = 0
   let maximum = 0
-  // Se suma points por cada coincidencia y se obtiene el total de puntaje posible
   for (let j = 0; j < modelQuantity; j++) {
     if (spec.model[j] === payload.model[j]) points += pointsPerCriterion
     maximum += pointsPerCriterion
@@ -198,12 +205,11 @@ const criterioModeloTeraupetico = (spec, payload, pointsPerCriterion) => {
 }
 
 /**
- * @description Pondera los especialistas segun sus puntajes
- * @param {Array} matchedList - Lista de especialistas matchados que se quiere ponderar
- * @param {Object} payload - Objeto con las preferencias del usuario
- * @returns {Array} - Lista de especialistas ponderados
+ * Calculates weighted match score for specialists
+ * @param {Array} matchedList - List of matched specialists
+ * @param {Object} payload - Patient preferences
+ * @returns {Promise<Array>} List of specialists with weighted scores
  */
-
 const ponderationMatch = async (matchedList, payload) => {
   const pointsPerCriterion = 3
   // Ponderado es un array que contiene el porcentaje de ponderación de cada criterio
@@ -249,12 +255,11 @@ const ponderationMatch = async (matchedList, payload) => {
 }
 
 /**
- * @description Clasifica los especialistas si es el mejor match, el mas barato y el con mayor disponibilidad
- * @param {Array} matchedList - Lista de especialistas matchados que se quiere clasificar
- * @param {Object} payload - Objeto con las preferencias del usuario
- * @returns - Lista de especialistas clasificados
+ * Classifies specialists based on match scores
+ * @param {Array} matchedList - List of matched specialists
+ * @param {Object} payload - Patient preferences
+ * @returns {Promise<Array>} Classified list of specialists
  */
-
 const specialistClasification = async (matchedList, payload) => {
   const nextDays = 7
   let points = 0
@@ -290,6 +295,11 @@ const specialistClasification = async (matchedList, payload) => {
   return resultList
 }
 
+/**
+ * Matches a patient with suitable specialists
+ * @param {Object} body - Matching criteria
+ * @returns {Promise<Object>} Response object containing matched specialists
+ */
 const match = async (body) => {
   const { payload } = body
   let matchedSpecialists = []
@@ -339,6 +349,14 @@ const match = async (body) => {
   })
 }
 
+/**
+ * Reschedules a therapy session
+ * @param {string} sessionsId - Session document ID
+ * @param {string} planId - Plan ID
+ * @param {string} sessionId - Session ID
+ * @param {string} newDate - New session date
+ * @returns {Promise<Object>} Response object indicating success or failure
+ */
 const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
   // Se da formato a la fecha
   newDate = dayjs(newDate, 'YYYY-MM-DDTHH:mm').format('MM/DD/YYYY HH:mm')
@@ -380,6 +398,13 @@ const rescheduleSession = async (sessionsId, planId, sessionId, newDate) => {
   await sessions.save()
   return okResponse('Hora actualizada', { sessions })
 }
+
+/**
+ * Updates a specialist's subscription plan
+ * @param {string} specialistId - Specialist ID
+ * @param {Object} planInfo - New plan information
+ * @returns {Promise<Object>} Response object containing updated plan
+ */
 const updatePlan = async (specialistId, planInfo) => {
   // Funcion para actualizar el plan de un especialista, se busca el especialista por su id y se actualiza
   const updatedSpecialist = await Specialist.findByIdAndUpdate(
@@ -394,6 +419,11 @@ const updatePlan = async (specialistId, planInfo) => {
   return okResponse('Plan creado', { specialist: updatedSpecialist })
 }
 
+/**
+ * Retrieves a specialist by username
+ * @param {string} username - Specialist's username
+ * @returns {Promise<Object>} Response object containing specialist profile
+ */
 const getByData = async (username) => {
   // Funcion para obtener un especialista por su username
   const usernameSearch = await Specialist.findOne({ username })
@@ -408,6 +438,12 @@ const getByData = async (username) => {
   }) // Se retorna una respuesta con el especialista
 }
 
+/**
+ * Updates a specialist's availability schedule
+ * @param {Object} user - Specialist object
+ * @param {Object} payload - New schedule information
+ * @returns {Promise<Object>} Response object indicating success or failure
+ */
 const setSchedule = async (user, payload) => {
   let response
   // Si el user es un psicologo, se busca el psicologo por su id y se actualiza el horario
@@ -475,6 +511,12 @@ const setSchedule = async (user, payload) => {
   })
 }
 
+/**
+ * Updates a specialist's payment method
+ * @param {Object} user - Specialist object
+ * @param {Object} payload - New payment method information
+ * @returns {Promise<Object>} Response object indicating success or failure
+ */
 const updatePaymentMethod = async (user, payload) => {
   if (user.role !== 'specialist') {
     return conflictResponse('No eres un especialista.')
@@ -508,6 +550,12 @@ const updatePaymentMethod = async (user, payload) => {
   }
 }
 
+/**
+ * Updates a specialist's profile information
+ * @param {Object} user - Specialist object
+ * @param {Object} profile - Updated profile information
+ * @returns {Promise<Object>} Response object containing updated profile
+ */
 const updateSpecialist = async (user, profile) => {
   if (user.role === 'user') return conflictResponse('No tienes poder.')
   if (user.role === 'superuser' && !user.specialist) {
@@ -634,6 +682,12 @@ const updateSpecialist = async (user, profile) => {
   }
 }
 
+/**
+ * Deletes a specialist
+ * @param {Object} user - Specialist object
+ * @param {string} id - Specialist ID
+ * @returns {Promise<Object>} Response object indicating success or failure
+ */
 const deleteOne = async (user, id) => {
   if (user.role !== 'superuser') {
     return conflictResponse(
@@ -647,6 +701,12 @@ const deleteOne = async (user, id) => {
   return okResponse('Especialista eliminado', { specialists })
 }
 
+/**
+ * Updates a specialist's session prices
+ * @param {Object} user - Specialist object
+ * @param {Object} newPrice - New price information
+ * @returns {Promise<Object>} Response object indicating success or failure
+ */
 const setPrice = async (user, newPrice) => {
   newPrice = Number(newPrice)
   if (user.role != 'specialist') {
@@ -682,6 +742,11 @@ const setPrice = async (user, newPrice) => {
   })
 }
 
+/**
+ * Retrieves all clients assigned to a specialist
+ * @param {Object} specialist - Specialist object
+ * @returns {Promise<Object>} Response object containing list of clients
+ */
 const getClients = async (specialist) => {
   // Se busca las sessiones de un especialista en particular y se filtran por las que estan pagadas
   const sessions = await Sessions.find({
@@ -720,6 +785,11 @@ const getClients = async (specialist) => {
   })
 }
 
+/**
+ * Gets the last session for a client
+ * @param {Object} item - Client session information
+ * @returns {Object} Last session details
+ */
 const getLastSession = (item) => {
   // Se obtiene la ultima sesion de un documento Sessions, se le da formato, se ordena, se filtra y se retorna
   return item.plan
@@ -734,6 +804,11 @@ const getLastSession = (item) => {
     )
 }
 
+/**
+ * Searches for clients based on criteria
+ * @param {string} search - Search query
+ * @returns {Promise<Object>} Response object containing matching clients
+ */
 const searchClients = async (search) => {
   // Se busca un usuario por nombre y correo
   const foundUser = await User.find({ email: search, name: search })
@@ -743,6 +818,11 @@ const searchClients = async (search) => {
   return okResponse('Usuario encontrado', { users: foundUser })
 }
 
+/**
+ * Checks if a username is available
+ * @param {string} username - Username to check
+ * @returns {Promise<Object>} Response object indicating availability
+ */
 const usernameAvailable = async (username) => {
   // Se verifica si el nombre de usuario ya existe para saber si el usuario está disponible
   let available = true
@@ -753,6 +833,12 @@ const usernameAvailable = async (username) => {
   )
 }
 
+/**
+ * Updates a specialist's formation and experience
+ * @param {Object} user - Specialist object
+ * @param {Object} payload - Updated formation and experience information
+ * @returns {Promise<Object>} Response object indicating success or failure
+ */
 const updateFormationExperience = async (user, payload) => {
   if (user.role != 'specialist') {
     return conflictResponse('No eres especialista')
@@ -777,7 +863,12 @@ const updateFormationExperience = async (user, payload) => {
   })
 }
 
-// Función actualmente no utilizada.
+/**
+ * Uploads a specialist's profile picture
+ * @param {string} specID - Specialist ID
+ * @param {Object} picture - Picture information
+ * @returns {Promise<Object>} Response object containing updated profile
+ */
 const uploadProfilePicture = async (specID, picture) => {
   if (!picture) return conflictResponse('No se ha enviado ninguna imagen')
   const { name, lastName, _id } = await User.findById(specID)
@@ -810,6 +901,12 @@ const uploadProfilePicture = async (specID, picture) => {
   })
 }
 
+/**
+ * Approves a specialist's profile picture
+ * @param {Object} user - Specialist object
+ * @param {string} id - Specialist ID
+ * @returns {Promise<Object>} Response object indicating success or failure
+ */
 const approveAvatar = async (user, id) => {
   if (user.role !== 'superuser') {
     return conflictResponse(
@@ -830,10 +927,12 @@ const approveAvatar = async (user, id) => {
   })
 }
 
+/**
+ * Updates a specialist's status to accept immediate attention
+ * @param {Object} spec - Specialist object
+ * @returns {Promise<Object>} Response object indicating success or failure
+ */
 const changeToInmediateAttention = async (spec) => {
-  /* if (user.role !== 'specialist')
-		return conflictResponse('No tienes permitida esta opción');
-	const spec = user.specialist; */
   let specialist = await Specialist.findById(spec)
   // Si la atención inmediata está activada, se desactiva
   if (specialist.inmediateAttention.activated) {
@@ -890,74 +989,22 @@ const changeToInmediateAttention = async (spec) => {
     specialist,
   })
 }
-/*
-const getAllSessionsInmediateAttention = async () => {
-	let specialist = await Specialist.find({}).select(
-		'_id inmediateAttention'
-	);
-	// Para que nos de deje modificar el array de mongo
-	specialist = JSON.stringify(specialist);
-	specialist = JSON.parse(specialist);
-	specialist = specialist.filter(
-		spec => spec.inmediateAttention.activated === true
-	);
 
-	let allSessions = await Sessions.find().populate(
-		'specialist',
-		'_id inmediateAttention'
-	);
-
-	let now = Date.now();
-	// Formato de array debe ser [date, date, ...date]
-	const setDaySessions = sessions =>
-		sessions.flatMap(item => {
-			return item.plan
-				.flatMap(plan => {
-					return plan.session.length
-						? plan.session.map(session => session.date)
-						: [];
-				})
-				.filter(session => {
-					const date = dayjs.tz(dayjs(session.date)).format(
-						'DD/MM/YYYY HH:mm'
-					);
-					return (
-						session.status !== 'success' &&
-						dayjs(date).isBefore(dayjs(now).add(3, 'hours')) &&
-						dayjs(date)
-							.add(50, 'minutes')
-							.isAfter(dayjs(now))
-					);
-				});
-		});
-
-	allSessions = specialist.map(item => ({
-		...item,
-		sessions: setDaySessions(
-			allSessions.filter(element => element.specialist === item._id)
-		).length,
-	}));
-
-	return okResponse('Sesiones', { allSessions });
-}; */
-
-const specialistsService = {
-  approveAvatar,
-  deleteOne,
+export default {
   getAll,
-  getByData,
-  getClients,
   match,
   rescheduleSession,
-  searchClients,
-  setPrice,
+  getByData,
   setSchedule,
-  updateFormationExperience,
   updatePaymentMethod,
-  updatePlan,
   updateSpecialist,
-  uploadProfilePicture,
+  deleteOne,
+  setPrice,
+  getClients,
+  searchClients,
   usernameAvailable,
+  updateFormationExperience,
+  approveAvatar,
+  uploadProfilePicture,
   changeToInmediateAttention,
 }
-export default Object.freeze(specialistsService)

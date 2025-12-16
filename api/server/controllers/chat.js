@@ -1,10 +1,15 @@
+// Chat Controller
+// This controller handles HTTP requests related to chat operations, such as starting conversations, retrieving chats and messages, sending messages, creating reports, and marking messages as read.
+
 'use strict'
 
 import chatService from '../services/chat'
 import { errorCallback } from '../utils/functions/errorCallback'
 import { restResponse } from '../utils/responses/functions'
 
+// Controller object containing chat-related operations
 const chatController = {
+  // Start a new conversation between a user and a specialist
   async startConversation(req, res) {
     try {
       const { params, user } = req
@@ -18,6 +23,7 @@ const chatController = {
     }
   },
 
+  // Retrieve all chats for the current user
   async getChats(req, res) {
     try {
       const { user } = req
@@ -27,6 +33,8 @@ const chatController = {
       return errorCallback(e, res, 'Error consiguiendo los chats')
     }
   },
+
+  // Retrieve all messages between a user and a specialist
   async getMessages(req, res) {
     try {
       const { user, spec } = req.params
@@ -36,6 +44,8 @@ const chatController = {
       return errorCallback(e, res, 'Error consiguiendo los mensajes')
     }
   },
+
+  // Send a message in a chat
   async sendMessage(req, res) {
     try {
       const { specialistId, userId } = req.params
@@ -53,6 +63,8 @@ const chatController = {
       return errorCallback(e, res, 'Error enviando el mensaje')
     }
   },
+
+  // Create a report for a chat issue
   async createReport(req, res) {
     try {
       const { specialistId, userId } = req.params
@@ -71,6 +83,8 @@ const chatController = {
       return errorCallback(e, res, 'Error creando el reporte')
     }
   },
+
+  // Mark a message as read
   async readMessage(req, res) {
     try {
       const { user } = req

@@ -1,0 +1,104 @@
+# DeepSource Configuration
+# This file configures the DeepSource static analysis tool for the project
+
+# Version of the DeepSource configuration file
+version = 1
+
+# Enable specific analyzers
+[[analyzers]]
+name = "python"
+enabled = true
+
+[[analyzers]]
+name = "javascript"
+enabled = true
+
+[[analyzers]]
+name = "typescript"
+enabled = true
+
+# Configure specific checks for each analyzer
+[[analyzers.settings]]
+name = "python"
+enabled = true
+checks = [
+  "python-best-practices",
+  "python-code-style",
+  "python-docstyle",
+  "python-error-prone",
+  "python-security",
+  "python-test-coverage"
+]
+
+[[analyzers.settings]]
+name = "javascript"
+enabled = true
+checks = [
+  "javascript-best-practices",
+  "javascript-code-style",
+  "javascript-error-prone",
+  "javascript-security",
+  "javascript-test-coverage"
+]
+
+[[analyzers.settings]]
+name = "typescript"
+enabled = true
+checks = [
+  "typescript-best-practices",
+  "typescript-code-style",
+  "typescript-error-prone",
+  "typescript-security",
+  "typescript-test-coverage"
+]
+
+# Exclude specific paths from analysis
+exclude_paths = [
+  "node_modules/",
+  "dist/",
+  "build/",
+  "coverage/",
+  ".git/",
+  "*.test.ts",
+  "*.spec.ts",
+  "*.test.js",
+  "*.spec.js"
+]
+
+# Configure test coverage settings
+[test_patterns]
+python = ["test_*.py", "*_test.py"]
+javascript = ["*.test.js", "*.spec.js"]
+typescript = ["*.test.ts", "*.spec.ts"]
+
+# Configure security settings
+[security]
+enable_secrets_scan = true
+enable_dependency_scan = true
+enable_sast = true
+
+# Configure test coverage tracking
+[[analyzers]]
+name = "test-coverage"  # Test coverage analysis
+enabled = true          # Enable test coverage tracking
+
+# Configure security analysis
+[[analyzers]]
+name = "security"    # Security vulnerability analysis
+enabled = true       # Enable security analyzer
+
+# Configure code quality analysis
+[[analyzers]]
+name = "code-quality"  # Code quality analysis
+enabled = true         # Enable code quality analyzer
+
+[[analyzers]]
+name = "docker"
+enabled = true
+
+[[analyzers]]
+name = "vue"
+enabled = true
+
+  [analyzers.meta]
+  plugins = ["vue"]

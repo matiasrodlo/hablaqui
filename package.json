@@ -1,13 +1,32 @@
 {
-  "dependencies": {
-    "@google-cloud/debug-agent": "^5.2.8"
+  "name": "hablaqui",
+  "version": "1.0.0",
+  "description": "Hablaqui - Mental Health Marketplace and SaaS Platform",
+  "private": true,
+  "workspaces": [
+    "api",
+    "landing",
+    "movil"
+  ],
+  "scripts": {
+    "dev": "concurrently \"npm run dev:api\" \"npm run dev:landing\"",
+    "dev:api": "cd api && npm run dev",
+    "dev:landing": "cd landing && npm run dev",
+    "dev:mobile": "cd movil && flutter run",
+    "build": "npm run build:api && npm run build:landing",
+    "build:api": "cd api && npm run build",
+    "build:landing": "cd landing && npm run build",
+    "build:mobile": "cd movil && flutter build",
+    "test": "npm run test:api && npm run test:landing",
+    "test:api": "cd api && npm test",
+    "test:landing": "cd landing && npm test",
+    "test:mobile": "cd movil && flutter test",
+    "lint": "npm run lint:api && npm run lint:landing",
+    "lint:api": "cd api && npm run lint",
+    "lint:landing": "cd landing && npm run lint",
+    "lint:mobile": "cd movil && flutter analyze"
   },
   "devDependencies": {
-    "eslint": "^8.34.0",
-    "eslint-config-prettier": "^8.6.0",
-    "eslint-config-standard": "^17.0.0",
-    "eslint-plugin-prettier": "^4.2.1",
-    "eslint-plugin-vue": "^9.9.0",
-    "prettier": "^2.8.4"
+    "concurrently": "^8.0.1"
   }
 }

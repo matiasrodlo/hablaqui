@@ -1,3 +1,22 @@
+/**
+ * PagosMobile Component
+ *
+ * Displays and manages payment and subscription options for users on mobile devices.
+ *
+ * Key Features:
+ * - Mobile-friendly payment interface
+ * - Subscription plan selection
+ * - Payment summary and confirmation
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify form and card components
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <PagosMobile />
+ */
 <template>
   <div>
     <div v-show="hasSessions" style="height: 100%">

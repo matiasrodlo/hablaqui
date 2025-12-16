@@ -1,3 +1,89 @@
+/**
+ * Ubicacion Component
+ * 
+ * A location-based marketplace view that displays specialists and services available
+ * in a specific location. Features a responsive layout with desktop and mobile views,
+ * FAQ section, and location-specific content.
+ * 
+ * Key Features:
+ * - Location-based specialist listing
+ * - Responsive design (desktop/mobile)
+ * - Interactive map integration
+ * - FAQ section
+ * - Location-specific content
+ * - Specialist filtering
+ * - Session management
+ * - Appointment scheduling
+ * - Navigation controls
+ * - Footer information
+ * 
+ * Component Requirements:
+ * - Vuetify v-container component
+ * - Vuetify v-row component
+ * - Vuetify v-col component
+ * - Vuetify v-expansion-panels component
+ * - Vuetify v-expansion-panel component
+ * - AppbarWhite component
+ * - Footer component
+ * - EspecialistasDesktop component
+ * - EspecialistasMobile component
+ * - GeoEspecialistas component
+ * - Vuex store
+ * 
+ * @component
+ * @example
+ * // Basic usage
+ * <Ubicacion
+ *   :location="locationData"
+ * />
+ * 
+ * // Location object structure:
+ * {
+ *   slug: String,         // Location identifier
+ *   name: String,         // Location name
+ *   coordinates: Object,  // Map coordinates
+ *   services: Array      // Available services
+ * }
+ * 
+ * // Layout specifications:
+ * // - Container max-width: 1080px
+ * // - Appbar height: 83px
+ * // - FAQ panel spacing: 16px
+ * // - Footer background: #0f3860
+ * // - Text colors:
+ * //   - Primary: #0f3860
+ * //   - Secondary: #717171
+ * //   - White: #ffffff
+ * 
+ * // Error Handling:
+ * // - Location data errors
+ * // - Specialist loading errors
+ * // - Session fetching errors
+ * // - Map integration errors
+ * // - Navigation errors
+ * 
+ * // Performance:
+ * // - Lazy loading for components
+ * // - Efficient DOM updates
+ * // - Optimized re-renders
+ * // - Responsive image loading
+ * // - Debounced search
+ * // - Cached location data
+ * // - Memory leak prevention
+ * // - Resource cleanup
+ * 
+ * @requires {Component} AppbarWhite - Navigation bar component
+ * @requires {Component} Footer - Footer component
+ * @requires {Component} EspecialistasDesktop - Desktop specialist list
+ * @requires {Component} EspecialistasMobile - Mobile specialist list
+ * @requires {Component} GeoEspecialistas - Map component
+ * 
+ * @throws {Error} If location data is invalid
+ * @throws {Error} If specialist loading fails
+ * @throws {Error} If session fetching fails
+ * @throws {Error} If map integration fails
+ * @throws {Error} If navigation fails
+ */
 <template>
   <div style="background-color: #f0f8ff">
     <!-- appbar -->
@@ -68,10 +154,32 @@ import EspecialistasDesktop from '~/components/especialistas/EspecialistasDeskto
 import EspecialistasMobile from '~/components/especialistas/EspecialistasMobile'
 import Footer from '~/components/Footer'
 import Appbar from '~/components/AppbarWhite'
+
 /**
- * Vista marketplace por ubicacion
+ * Location-based marketplace view component
+ * 
+ * Displays specialists and services available in a specific location with
+ * responsive design and interactive features.
+ * 
+ * @component
+ * @requires {Vuex} mapGetters - Vuex getters mapping
+ * @requires {Vuex} mapActions - Vuex actions mapping
+ * @requires {Component} EspecialistasDesktop - Desktop specialist list
+ * @requires {Component} EspecialistasMobile - Mobile specialist list
+ * @requires {Component} Footer - Footer component
+ * @requires {Component} AppbarWhite - Navigation bar component
  */
 export default {
+  name: 'Ubicacion',
+
+  /**
+   * Component dependencies
+   * @property {Component} Footer - Footer component
+   * @property {Component} Appbar - Navigation bar component
+   * @property {Component} EspecialistasDesktop - Desktop specialist list
+   * @property {Component} EspecialistasMobile - Mobile specialist list
+   * @property {Component} geoEspecialistas - Map component
+   */
   components: {
     Footer,
     Appbar,
@@ -80,12 +188,32 @@ export default {
     geoEspecialistas: () =>
       import('~/components/especialistas/GeoEspecialistas'),
   },
+
+  /**
+   * Component properties
+   * @property {Object} location - Location data object
+   * 
+   * @example
+   * {
+   *   slug: 'santiago',
+   *   name: 'Santiago',
+   *   coordinates: { lat: -33.4489, lng: -70.6693 },
+   *   services: ['therapy', 'counseling']
+   * }
+   */
   props: {
     location: {
       type: Object,
       default: null,
     },
   },
+
+  /**
+   * Component data
+   * @returns {Object} Component data
+   * @property {Array} panel - Expansion panel state
+   * @property {Array} faq - FAQ items
+   */
   data() {
     return {
       panel: [],
@@ -110,7 +238,7 @@ export default {
         {
           id: 3,
           title: '¿Qué tipo de terapia en línea es el mejor para mí?',
-          desc: `No existe una “forma correcta”. Cada tipo de orientación o tratamiento tiene el potencial de ayudar a una
+          desc: `No existe una "forma correcta". Cada tipo de orientación o tratamiento tiene el potencial de ayudar a una
                         amplia gama de condiciones. Los especialistas online de Hablaquí le permiten aumentar sus niveles de bienestar
                         emocional estando en Localidad, para ello se especializan en diversas técnicas terapéuticas, como la
                         psicoanalítica, cognitivo-conductual o sistémica. `,
@@ -118,26 +246,46 @@ export default {
       ],
     }
   },
+
+  /**
+   * Computed properties
+   * @property {Boolean} loadingSpecialist - Loading state for specialist data
+   */
   computed: {
     ...mapGetters({ loadingSpecialist: 'Specialist/loadingSpecialist' }),
   },
+
+  /**
+   * Lifecycle hooks
+   */
   mounted() {
     window.scrollTo(0, 0)
     this.initialFetch()
   },
+
+  /**
+   * Component methods
+   */
   methods: {
     /**
-     * obtenemos las especialidades
+     * Initial data fetching
+     * Fetches appointments and initializes the component
      */
     async initialFetch() {
       await this.getAppointments()
     },
+
     /**
-     * obtenemos las sessiones
+     * Session management
+     * @param {Array} ids - Array of session IDs to fetch
      */
     getSessions(ids) {
       this.getSessionsLimit(ids)
     },
+
+    /**
+     * Vuex actions mapping
+     */
     ...mapActions({
       getAppointments: 'Appointments/getAppointments',
       getFormattedSessionsAll: 'Specialist/getFormattedSessionsAll',

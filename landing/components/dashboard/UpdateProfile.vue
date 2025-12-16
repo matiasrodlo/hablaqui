@@ -1,3 +1,26 @@
+/**
+ * UpdateProfile Component
+ *
+ * A form for users to update their profile information, including name, email, phone, address, and more.
+ * Handles region/comuna selection for specialists and includes validation and error handling.
+ *
+ * Key Features:
+ * - Editable profile fields (name, email, phone, etc.)
+ * - Region and comuna selection (for specialists)
+ * - Date picker for birth date
+ * - Gender and timezone selection
+ * - Validation and error messages
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify v-text-field, v-select, v-menu, v-date-picker, v-btn
+ * - Vuelidate for validation
+ * - Vuex for actions
+ *
+ * @component
+ * @example
+ * <UpdateProfile />
+ */
 <template>
   <v-row>
     <v-col cols="12" md="6">

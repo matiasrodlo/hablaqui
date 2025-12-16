@@ -1,3 +1,22 @@
+/**
+ * EspecialistasDesktop Component
+ *
+ * Displays a desktop-optimized list and profile view of specialists, allowing users to browse, search, and select specialists.
+ *
+ * Key Features:
+ * - Desktop-friendly specialist list
+ * - Search and filter specialists
+ * - Profile view and selection
+ * - Responsive design
+ *
+ * Requirements:
+ * - Vuetify list and card components
+ * - Vuex for state
+ *
+ * @component
+ * @example
+ * <EspecialistasDesktop />
+ */
 <template>
   <div>
     <!-- filter name -->
@@ -358,18 +377,18 @@
               </v-col>
               <v-col class="pl-4">
                 <div class="text-h5 primary--text font-weight-bold">
-                  Te ayudamos a encontrar a tu especialista ideal
+                  Evaluación psicológica con Inteligencia Artificial
                 </div>
                 <div class="my-2 text-h6 primary--text font-weight-regular">
-                  Encuentra al especialista que necesitas, solo responde las
-                  siguientes preguntas.
+                  Obtén un documento detallado con tus síntomas y metas de tratamiento.
                 </div>
                 <div class="my-4">
                   <v-btn
                     rounded
                     color="primary"
                     class="px-8 py-2"
-                    @click="goEvaluation"
+                    target="_blank"
+                    href="https://wa.me/message/UEPODIF6XTSYK1"
                   >
                     Comenzar
                   </v-btn>
@@ -613,22 +632,62 @@ import { mdiChevronDown, mdiAccount } from '@mdi/js'
 import { mapGetters, mapMutations } from 'vuex'
 
 /**
- * Componente: Listado de especialistas en vista de escritorio
+ * EspecialistasDesktop Component
+ * 
+ * A Vue component that provides a desktop view for browsing and filtering
+ * specialists with advanced search capabilities.
+ * 
+ * @component
+ * @requires {Component} Icon - Icon component
+ * @requires {Vuex} mapGetters - Vuex getters mapping
+ * @requires {Vuex} mapActions - Vuex actions mapping
  */
 export default {
   name: 'EspecialistasDesktop',
+
+  /**
+   * Component dependencies
+   * @property {Component} Icon - Icon component
+   * @property {Component} Avatar - Avatar component
+   * @property {Component} MiniCalendar - Mini calendar component
+   */
   components: {
+    Icon: () => import('~/components/Icon'),
+    Avatar: () => import('~/components/Avatar'),
+    MiniCalendar: () => import('~/components/especialistas/MiniCalendar'),
     CalendarSpecialist: () => import('~/components/CalendarSpecialist'),
   },
+
+  /**
+   * Component properties
+   * @property {Boolean} loadingSpecialist - Loading state for specialists
+   * @property {Function} getSessionsLimit - Function to get sessions with limit
+   */
   props: {
     loadingSpecialist: {
       type: Boolean,
+      default: false,
     },
     getSessionsLimit: {
       type: Function,
-      required: true,
+      default: () => {},
     },
   },
+
+  /**
+   * Component data
+   * @returns {Object} Component data
+   * @property {String} searchInput - Search input value
+   * @property {Array} specialties - Selected specialties
+   * @property {Array} gender - Selected genders
+   * @property {Boolean} status - Online status filter
+   * @property {Boolean} menuSpecialties - Specialties menu visibility
+   * @property {Boolean} menuGender - Gender menu visibility
+   * @property {Number} scrollHeight - Scroll position
+   * @property {Number} page - Current page number
+   * @property {Array} visibles - Visible specialist IDs
+   * @property {Object} mdiChevronDown - Chevron down icon
+   */
   data() {
     return {
       mdiChevronDown,
@@ -648,9 +707,13 @@ export default {
       visibles: [],
       fullcard: [],
       page: null,
-      status: false,
+      status: true,
     }
   },
+
+  /**
+   * Component computed properties
+   */
   computed: {
     /**
      * Filter search box
@@ -767,6 +830,11 @@ export default {
 		window.removeEventListener('scroll', this.onScroll);
 	},
 	methods: {
+		logDebug(message, data) {
+			if (process.env.NODE_ENV !== 'production') {
+				console.debug(`[EspecialistasDesktop] ${message}`, data);
+			}
+		},
 		/**
 		 * Cambia aumenta de pagina con el scroll
 		 */
@@ -812,10 +880,8 @@ export default {
 		 */
 		getSessions(id) {
 			const temp = this.sessions.find(element => element.specialist === id);
-			if (id === '63e1727b384b67ddc9eebc33') {
-				console.log('sessions', this.sessions);
-				console.log('temp', temp);
-			}
+			this.logDebug('Current sessions:', this.sessions);
+			this.logDebug('Found session data:', temp);
 			if (!temp) {
 				return [];
 			}

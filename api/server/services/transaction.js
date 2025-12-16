@@ -1,3 +1,26 @@
+/**
+ * Transaction Service
+ *
+ * This module provides business logic for managing financial transactions, payments,
+ * and withdrawal requests for specialists in the Hablaquí platform.
+ *
+ * Key Features:
+ * - Payment completion and withdrawal request processing
+ * - Transaction history retrieval
+ * - Integration with analytics and email notifications
+ * - Session and plan status updates
+ *
+ * @module services/transaction
+ * @requires ../models/transaction - Transaction model
+ * @requires ../models/sessions - Sessions model
+ * @requires ../models/specialist - Specialist model
+ * @requires ../utils/responses/functions - Response utilities
+ * @requires ../utils/functions/getAllSessionsFunction - Session utilities
+ * @requires ../utils/functions/priceFormatter - Price formatting utilities
+ * @requires ../utils/functions/mails/specialistStatus - Specialist email service
+ * @requires dayjs - Date handling
+ * @requires analytics-node - Analytics integration
+ */
 'use strict'
 
 import Transaction from '../models/transaction'
@@ -17,6 +40,19 @@ dayjs.tz.setDefault('America/Santiago')
 
 const analytics = new Analytics(process.env.SEGMENT_API_KEY)
 
+/**
+ * Completes a payment request for a specialist
+ * 
+ * This function:
+ * 1. Retrieves all sessions for the specialist
+ * 2. Filters for successful sessions with pending requests
+ * 3. Updates session payment status and dates
+ * 4. Creates transaction record
+ * 5. Sends payment completion notification
+ * 
+ * @param {string} spec - Specialist ID
+ * @returns {Object} Response with transaction details
+ */
 const completePaymentsRequest = async spec => {
   // Se obtienen todas las sessiones del especialista, obtiene el documento de especialista con su id
   let sessions = await getAllSessionsFunction(spec)
@@ -88,6 +124,22 @@ const completePaymentsRequest = async spec => {
   })
 }
 
+/**
+ * Creates a new payment request for a specialist
+ * 
+ * This function:
+ * 1. Validates user role (must be specialist)
+ * 2. Retrieves all sessions for the specialist
+ * 3. Filters for successful sessions without pending requests
+ * 4. Calculates total amount
+ * 5. Updates session request status
+ * 6. Creates transaction record
+ * 7. Tracks analytics event
+ * 8. Sends payment request notification
+ * 
+ * @param {Object} user - User object
+ * @returns {Object} Response with request details
+ */
 const createPaymentsRequest = async user => {
   if (user.role === 'user') {
     return conflictResponse('No estas autorizado para esta operacion')
@@ -181,6 +233,19 @@ const createPaymentsRequest = async user => {
   })
 }
 
+/**
+ * Retrieves transaction history and statistics for a specialist
+ * 
+ * This function:
+ * 1. Validates user role (must be specialist)
+ * 2. Retrieves all sessions and transactions
+ * 3. Calculates total earnings
+ * 4. Calculates available balance
+ * 5. Counts successful and receivable sessions
+ * 
+ * @param {Object} user - User object
+ * @returns {Object} Response with transaction statistics
+ */
 const getTransactions = async user => {
   if (user.role === 'user') {
     return conflictResponse('No estas autorizado para esta operacion')
@@ -252,6 +317,20 @@ const getTransactions = async user => {
   })
 }
 
+/**
+ * Generates a new transaction record (admin only)
+ * 
+ * This function:
+ * 1. Validates user role (must be superuser)
+ * 2. Updates session payment status
+ * 3. Creates transaction record
+ * 
+ * @param {Object} user - User object
+ * @param {number} total - Transaction amount
+ * @param {Array} session - Session data
+ * @param {string} idSpec - Specialist ID
+ * @returns {Object} Response with transaction details
+ */
 const generateTransaction = async (user, total, session, idSpec) => {
   if (user.role !== 'superuser') return conflictResponse('No tienes permiso')
   if (session.length === 0) {
@@ -278,6 +357,18 @@ const generateTransaction = async (user, total, session, idSpec) => {
   return okResponse('Pago completado', { transaction })
 }
 
+/**
+ * Retrieves all transactions (admin only)
+ * 
+ * This function:
+ * 1. Validates user role (must be superuser)
+ * 2. Retrieves all transactions with specialist details
+ * 3. Formats dates and transaction data
+ * 4. Sorts by creation date
+ * 
+ * @param {Object} user - User object
+ * @returns {Object} Response with all transactions
+ */
 const getAllTransactions = async user => {
   if (user.role !== 'superuser') return conflictResponse('No tienes permiso')
 
