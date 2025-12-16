@@ -14,7 +14,7 @@
 
 ---
 
--   **GoogleBtn.vue**: Login con Google (No Integrado)
+-   **GoogleBtn.vue**: Login con Google (Componente disponible, requiere integración)
 -   **SendPasswordRecovery.vue**: Recuperación de contraseña (user/spec)
 -   **SignIn.vue**: Login (user/spec)
 -   **SignUp.vue**: Registro (user)
@@ -88,7 +88,6 @@
 
 ---
 
--   **AppbarBlue.vue**: Menú de navegación blog (Deprecado)
 -   **AppbarWhite.vue**: Menú de navegación
 -   **Avatar.vue**: Avatar de un usuario
 -   **Calendar.vue**: Timepicker scroll

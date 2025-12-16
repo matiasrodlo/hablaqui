@@ -20,12 +20,9 @@
 
 import dotenv from 'dotenv'
 dotenv.config()
-// process.env.URLDB = process.env.URLDB || 'mongodb://localhost:27017/sochamar';
 export const room = 'https://rooms.hablaqui.cl/'
 export const port = process.env.PORT
 export const node_env = process.env.NODE_ENV
-export const cloud_project_name = process.env.CLOUD_PROJECT_NAME
-export const cloud_project_location = process.env.CLOUD_PROJECT_LOCATION
 export const url_db = process.env.URLDB
 export const vue_app_origin = process.env.VUE_APP_ORIGIN
 export const frontend_url = process.env.FRONTEND_URL

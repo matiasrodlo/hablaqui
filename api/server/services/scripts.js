@@ -26,7 +26,7 @@
  * @requires ../models/transaction - Transaction model
  * @requires ../config/bucket - AWS S3 configuration
  * @requires @aws-sdk/client-s3 - AWS SDK
- * @requires @google-cloud/storage - Google Cloud Storage
+ * @requires @google-cloud/storage - Google Cloud Storage (only for migration)
  */
 
 'use strict'
@@ -43,7 +43,15 @@ import Psychologist from '../models/psychologist'
 import transactionModel from '../models/transaction'
 import s3 from '../config/bucket'
 import { PutObjectCommand } from '@aws-sdk/client-s3'
-const { Storage } = require('@google-cloud/storage')
+// GCP Storage is only used for migration from GCP to AWS
+// Import conditionally to avoid requiring GCP dependencies in production
+let Storage
+try {
+  Storage = require('@google-cloud/storage').Storage
+} catch (error) {
+  // GCP storage not available - migration function will handle this
+  Storage = null
+}
 
 /**
  * Changes user role from psychologist to specialist
@@ -661,6 +669,9 @@ const stepBack = async () => {
  * @returns {Promise<Object>} Response with migration status
  */
 const migrationGcpBucketToAws = async () => {
+  if (!Storage) {
+    return conflictResponse('Google Cloud Storage is not available. This migration requires @google-cloud/storage package.')
+  }
   const gcs = new Storage()
   const gcsBucket = ['hablaqui-email', 'hablaqui-content', 'hablaqui-blog']
   gcsBucket.forEach(async (gcsBucketName) => {

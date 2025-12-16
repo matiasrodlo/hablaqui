@@ -176,7 +176,7 @@ npm test -- --grep "auth"
 ```
 
 ### Deployment
-The API is deployed to Google Cloud Platform using App Engine. See the deployment documentation for details.
+The API is deployed to AWS. See the deployment documentation for details.
 
 ## Monitoring and Logging
 

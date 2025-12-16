@@ -55,7 +55,7 @@ The plan renewal reminder email is sent when the user has an expired plan and ha
 
 ---
 
-To perform QA on one or more of the emails mentioned in this README, you must first go to the cloud (GCP or AWS, depending on whether the migration has been completed). For GCP, go to https://console.cloud.google.com/cloudscheduler?project=hablaqui-staging-306619 and identify the job called "email-scheduiling". Click the three dots in the actions column and select "Force job execution". This will schedule the sending of emails that are in the MongoDB "emails" collection.
+To perform QA on one or more of the emails mentioned in this README, you must first go to the cloud (AWS). The project has been migrated from GCP to AWS. Use AWS services to schedule email sending for emails in the MongoDB "emails" collection.
 
 Next, go to MongoDB, find the email of interest by its subject (determined by the "type" parameter in the email document), and once found, modify the scheduled sending date (determined by the "scheduledAt" parameter). Set it to the current date/time so the email will be sent when you run the cron job again.
 

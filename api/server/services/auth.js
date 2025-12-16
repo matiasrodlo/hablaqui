@@ -54,7 +54,6 @@ const analytics = new Analytics(process.env.SEGMENT_API_KEY)
  * @returns {string} JWT token
  */
 const generateJwt = user => {
-  // Se crea el payload para el token, se genera con la clave secreta y el payload, se le asigna la expiración y se devuelve
   const payload = {
     username: user.name,
     sub: user._id,
@@ -96,11 +95,10 @@ const login = async user => {
       },
     })
   }
-  // comentado por JESUS marzo/24/2022 porque interrumpe el flujo
-  // el objeto user debe contener, ahora, un elemento isVerified que indica si
-  // la cuenta está o no verificada
+  // Email verification check disabled (commented by JESUS marzo/24/2022)
+  // Note: The user object should contain an isVerified element indicating if the account is verified
   // if (user.role === 'user' && !user.isVerified)
-  // 	return conflictResponse('Verifica tu correo');
+  //   return conflictResponse('Verifica tu correo');
   return okResponse(`Bienvenido ${user.name}`, {
     token: generateJwt(user),
     user: await generateUser(user),
@@ -120,7 +118,6 @@ const login = async user => {
  * @returns {Promise<Object>} Success response
  */
 const logout = async user => {
-  // Hace el trackeo de la acción de logout con segment
   if (
     process.env.API_URL.includes('hablaqui.cl') ||
     process.env.DEBUG_ANALYTICS === 'true'
@@ -152,7 +149,6 @@ const logout = async user => {
  * @returns {Promise<Array|null>} Array of sessions or null
  */
 const getSessions = async user => {
-  // Verifica el rol del usuario y devuelve las sesiones correspondientes
   if (user.role === 'user') {
     return await Sessions.find({ user: user._id })
   }
@@ -178,7 +174,6 @@ const getSessions = async user => {
  * @returns {Promise<Object>} Formatted user object
  */
 const generateUser = async user => {
-  // Genera el objeto de usuario que se devuelve en las respuestas
   return {
     _id: user._id,
     avatar: user.avatar,
@@ -227,7 +222,6 @@ const generateUser = async user => {
  * @throws {Error} If email or RUT already exists
  */
 const register = async payload => {
-  // Verifica si el usuario ya existe, si no crea un nuevo usuario
   if (await User.exists({ email: payload.email })) {
     return conflictResponse('Correo electronico en uso')
   }
@@ -243,15 +237,12 @@ const register = async payload => {
     password: bcrypt.hashSync(payload.password, 10),
   }
   const user = await User.create(newUser)
-  // Enviar correo de verificación
   const token = generateJwt(user)
   const verifyurl = `${process.env.VUE_APP_LANDING}verificacion-email?id=${user._id}&token=${token}`
 
   if (process.env.NODE_ENV === 'development') {
     logInfo(actionInfo(payload.email, `url: ${verifyurl}`))
   }
-  // logInfo es una función que imprime en consola la información del usuario y la url de verificación
-  // else await mailServiceAccount.sendVerifyEmail(user, verifyurl); // si el entorno no es development envía el correo de verificación
 
   // Segment identification
   if (

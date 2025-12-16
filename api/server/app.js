@@ -12,7 +12,6 @@
  * - API documentation with Swagger/OpenAPI
  * - Static file serving
  * - Error logging with Pino
- * - Google Cloud Debug integration
  * 
  * Security Features:
  * - Rate limiting (1000 requests per 15 minutes per IP)
@@ -29,7 +28,6 @@
  * @requires cors - Cross-origin resource sharing
  * @requires swagger-ui-express - API documentation UI
  * @requires swagger-jsdoc - API documentation generator
- * @requires @google-cloud/debug-agent - Cloud debugging
  * 
  * @example
  * // Start the server
@@ -62,20 +60,7 @@ import rateLimit from 'express-rate-limit'
 import swaggerUi from 'swagger-ui-express'
 import swaggerJsDoc from 'swagger-jsdoc'
 
-// Main Application Setup
-// This file configures the Express application with middleware, routes, and error handling
-
-// Initialize Express application
 const app = express()
-
-/**
- * Initialize Google Cloud Debug Agent
- * Enables cloud debugging and monitoring
- * @see {@link https://cloud.google.com/debugger|Google Cloud Debugger}
- */
-require('@google-cloud/debug-agent').start({
-  serviceContext: { enableCanary: true },
-})
 
 /**
  * Connect to MongoDB database
@@ -90,8 +75,8 @@ mongoose
   .then(logger.info('Database connected successfully'))
   .catch(error => logError(error))
 
-// Enable if you're behind a reverse proxy (Heroku, Bluemix, AWS ELB, Nginx, etc)
-// see https://expressjs.com/en/guide/behind-proxies.html
+// Trust proxy configuration (uncomment if behind reverse proxy like AWS ELB, Nginx, etc)
+// See: https://expressjs.com/en/guide/behind-proxies.html
 // app.set('trust proxy', 1);
 
 /**
@@ -104,26 +89,12 @@ const limiter = rateLimit({
   max: 1000, // Maximum requests per window
 })
 
-/*
-Código comentado porque no se está usando en ninguna parte
-//limiter solve a brute attack problem in the api, every x time you're only allowed to send x quantity of requests
-const whitelist = [process.env.VUE_APP_LANDING];
-
-let corsOptions = {
-	origin: function(origin, callback) {
-		if (whitelist.indexOf(origin) !== -1) callback(null, true);
-		else callback('Not allowed by CORS: ' + origin);
-	},
-};
-*/
-
-// Middleware configuration
-app.use(limiter) // Apply rate limiting
-app.use(helmet()) // Security headers
-app.use(cors()) // Enable CORS
-app.use(express.static(path.join(__dirname, 'static'))) // Serve static files
-app.use(bodyParser.urlencoded({ extended: false })) // Parse URL-encoded bodies
-app.use(bodyParser.json()) // Parse JSON bodies
+app.use(limiter)
+app.use(helmet())
+app.use(cors())
+app.use(express.static(path.join(__dirname, 'static')))
+app.use(bodyParser.urlencoded({ extended: false }))
+app.use(bodyParser.json())
 
 /**
  * Authentication configuration
@@ -133,7 +104,6 @@ app.use(bodyParser.json()) // Parse JSON bodies
 passportConfig(passport)
 app.use(passport.initialize())
 
-// Register API routes
 routes(app)
 
 /**
@@ -168,18 +138,15 @@ const swaggerOptions = {
  *         description: Successful response
  */
 
-// Initialize Swagger documentation
 const swaggerDocs = swaggerJsDoc(swaggerOptions)
 app.use('/documentation', swaggerUi.serve, swaggerUi.setup(swaggerDocs))
 
-// Health check endpoint
 app.get('/health', (req, res) => {
-  res.status(200).json({ status: 'ok' });
-});
+  res.status(200).json({ status: 'ok' })
+})
 
-// Error handling middleware
 app.use((req, res) => {
-  res.status(404).json({ error: 'Not Found' });
-});
+  res.status(404).json({ error: 'Not Found' })
+})
 
 module.exports = app

@@ -15,7 +15,6 @@ scripts/
     ├── buildspec.yml           # AWS CodeBuild specification
     ├── buildspec-backend.yml   # Backend build specification
     ├── buildspec-frontend.yml  # Frontend build specification
-    ├── cloudbuild.yaml         # Google Cloud Build configuration
     └── dispatch.yaml           # GitHub Actions dispatch configuration
 ```
 
@@ -39,7 +38,6 @@ The `setup/` directory contains scripts for:
 ## Deployment Scripts
 The `deploy/` directory contains configuration files for:
 - AWS CodeBuild specifications
-- Google Cloud Build configurations
 - GitHub Actions workflows
 - CI/CD pipeline configurations
 - Multi-environment deployments
@@ -72,12 +70,10 @@ The `deploy/` directory contains configuration files for:
 # Deploy to AWS
 ./scripts/deploy/deploy-aws.sh
 
-# Deploy to Google Cloud
-./scripts/deploy/deploy-gcp.sh
-
 # Deploy to multiple environments
 ./scripts/deploy/deploy-all.sh
 ```
+
 
 ## Configuration Files
 
@@ -89,13 +85,6 @@ The `deploy/` directory contains configuration files for:
 - Handles environment variables
 - Generates deployment artifacts
 
-### Google Cloud Build (cloudbuild.yaml)
-- Defines build steps for Google Cloud Build
-- Configures build environment
-- Specifies build commands and artifacts
-- Manages service deployments
-- Handles environment configuration
-- Controls build resources
 
 ### GitHub Actions (dispatch.yaml)
 - Configures GitHub Actions workflows

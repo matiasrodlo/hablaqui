@@ -13,25 +13,19 @@
 import { Router } from 'express'
 import appointmentsController from '../controllers/appointments'
 
-// Initialize Express router
 const appointmentsRouter = Router()
 
 /**
  * GET /api/v1/appointments/all
  * 
  * Retrieves all appointments in the system.
- * Note: Authentication and authorization middleware are currently commented out
- * but should be implemented for production use.
  * 
  * @route GET /appointments/all
  * @returns {Object[]} List of appointments
+ * @todo Add authentication and authorization middleware for production use
  */
 appointmentsRouter.get(
-  '/appointments/all' /*,
-    [
-        passport.authenticate('jwt', { session: true }),
-        grantAccess('readAny', 'appointments'),
-    ] */,
+  '/appointments/all',
   appointmentsController.getAll
 )
 

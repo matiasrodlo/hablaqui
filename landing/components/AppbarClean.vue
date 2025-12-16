@@ -207,7 +207,7 @@
             tabindex="0"
             class="mx-auto my-5"
             style="max-width: 150px"
-            src="https://storage.googleapis.com/hablaqui-blog/2022/01/d978f84d-logo-1024x242.png"
+            src="https://cdn.hablaqui.cl/static/logo.png"
             lazy-src="https://cdn.hablaqui.cl/static/logo.png"
             alt="hablaqui Logo"
             accesskey="h"
@@ -233,7 +233,7 @@
               <v-img
                 style="max-width: 176px"
                 alt="hablaqui Logo"
-                src="https://storage.googleapis.com/hablaqui-blog/2022/01/d978f84d-logo-1024x242.png"
+                src="https://cdn.hablaqui.cl/static/logo.png"
                 lazy-src="https://cdn.hablaqui.cl/static/logo.png"
                 contain
               />
@@ -515,7 +515,7 @@ export default {
     },
     logoUrl: {
       type: String,
-      default: 'https://storage.googleapis.com/hablaqui-blog/2022/01/d978f84d-logo-1024x242.png'
+      default: 'https://cdn.hablaqui.cl/static/logo.png'
     },
     defaultAvatarUrl: {
       type: String,
